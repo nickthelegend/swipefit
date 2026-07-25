@@ -1,0 +1,29 @@
+[
+  {
+    "id": "model-a",
+    "label": "Light / Neutral",
+    "facePublicUrl": "https://images.pexels.com/photos/6668809/pexels-photo-6668809.jpeg?auto=compress&w=1200",
+    "bodyPublicUrl": "https://images.pexels.com/photos/6668809/pexels-photo-6668809.jpeg?auto=compress&w=1200",
+    "credit": "Photo by Nataliya Vaitkevich on Pexels",
+    "measuredSkinColor": "#bd9c86",
+    "measuredLab": { "L": 66.8, "a": 8.9, "b": 16.1 }
+  },
+  {
+    "id": "model-b",
+    "label": "Medium / Warm",
+    "facePublicUrl": "https://images.pexels.com/photos/33055634/pexels-photo-33055634.jpeg?auto=compress&w=1200",
+    "bodyPublicUrl": "https://images.pexels.com/photos/33055634/pexels-photo-33055634.jpeg?auto=compress&w=1200",
+    "credit": "Photo by Youssef Mahmoud on Pexels",
+    "measuredSkinColor": "#8e684c",
+    "measuredLab": { "L": 47.2, "a": 11.5, "b": 21.7 }
+  },
+  {
+    "id": "model-c",
+    "label": "Deep / Neutral",
+    "facePublicUrl": "https://images.pexels.com/photos/19317142/pexels-photo-19317142.jpeg?auto=compress&w=1200",
+    "bodyPublicUrl": "https://images.pexels.com/photos/19317142/pexels-photo-19317142.jpeg?auto=compress&w=1200",
+    "credit": "Photo by Waldir Évora on Pexels",
+    "measuredSkinColor": "#644835",
+    "measuredLab": { "L": 33.1, "a": 9.3, "b": 16.1 }
+  }
+]
