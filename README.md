@@ -106,12 +106,33 @@ There is also a **live undertone override** on the deck header (tap your skin sw
 
 ---
 
+## Build the fit
+
+The try-on API takes one garment per call, so every deck card renders a new top over whatever trousers you happened to be photographed in. **Build the fit** removes that limit by chaining: the rendered top is fed back in as the *input person* for the bottom render, so the result is one image of a complete outfit on your own body.
+
+Reachable from the bag once you have both halves. Only the second call costs units — the top is reused from the deck cache.
+
+## Decision friction — the measurement nobody else has
+
+A retailer already knows its conversion rate. What it has never been able to see is the **hesitation before the buy**, and that is where returns begin. Four signals are captured directly from the gesture layer, and all four are real:
+
+| Signal | What it captures |
+|---|---|
+| `dwellMs` | How long the card was on top before the decision committed |
+| `inspected` | The card was flipped to read the breakdown first |
+| `hesitated` | The commit threshold was crossed, then retreated from |
+| `undone` | The decision was reversed |
+
+These combine into a per-SKU friction score. The console also reports **colour rejection**: how often pieces that fight the shopper's undertone are kept versus pieces that flatter it — invisible to ordinary retail analytics, because the shoppers who reject a colourway never click anything.
+
+Rates are suppressed below three observations per bucket. A percentage off one swipe is noise dressed as a finding.
+
 ## Things that are synthetic, and are labelled as such in the app
 
 Listed here so nothing in the UI is mistaken for a measurement.
 
 1. **Return-risk percentages** (`src/logic/reasoning.ts`) — a deterministic heuristic over category, cut, size-run breadth and colour match. It is built from published apparel-industry patterns, but it is **not** measured return data and no such data exists without a brand partnership. Every surface that shows a risk number also shows "Illustrative heuristic — not measured return data".
-2. **Brand console baseline figures** (`src/logic/analytics.ts`) — synthetic per-SKU impressions and right-swipe rates, seeded deterministically so they don't reshuffle. The banner at the top of that screen says so. **The current session's swipes are real** and are layered on top; rows the session touched are marked `LIVE`, so a right-swipe on the deck visibly moves that SKU's bar.
+2. ~~Brand console baseline figures~~ — **removed.** An earlier version seeded synthetic per-SKU impressions and swipe rates. That was deleted rather than relabelled: invented numbers prove nothing and quietly undermine the real ones next to them. The console now reports only measured behaviour, and says so on its face.
 3. **Beauty mode does not call the makeup-VTO API.** That is a separately-billed feature outside the judged track. Foundations are matched by ΔE from the measured skin hex and composited over your own face photo in-app; treatments are ranked against measured concern scores.
 4. **Prices** are real as observed, but some Levi's and COS entries were captured at promotional rather than list price.
 5. **The API key ships in the client bundle.** Acceptable for a hackathon key; a real deployment needs a proxy.

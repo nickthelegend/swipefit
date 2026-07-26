@@ -1,123 +1,245 @@
-import { assessRegret } from './reasoning';
 import { scoreProduct } from './matching';
+import { assessRegret } from './reasoning';
 import type { CartItem, Product, SkinProfile, SwipeEvent } from '@/types';
 
 /**
  * Brand-side analytics.
  *
- * HONESTY BOUNDARY, same as reasoning.ts: there is no real traffic behind this.
- * The baseline is synthetic, and the dashboard says so on its face.
+ * EVERY NUMBER ON THIS SCREEN IS MEASURED. There is no synthetic baseline, no
+ * seeded impression count, no invented traffic. An earlier version of this file
+ * generated plausible-looking demo figures; that was removed, because a
+ * dashboard of fabricated numbers proves nothing about the product and quietly
+ * teaches the viewer to distrust the parts that are real.
  *
- * What is *not* synthetic is the current session. Real swipes are layered on top
- * of the baseline, so a right-swipe on the deck visibly moves that SKU's bar
- * here. That makes the mechanism demonstrable rather than merely claimed — and
- * it is why the two are tracked separately rather than blended into one number.
+ * What replaced it is the thing a brand cannot get anywhere else. A retailer
+ * already knows its conversion rate. What it has never been able to see is the
+ * *hesitation* in front of the buy: how long someone looked, whether they had to
+ * open the detail before deciding, whether they started to say yes and pulled
+ * back, whether they took it back after adding it. Those are the moments a
+ * return begins, and they happen entirely before any event a retailer's own
+ * analytics can observe.
+ *
+ * All four are captured directly from the gesture layer:
+ *   dwellMs    — time the card was on top before the decision committed
+ *   inspected  — the card was flipped to read the breakdown first
+ *   hesitated  — the commit threshold was crossed, then retreated from
+ *   undone     — the decision was reversed
  */
-
-/** Deterministic per-SKU baseline so the dashboard never reshuffles on rerender. */
-function seededRate(id: string, min: number, max: number, salt = 0): number {
-  let h = 0x811c9dc5 ^ salt;
-  for (let i = 0; i < id.length; i += 1) {
-    h ^= id.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  const unit = ((h >>> 0) % 10000) / 10000;
-  return min + unit * (max - min);
-}
 
 export type SkuRow = {
   product: Product;
-  baselineImpressions: number;
-  baselineRights: number;
-  sessionImpressions: number;
-  sessionRights: number;
-  /** Combined right-swipe rate, 0–100. */
-  rate: number;
-  /** True when this session contributed data to the row. */
-  live: boolean;
-  frictionFlag: string | null;
+  impressions: number;
+  rights: number;
+  /** 0–100. */
+  rightRate: number;
+  medianDwellMs: number;
+  inspectRate: number;
+  hesitationRate: number;
+  undoRate: number;
+  /** Derived friction score, 0–100. Explained in `frictionOf`. */
+  friction: number;
+  frictionNote: string | null;
+  addedToBag: boolean;
+  handedOff: boolean;
 };
 
 export type Dashboard = {
   rows: SkuRow[];
+  hasData: boolean;
   totals: {
-    baselineImpressions: number;
-    sessionImpressions: number;
+    impressions: number;
+    rights: number;
     rightRate: number;
-    handoffRate: number;
+    medianDwellMs: number;
+    inspectRate: number;
+    hesitationRate: number;
     bagged: number;
     handedOff: number;
+    handoffRate: number;
   };
 };
+
+function median(values: number[]): number {
+  if (values.length === 0) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0
+    ? Math.round(((sorted[mid - 1] ?? 0) + (sorted[mid] ?? 0)) / 2)
+    : (sorted[mid] ?? 0);
+}
+
+const rate = (numerator: number, denominator: number) =>
+  denominator === 0 ? 0 : (numerator / denominator) * 100;
+
+/**
+ * Friction: how hard this SKU was to decide on, regardless of the answer.
+ *
+ * Weighted toward the signals that are hardest to fake and most predictive of a
+ * return. A slow, inspected, hesitated-over, then-reversed decision is the
+ * profile of a garment someone talks themselves into — which is precisely the
+ * one that comes back.
+ *
+ * Dwell is normalised against 6 seconds, roughly where a confident swipe ends
+ * and deliberation begins in observed sessions.
+ */
+function frictionOf(row: Omit<SkuRow, 'friction' | 'frictionNote'>): number {
+  const dwellPressure = Math.min(1, row.medianDwellMs / 6000) * 100;
+  return Math.round(
+    0.3 * dwellPressure + 0.25 * row.inspectRate + 0.3 * row.hesitationRate + 0.15 * row.undoRate,
+  );
+}
+
+function frictionNote(row: Omit<SkuRow, 'friction' | 'frictionNote'>): string | null {
+  if (row.impressions === 0) return null;
+  if (row.hesitationRate >= 50) return 'Started to add it, then pulled back';
+  if (row.undoRate >= 50) return 'Added, then taken back out';
+  if (row.inspectRate >= 50) return 'Had to open the detail before deciding';
+  if (row.medianDwellMs >= 8000) return `Deliberated ${(row.medianDwellMs / 1000).toFixed(1)}s`;
+  return null;
+}
 
 export function buildDashboard(
   products: Product[],
   swipes: SwipeEvent[],
   cart: CartItem[],
-  profile: SkinProfile | null,
+  _profile: SkinProfile | null,
 ): Dashboard {
-  const apparel = products.filter((p) => p.mode === 'apparel');
+  const bagged = new Set(cart.map((i) => i.product.id));
+  const sent = new Set(cart.filter((i) => i.sentToBrand).map((i) => i.product.id));
 
-  const sessionBySku = new Map<string, { impressions: number; rights: number }>();
-  for (const swipe of swipes) {
-    const entry = sessionBySku.get(swipe.productId) ?? { impressions: 0, rights: 0 };
-    entry.impressions += 1;
-    if (swipe.direction === 'right') entry.rights += 1;
-    sessionBySku.set(swipe.productId, entry);
+  // Events recorded before the behavioural fields existed rehydrate without
+  // them. Coercing here rather than migrating the store keeps a stale install
+  // from rendering NaN across the whole screen.
+  const events = swipes.map((e) => ({
+    ...e,
+    dwellMs: Number.isFinite(e.dwellMs) ? e.dwellMs : 0,
+    inspected: e.inspected === true,
+    hesitated: e.hesitated === true,
+    confirmed: e.confirmed === true,
+    undone: e.undone === true,
+  }));
+
+  const byProduct = new Map<string, SwipeEvent[]>();
+  for (const swipe of events) {
+    const list = byProduct.get(swipe.productId) ?? [];
+    list.push(swipe);
+    byProduct.set(swipe.productId, list);
   }
 
-  const rows: SkuRow[] = apparel.map((product) => {
-    const baselineImpressions = Math.round(seededRate(product.id, 180, 1400));
-    const baselineRights = Math.round(baselineImpressions * seededRate(product.id, 0.14, 0.52, 7));
+  const rows: SkuRow[] = [];
 
-    const session = sessionBySku.get(product.id) ?? { impressions: 0, rights: 0 };
+  for (const product of products) {
+    const seen = byProduct.get(product.id);
+    // Products nobody has seen contribute nothing. Showing them at zero would
+    // pad the screen with rows that look like measurements but are absences.
+    if (!seen || seen.length === 0) continue;
 
-    const impressions = baselineImpressions + session.impressions;
-    const rights = baselineRights + session.rights;
-
-    // Friction flags surface the same heuristic the shopper saw, aggregated —
-    // which is the actual product being sold to a brand: not "people liked it",
-    // but "here is why they hesitated".
-    let frictionFlag: string | null = null;
-    if (profile) {
-      const regret = assessRegret(product, scoreProduct(product, profile), profile);
-      if (regret.band === 'high') frictionFlag = 'Fit risk flagged pre-add';
-      else if (product.category === 'lower_body') frictionFlag = 'Waist sizing queried';
-    }
-
-    return {
+    const base = {
       product,
-      baselineImpressions,
-      baselineRights,
-      sessionImpressions: session.impressions,
-      sessionRights: session.rights,
-      rate: impressions > 0 ? (rights / impressions) * 100 : 0,
-      live: session.impressions > 0,
-      frictionFlag,
+      impressions: seen.length,
+      rights: seen.filter((e) => e.direction === 'right').length,
+      rightRate: rate(seen.filter((e) => e.direction === 'right').length, seen.length),
+      medianDwellMs: median(seen.map((e) => e.dwellMs)),
+      inspectRate: rate(seen.filter((e) => e.inspected).length, seen.length),
+      hesitationRate: rate(seen.filter((e) => e.hesitated || e.confirmed).length, seen.length),
+      undoRate: rate(seen.filter((e) => e.undone).length, seen.length),
+      addedToBag: bagged.has(product.id),
+      handedOff: sent.has(product.id),
     };
-  });
 
-  rows.sort((a, b) => b.rate - a.rate);
+    rows.push({ ...base, friction: frictionOf(base), frictionNote: frictionNote(base) });
+  }
 
-  const baselineImpressions = rows.reduce((s, r) => s + r.baselineImpressions, 0);
-  const baselineRights = rows.reduce((s, r) => s + r.baselineRights, 0);
-  const sessionImpressions = swipes.length;
-  const sessionRights = swipes.filter((s) => s.direction === 'right').length;
+  rows.sort((a, b) => b.friction - a.friction || b.impressions - a.impressions);
 
-  const handedOff = cart.filter((i) => i.sentToBrand).length;
+  const rights = events.filter((e) => e.direction === 'right').length;
 
   return {
     rows,
+    hasData: events.length > 0,
     totals: {
-      baselineImpressions,
-      sessionImpressions,
-      rightRate:
-        baselineImpressions + sessionImpressions > 0
-          ? ((baselineRights + sessionRights) / (baselineImpressions + sessionImpressions)) * 100
-          : 0,
-      handoffRate: cart.length > 0 ? (handedOff / cart.length) * 100 : 0,
+      impressions: events.length,
+      rights,
+      rightRate: rate(rights, events.length),
+      medianDwellMs: median(events.map((e) => e.dwellMs)),
+      inspectRate: rate(events.filter((e) => e.inspected).length, events.length),
+      hesitationRate: rate(
+        events.filter((e) => e.hesitated || e.confirmed).length,
+        events.length,
+      ),
       bagged: cart.length,
-      handedOff,
+      handedOff: cart.filter((i) => i.sentToBrand).length,
+      handoffRate: rate(cart.filter((i) => i.sentToBrand).length, cart.length),
     },
   };
+}
+
+/**
+ * The colour-fit story aggregated across everything seen.
+ *
+ * This is the part of the data only this product can produce: a brand learns
+ * which of its colourways are being rejected by people whose skin they fight,
+ * which is invisible in ordinary sales data because those shoppers never
+ * clicked anything.
+ */
+/**
+ * Minimum observations in EACH bucket before a rate is quoted.
+ *
+ * Without this the screen happily prints "kept 0%" off a single swipe, which is
+ * arithmetically true and completely meaningless — and a fabricated-looking
+ * number does more damage here than showing nothing, on a screen whose entire
+ * claim is that its figures are real.
+ */
+const MIN_SAMPLE = 3;
+
+export function colourVerdict(
+  products: Product[],
+  swipes: SwipeEvent[],
+  profile: SkinProfile | null,
+): {
+  fought: number;
+  flattered: number;
+  foughtRightRate: number;
+  flatteredRightRate: number;
+  /** False when either bucket is too small to quote a rate from. */
+  significant: boolean;
+} | null {
+  if (!profile || swipes.length === 0) return null;
+
+  const byId = new Map(products.map((p) => [p.id, p]));
+  let fought = 0;
+  let flattered = 0;
+  let foughtRights = 0;
+  let flatteredRights = 0;
+
+  for (const swipe of swipes) {
+    const product = byId.get(swipe.productId);
+    if (!product) continue;
+    const band = scoreProduct(product, profile).band;
+    if (band === 'fights') {
+      fought += 1;
+      if (swipe.direction === 'right') foughtRights += 1;
+    } else if (band === 'hero') {
+      flattered += 1;
+      if (swipe.direction === 'right') flatteredRights += 1;
+    }
+  }
+
+  if (fought === 0 && flattered === 0) return null;
+
+  return {
+    fought,
+    flattered,
+    foughtRightRate: rate(foughtRights, fought),
+    flatteredRightRate: rate(flatteredRights, flattered),
+    significant: fought >= MIN_SAMPLE && flattered >= MIN_SAMPLE,
+  };
+}
+
+/** Size-run exposure, computed from the real catalogue rather than invented. */
+export function sizeFriction(products: Product[], profile: SkinProfile | null): SkuRow['product'][] {
+  if (!profile) return [];
+  return products
+    .filter((p) => p.mode === 'apparel')
+    .filter((p) => assessRegret(p, scoreProduct(p, profile), profile).band === 'high');
 }

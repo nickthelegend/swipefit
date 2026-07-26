@@ -104,11 +104,28 @@ export type RenderState =
 
 export type SwipeDirection = 'left' | 'right';
 
+/**
+ * A swipe, with the behavioural signal around it.
+ *
+ * Everything past `direction` is measured, not inferred. These are the fields
+ * the brand console reports on — the product's whole analytics claim rests on
+ * them being real, so nothing here may be synthesised.
+ */
 export type SwipeEvent = {
   productId: string;
   direction: SwipeDirection;
   timestamp: number;
   matchScore: number;
+  /** Milliseconds the card was on top before the shopper committed. */
+  dwellMs: number;
+  /** They flipped the card to read the breakdown before deciding. */
+  inspected: boolean;
+  /** They crossed the commit threshold, then pulled back before releasing. */
+  hesitated: boolean;
+  /** A high-risk item raised the confirm sheet before this decision landed. */
+  confirmed: boolean;
+  /** Later reversed with undo. Set retroactively. */
+  undone: boolean;
 };
 
 export type CartItem = {
@@ -117,6 +134,25 @@ export type CartItem = {
   sentToBrand: boolean;
   /** Kept so the bag can show the render the shopper actually said yes to. */
   renderUri: string | null;
+};
+
+/**
+ * A full look: one upper-body garment and one lower-body garment rendered onto
+ * the same person in sequence.
+ *
+ * Produced by chaining the try-on: the output of the first render becomes the
+ * *input person* for the second. The API has no multi-garment call, so this is
+ * the only way to see a complete outfit on yourself rather than one piece at a
+ * time against whatever you happened to be wearing in the source photo.
+ */
+export type Outfit = {
+  id: string;
+  topId: string;
+  bottomId: string;
+  status: 'queued' | 'rendering' | 'ready' | 'failed';
+  uri: string | null;
+  reason: string | null;
+  createdAt: number;
 };
 
 export type DemoModel = {

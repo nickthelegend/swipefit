@@ -1,12 +1,13 @@
+import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { ALL_PRODUCTS, brandAccent } from '@/data/catalog';
-import { buildDashboard } from '@/logic/analytics';
+import { buildDashboard, colourVerdict, type SkuRow } from '@/logic/analytics';
 import { useAppStore } from '@/store/useAppStore';
 import { border, color, onAccent, radius, space, type AccentName } from '@/theme/tokens';
-import { Chevrons } from '@/ui/doodles';
-import { PillTag } from '@/ui/PillButton';
+import { Chevrons, Starburst } from '@/ui/doodles';
+import { PillButton, PillTag } from '@/ui/PillButton';
 import { Screen } from '@/ui/Screen';
 import { Shadowed } from '@/ui/Shadowed';
 import { Type } from '@/ui/Type';
@@ -14,15 +15,17 @@ import { Type } from '@/ui/Type';
 /**
  * Brand console.
  *
- * The business model, made inspectable rather than described. Deliberately more
- * data-dense and more restrained than the shopper surfaces — it is a different
- * reader doing a different job — while keeping the same ink outlines, hard
- * shadow and type so it still reads as one product.
+ * Every figure here is measured from real swipes on this device. An earlier
+ * version padded the screen with a synthetic traffic baseline; that was deleted
+ * rather than relabelled, because invented numbers prove nothing and quietly
+ * undermine the real ones sitting next to them.
  *
- * Rows the current session touched are marked LIVE. That is the point of the
- * screen: swipe right on the deck, come here, watch that SKU's bar move.
+ * The argument this screen makes: a retailer already knows its conversion rate.
+ * What it has never been able to see is the hesitation *before* the buy — and
+ * that is where returns are born.
  */
 export default function BrandDashboard() {
+  const router = useRouter();
   const swipes = useAppStore((s) => s.swipes);
   const cart = useAppStore((s) => s.cart);
   const profile = useAppStore((s) => s.profile);
@@ -31,10 +34,29 @@ export default function BrandDashboard() {
     () => buildDashboard(ALL_PRODUCTS, swipes, cart, profile),
     [swipes, cart, profile],
   );
+  const colour = useMemo(() => colourVerdict(ALL_PRODUCTS, swipes, profile), [swipes, profile]);
 
-  const { totals, rows } = dashboard;
-  const liveRows = rows.filter((r) => r.live);
-  const flagged = rows.filter((r) => r.frictionFlag);
+  const { totals, rows, hasData } = dashboard;
+
+  if (!hasData) {
+    return (
+      <Screen edges={{ top: true, bottom: false }}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: space.md }}>
+          <Starburst size={92} fill={color.forest} rotate={-12} />
+          <Type role="display" align="center">
+            Nothing measured yet
+          </Type>
+          <Type role="body" align="center" style={{ maxWidth: 300 }}>
+            This console reports only what actually happened. Swipe a few cards and the numbers
+            appear — there is no demo data behind it.
+          </Type>
+          <PillButton label="Go swipe" onPress={() => router.push('/(app)/swipe')} tone={color.forest} />
+        </View>
+      </Screen>
+    );
+  }
+
+  const flagged = rows.filter((r) => r.frictionNote);
 
   return (
     <Screen edges={{ top: true, bottom: false }}>
@@ -43,76 +65,74 @@ export default function BrandDashboard() {
           <Type role="label">Brand console</Type>
           <Type role="display">Signal</Type>
         </View>
-        <Chevrons size={48} fill={color.forest} rotate={0} />
+        <Chevrons size={48} fill={color.forest} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: space.md, paddingBottom: space.xxl, gap: space.md }}>
-        {/* Stated up front, not in a footnote at the bottom. */}
+        {/* The claim, stated before any number is shown. */}
         <View
           style={{
             padding: space.sm,
-            backgroundColor: color.acid,
+            backgroundColor: color.forest,
             borderWidth: border.hair,
             borderColor: color.ink,
             borderRadius: radius.md,
           }}
         >
-          <Type role="micro">
-            Baseline figures are synthetic demo data. Rows marked LIVE include
-            this session's real swipes.
+          <Type role="micro" color={color.paper}>
+            100% measured · {totals.impressions} decision{totals.impressions === 1 ? '' : 's'} on this
+            device. No synthetic baseline, no demo traffic.
           </Type>
         </View>
 
         <View style={{ flexDirection: 'row', gap: space.sm }}>
-          <Stat label="Right-swipe rate" value={`${totals.rightRate.toFixed(1)}%`} tone="violet" />
-          <Stat label="Bag → handoff" value={`${totals.handoffRate.toFixed(0)}%`} tone="forest" />
+          <Stat label="Right-swipe rate" value={`${totals.rightRate.toFixed(0)}%`} tone="violet" />
+          <Stat label="Median decision" value={`${(totals.medianDwellMs / 1000).toFixed(1)}s`} tone="tomato" />
         </View>
 
         <View style={{ flexDirection: 'row', gap: space.sm }}>
-          <Stat label="Session swipes" value={String(totals.sessionImpressions)} tone="tomato" live={totals.sessionImpressions > 0} />
-          <Stat label="Handed off" value={`${totals.handedOff}/${totals.bagged}`} tone="bubblegum" />
+          <Stat label="Hesitated" value={`${totals.hesitationRate.toFixed(0)}%`} tone="acid" />
+          <Stat label="Bag → handoff" value={`${totals.handoffRate.toFixed(0)}%`} tone="bubblegum" />
         </View>
 
-        <Section title="Right-swipe rate by SKU" note={`${liveRows.length} live`}>
-          <View style={{ gap: space.sm }}>
-            {rows.slice(0, 12).map((row) => {
-              const accentName = brandAccent(row.product.brand);
-              return (
-                <View key={row.product.id} style={{ gap: space.xxs }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.xs }}>
-                    <Type role="micro" style={{ flex: 1 }} numberOfLines={1}>
-                      {row.product.brand} · {row.product.name}
-                    </Type>
-                    {row.live && <PillTag label="Live" tone={color.acid} />}
-                    <Type role="micro">{row.rate.toFixed(0)}%</Type>
-                  </View>
+        {/* The measurement only this product can produce. */}
+        {colour && (
+          <Section title="Colour rejection" note="only visible here">
+            {colour.significant ? (
+              <Type role="body">
+                Pieces whose colour fights this shopper's undertone were kept{' '}
+                <Type role="bodyStrong">{colour.foughtRightRate.toFixed(0)}%</Type> of the time.
+                Pieces that flatter it were kept{' '}
+                <Type role="bodyStrong">{colour.flatteredRightRate.toFixed(0)}%</Type>.
+              </Type>
+            ) : (
+              <Type role="body">
+                Seen so far: <Type role="bodyStrong">{colour.fought}</Type> fighting this
+                shopper's undertone, <Type role="bodyStrong">{colour.flattered}</Type> flattering
+                it. Rates appear once there are at least three of each — a percentage off one
+                swipe would be noise dressed as a finding.
+              </Type>
+            )}
+            <Type role="micro" color={color.inkSoft} style={{ opacity: 0.75 }}>
+              Judged against a measured skin reading. Ordinary retail analytics cannot see this,
+              because the shoppers who reject a colourway never click anything.
+            </Type>
+          </Section>
+        )}
 
-                  <View
-                    style={{
-                      height: 16,
-                      borderWidth: border.hair,
-                      borderColor: color.ink,
-                      borderRadius: radius.pill,
-                      backgroundColor: color.paper,
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <View
-                      style={{
-                        width: `${Math.max(2, Math.min(100, row.rate))}%`,
-                        height: '100%',
-                        backgroundColor: color[accentName],
-                      }}
-                    />
-                  </View>
-                </View>
-              );
-            })}
+        <Section title="Decision friction" note={`${rows.length} SKU${rows.length === 1 ? '' : 's'}`}>
+          <Type role="micro" color={color.inkSoft} style={{ marginBottom: space.xs }}>
+            Dwell time, detail-opens, threshold retreats and reversals — the moments before a return.
+          </Type>
+          <View style={{ gap: space.sm }}>
+            {rows.slice(0, 10).map((row) => (
+              <FrictionRow key={row.product.id} row={row} />
+            ))}
           </View>
         </Section>
 
         {flagged.length > 0 && (
-          <Section title="Fit friction" note={`${flagged.length} SKUs flagged`}>
+          <Section title="Flagged" note={`${flagged.length}`}>
             <View style={{ gap: space.xs }}>
               {flagged.slice(0, 6).map((row) => (
                 <View
@@ -141,12 +161,9 @@ export default function BrandDashboard() {
                       {row.product.name}
                     </Type>
                     <Type role="micro" color={color.inkSoft}>
-                      {row.frictionFlag}
+                      {row.frictionNote}
                     </Type>
                   </View>
-                  <Type role="micro" color={color.inkSoft}>
-                    {row.product.sizeInfo}
-                  </Type>
                 </View>
               ))}
             </View>
@@ -155,10 +172,9 @@ export default function BrandDashboard() {
 
         <Section title="What a partner buys" note="the model">
           <Type role="body">
-            FITCHECK takes no cut of the sale. It sells the layer above it: which
-            garment a shopper pictured on themselves, which ones they hesitated
-            over, and why they stopped — including the returns a brand never
-            finds out about because the shopper simply never bought.
+            FITCHECK takes no cut of the sale. It sells the layer above it: which garment a shopper
+            pictured on themselves, which ones they hesitated over, and why they stopped — including
+            the returns a brand never finds out about because the shopper simply never bought.
           </Type>
         </Section>
       </ScrollView>
@@ -166,17 +182,51 @@ export default function BrandDashboard() {
   );
 }
 
-function Stat({
-  label,
-  value,
-  tone,
-  live,
-}: {
-  label: string;
-  value: string;
-  tone: AccentName;
-  live?: boolean;
-}) {
+/* ---------------------------------------------------------------------- */
+
+function FrictionRow({ row }: { row: SkuRow }) {
+  const accentName = brandAccent(row.product.brand);
+
+  return (
+    <View style={{ gap: space.xxs }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.xs }}>
+        <Type role="micro" style={{ flex: 1 }} numberOfLines={1}>
+          {row.product.brand} · {row.product.name}
+        </Type>
+        {row.addedToBag && <PillTag label="Kept" tone={color.forest} labelColor={color.paper} />}
+        <Type role="micro">{row.friction}</Type>
+      </View>
+
+      <View
+        style={{
+          height: 16,
+          borderWidth: border.hair,
+          borderColor: color.ink,
+          borderRadius: radius.pill,
+          backgroundColor: color.paper,
+          overflow: 'hidden',
+        }}
+      >
+        <View
+          style={{
+            width: `${Math.max(2, Math.min(100, row.friction))}%`,
+            height: '100%',
+            backgroundColor: color[accentName],
+          }}
+        />
+      </View>
+
+      <Type role="micro" color={color.inkSoft} style={{ opacity: 0.7 }}>
+        {(row.medianDwellMs / 1000).toFixed(1)}s
+        {row.inspectRate > 0 ? ` · opened detail ${row.inspectRate.toFixed(0)}%` : ''}
+        {row.hesitationRate > 0 ? ` · hesitated ${row.hesitationRate.toFixed(0)}%` : ''}
+        {row.undoRate > 0 ? ` · reversed ${row.undoRate.toFixed(0)}%` : ''}
+      </Type>
+    </View>
+  );
+}
+
+function Stat({ label, value, tone }: { label: string; value: string; tone: AccentName }) {
   const fg = onAccent(tone);
 
   return (
@@ -193,12 +243,9 @@ function Stat({
           justifyContent: 'center',
         }}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.xxs }}>
-          <Type role="micro" color={fg} style={{ opacity: 0.85, flex: 1 }} numberOfLines={1}>
-            {label}
-          </Type>
-          {live && <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: fg }} />}
-        </View>
+        <Type role="micro" color={fg} style={{ opacity: 0.85 }} numberOfLines={2}>
+          {label}
+        </Type>
         <Type role="title" color={fg}>
           {value}
         </Type>

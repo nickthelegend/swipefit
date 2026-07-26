@@ -82,20 +82,3 @@ export function clearRenderCache(): void {
   }
 }
 
-export function cacheStats(): { count: number; bytes: number } {
-  try {
-    const dir = cacheDir();
-    const entries = dir.list();
-    let bytes = 0;
-    let count = 0;
-    for (const entry of entries) {
-      if (entry instanceof File) {
-        bytes += entry.size ?? 0;
-        count += 1;
-      }
-    }
-    return { count, bytes };
-  } catch {
-    return { count: 0, bytes: 0 };
-  }
-}

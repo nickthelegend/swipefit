@@ -7,12 +7,13 @@ import { findDemoModel } from '@/data/demoModels';
 import { contrastLevel, undertoneFromSkinHex, type Undertone } from '@/logic/color';
 import { buildDeck, deriveSeason } from '@/logic/matching';
 import { assessRegret } from '@/logic/reasoning';
-import { cacheRender, readCachedRender } from '@/services/renderCache';
+import { cacheRender, clearRenderCache, readCachedRender } from '@/services/renderCache';
 import * as youcam from '@/services/youcam';
 import type {
   CartItem,
   DeckCard,
   Mode,
+  Outfit,
   Product,
   RenderState,
   SkinConcern,
@@ -71,6 +72,21 @@ type State = {
 
   prepareProgress: { done: number; total: number };
   lastError: string | null;
+
+  /**
+   * Behaviour observed on the card currently on top.
+   *
+   * Held in the store rather than in the deck component so it survives the
+   * component remounting between cards, and so `swipe()` can fold it into the
+   * event without the view having to pass it down.
+   */
+  cardShownAt: number;
+  cardInspected: boolean;
+  cardHesitated: boolean;
+  cardConfirmed: boolean;
+
+  /** Stacked looks built from bagged items. */
+  outfits: Outfit[];
 };
 
 type Actions = {
@@ -85,6 +101,11 @@ type Actions = {
   ensureRendersAhead: () => void;
 
   swipe: (direction: SwipeDirection) => void;
+  noteInspected: () => void;
+  noteHesitated: () => void;
+  noteConfirmPrompted: () => void;
+  buildOutfit: (topId: string, bottomId: string) => Promise<void>;
+  removeOutfit: (id: string) => void;
   undoSwipe: () => void;
   markCoachSeen: () => void;
 
@@ -113,6 +134,11 @@ export const useAppStore = create<State & Actions>()(
       cart: [],
       prepareProgress: { done: 0, total: 0 },
       lastError: null,
+      cardShownAt: Date.now(),
+      cardInspected: false,
+      cardHesitated: false,
+      cardConfirmed: false,
+      outfits: [],
 
       setPerson: (person) => set({ person, lastError: null }),
 
@@ -239,7 +265,15 @@ export const useAppStore = create<State & Actions>()(
         if (!profile) return;
 
         const previousRenders = new Map(previous.map((c) => [c.product.id, c.render]));
-        const swipedIds = new Set(get().swipes.map((s) => s.productId));
+
+        // Undone swipes are kept in the log as behavioural signal but must NOT
+        // exclude their product here, or an undo would make the card vanish the
+        // next time the deck re-sorts.
+        const swipedIds = new Set(
+          get()
+            .swipes.filter((s) => !s.undone)
+            .map((s) => s.productId),
+        );
 
         const ordered = buildDeck(ALL_PRODUCTS, profile, mode);
 
@@ -298,11 +332,21 @@ export const useAppStore = create<State & Actions>()(
         const card = deck[cursor];
         if (!card || !profile) return;
 
+        const now = Date.now();
+        const { cardShownAt, cardInspected, cardHesitated, cardConfirmed } = get();
+
         const event: SwipeEvent = {
           productId: card.product.id,
           direction,
-          timestamp: Date.now(),
+          timestamp: now,
           matchScore: card.match.score,
+          // Clamped because a backgrounded app would otherwise report a dwell
+          // of several minutes and skew every median on the dashboard.
+          dwellMs: Math.min(now - cardShownAt, 120_000),
+          inspected: cardInspected,
+          hesitated: cardHesitated,
+          confirmed: cardConfirmed,
+          undone: false,
         };
 
         const cart =
@@ -318,7 +362,15 @@ export const useAppStore = create<State & Actions>()(
               ]
             : get().cart;
 
-        set({ swipes: [...get().swipes, event], cart, cursor: cursor + 1 });
+        set({
+          swipes: [...get().swipes, event],
+          cart,
+          cursor: cursor + 1,
+          cardShownAt: now,
+          cardInspected: false,
+          cardHesitated: false,
+          cardConfirmed: false,
+        });
         get().ensureRendersAhead();
       },
 
@@ -327,9 +379,16 @@ export const useAppStore = create<State & Actions>()(
         const last = swipes[swipes.length - 1];
         if (!last || cursor === 0) return;
 
+        // The event is flagged rather than dropped. An undo is a real signal —
+        // "they took it back" is exactly the kind of hesitation a brand wants to
+        // see — so deleting it would throw away the most interesting data point.
         set({
-          swipes: swipes.slice(0, -1),
+          swipes: [...swipes.slice(0, -1), { ...last, undone: true }],
           cursor: cursor - 1,
+          cardShownAt: Date.now(),
+          cardInspected: false,
+          cardHesitated: false,
+          cardConfirmed: false,
           cart:
             last.direction === 'right'
               ? get().cart.filter((item) => item.product.id !== last.productId)
@@ -338,6 +397,85 @@ export const useAppStore = create<State & Actions>()(
       },
 
       markCoachSeen: () => set({ coachSeen: true }),
+
+      noteInspected: () => set({ cardInspected: true }),
+      noteHesitated: () => set({ cardHesitated: true }),
+      noteConfirmPrompted: () => set({ cardConfirmed: true }),
+
+      /**
+       * Renders a complete look by chaining two try-ons.
+       *
+       * The API accepts one garment per call, so a full outfit is produced by
+       * feeding the *output* of the top render back in as the person for the
+       * bottom render. That second call needs the first result as an uploadable
+       * file, which is exactly what the on-disk render cache already holds.
+       *
+       * Only the second call costs units — the top is reused from the deck.
+       */
+      buildOutfit: async (topId, bottomId) => {
+        const { person, deck, outfits } = get();
+        if (!person) return;
+
+        const id = `${topId}+${bottomId}`;
+        if (outfits.some((o) => o.id === id && o.status !== 'failed')) return;
+
+        const patch = (next: Partial<Outfit>) =>
+          set({
+            outfits: get().outfits.map((o) => (o.id === id ? { ...o, ...next } : o)),
+          });
+
+        set({
+          outfits: [
+            ...get().outfits.filter((o) => o.id !== id),
+            { id, topId, bottomId, status: 'rendering', uri: null, reason: null, createdAt: Date.now() },
+          ],
+        });
+
+        try {
+          const cached = readCachedRender(person.key, id);
+          if (cached) {
+            patch({ status: 'ready', uri: cached });
+            return;
+          }
+
+          const bottom = ALL_PRODUCTS.find((p) => p.id === bottomId);
+          if (!bottom) throw new Error('That piece is no longer in the catalogue.');
+
+          // Layer one: reuse the deck's render of the top if we have it, so the
+          // common case costs a single call rather than two.
+          const topRender = deck.find((c) => c.product.id === topId)?.render;
+          let personLayer = person.body;
+
+          if (topRender?.status === 'ready') {
+            personLayer = { kind: 'file', uri: topRender.uri };
+          } else {
+            const top = ALL_PRODUCTS.find((p) => p.id === topId);
+            if (!top) throw new Error('That piece is no longer in the catalogue.');
+            const topUrl = await youcam.tryOnGarment(
+              person.body,
+              { kind: 'url', url: top.productImageUrl },
+              'upper_body',
+            );
+            personLayer = { kind: 'url', url: topUrl };
+          }
+
+          // Layer two: the bottom, worn over the result of layer one.
+          const finalUrl = await youcam.tryOnGarment(
+            personLayer,
+            { kind: 'url', url: bottom.productImageUrl },
+            'lower_body',
+          );
+          const localUri = await cacheRender(person.key, id, finalUrl);
+          patch({ status: 'ready', uri: localUri });
+        } catch (error) {
+          patch({
+            status: 'failed',
+            reason: error instanceof youcam.YouCamError ? error.message : 'That look could not be rendered.',
+          });
+        }
+      },
+
+      removeOutfit: (id) => set({ outfits: get().outfits.filter((o) => o.id !== id) }),
 
       removeFromCart: (productId) =>
         set({ cart: get().cart.filter((i) => i.product.id !== productId) }),
@@ -351,7 +489,8 @@ export const useAppStore = create<State & Actions>()(
 
       clearCart: () => set({ cart: [] }),
 
-      resetAll: () =>
+      resetAll: () => {
+        clearRenderCache();
         set({
           onboarded: false,
           coachSeen: false,
@@ -362,9 +501,11 @@ export const useAppStore = create<State & Actions>()(
           cursor: 0,
           swipes: [],
           cart: [],
+          outfits: [],
           prepareProgress: { done: 0, total: 0 },
           lastError: null,
-        }),
+        });
+      },
     }),
     {
       name: 'fitcheck-v1',
@@ -385,6 +526,9 @@ export const useAppStore = create<State & Actions>()(
         cursor: state.cursor,
         swipes: state.swipes,
         cart: state.cart,
+        // Only finished looks persist; an interrupted render would rehydrate
+        // stuck in `rendering` with nothing driving it.
+        outfits: state.outfits.filter((o) => o.status === 'ready'),
       }),
       onRehydrateStorage: () => (state) => {
         state?.rebuildDeck();
@@ -444,8 +588,6 @@ async function renderCard(product: Product, set: Setter, get: Getter): Promise<v
 /* -------------------------------------------------------------------------
  * Selectors
  * ---------------------------------------------------------------------- */
-
-export const selectCurrentCard = (s: State) => s.deck[s.cursor] ?? null;
 
 /**
  * Groups the bag by brand.

@@ -13,7 +13,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { border, color, motion, radius, space } from '@/theme/tokens';
-import type { DeckCard, SwipeDirection } from '@/types';
+import type { DeckCard, SkinProfile, SwipeDirection } from '@/types';
 import { ProductCard } from './ProductCard';
 import { Type } from './Type';
 
@@ -29,9 +29,14 @@ const STAMP_ONSET = 40;
 type Props = {
   cards: DeckCard[];
   facePhotoUri?: string | null;
+  profile?: SkinProfile | null;
   onSwipe: (direction: SwipeDirection) => void;
   /** Called instead of onSwipe when a high-risk item is swiped right. */
   onConfirmNeeded: (card: DeckCard) => void;
+  /** The shopper flipped the card to read the breakdown before deciding. */
+  onInspect: () => void;
+  /** They crossed the commit threshold and then retreated from it. */
+  onHesitate: () => void;
 };
 
 /**
@@ -44,7 +49,15 @@ type Props = {
  * release, and haptics fire once at the commit threshold so the shopper feels
  * where the line is without looking for it.
  */
-export function SwipeDeck({ cards, facePhotoUri, onSwipe, onConfirmNeeded }: Props) {
+export function SwipeDeck({
+  cards,
+  facePhotoUri,
+  profile = null,
+  onSwipe,
+  onConfirmNeeded,
+  onInspect,
+  onHesitate,
+}: Props) {
   const [flipped, setFlipped] = useState(false);
 
   const x = useSharedValue(0);
@@ -116,7 +129,10 @@ export function SwipeDeck({ cards, facePhotoUri, onSwipe, onConfirmNeeded }: Pro
         armed.value = true;
         runOnJS(tick)();
       } else if (!past && armed.value) {
+        // Crossed the line and came back. This is the hesitation the brand
+        // console reports, and it is only observable here in the gesture.
         armed.value = false;
+        runOnJS(onHesitate)();
       }
     })
     .onEnd((e) => {
@@ -154,6 +170,8 @@ export function SwipeDeck({ cards, facePhotoUri, onSwipe, onConfirmNeeded }: Pro
     .maxDistance(12)
     .onEnd(() => {
       runOnJS(setFlipped)(!flipped);
+      // Only opening counts as an inspection; closing it again does not.
+      if (!flipped) runOnJS(onInspect)();
     });
 
   const gesture = Gesture.Exclusive(pan, tap);
@@ -232,7 +250,7 @@ export function SwipeDeck({ cards, facePhotoUri, onSwipe, onConfirmNeeded }: Pro
 
       <GestureDetector gesture={gesture}>
         <Animated.View style={[stackStyle, topStyle]}>
-          <ProductCard card={top} facePhotoUri={facePhotoUri} flipped={flipped} />
+          <ProductCard card={top} facePhotoUri={facePhotoUri} profile={profile} flipped={flipped} />
 
           <Animated.View
             pointerEvents="none"

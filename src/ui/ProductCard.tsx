@@ -11,8 +11,9 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { brandAccent, formatPrice } from '@/data/catalog';
+import { fitVerdict } from '@/logic/reasoning';
 import { color, onAccent, border, radius, space } from '@/theme/tokens';
-import type { DeckCard } from '@/types';
+import type { DeckCard, SkinProfile } from '@/types';
 import { Blob, Starburst } from './doodles';
 import { PillTag } from './PillButton';
 import { Sticker } from './Sticker';
@@ -22,13 +23,15 @@ type Props = {
   card: DeckCard;
   /** The shopper's own face, used to composite beauty-mode shades. */
   facePhotoUri?: string | null;
+  /** Drives the fit verdict on the reverse of the card. */
+  profile?: SkinProfile | null;
   flipped?: boolean;
   onFlip?: () => void;
 };
 
 const RISK_TONE = { high: color.tomato, medium: color.acid, low: color.forest } as const;
 
-export function ProductCard({ card, facePhotoUri, flipped = false, onFlip }: Props) {
+export function ProductCard({ card, facePhotoUri, profile = null, flipped = false, onFlip }: Props) {
   const { product, match, regret, render } = card;
   const accent = color[brandAccent(product.brand)];
   const accentText = onAccent(brandAccent(product.brand));
@@ -73,7 +76,7 @@ export function ProductCard({ card, facePhotoUri, flipped = false, onFlip }: Pro
           backStyle,
         ]}
       >
-        <CardBack card={card} accent={accent} accentText={accentText} />
+        <CardBack card={card} accent={accent} accentText={accentText} profile={profile} />
       </Animated.View>
     </Wrapper>
   );
@@ -331,10 +334,12 @@ function CardBack({
   card,
   accent,
   accentText,
+  profile,
 }: {
   card: DeckCard;
   accent: string;
   accentText: string;
+  profile: SkinProfile | null;
 }) {
   const { product, match, regret } = card;
 
@@ -366,9 +371,18 @@ function CardBack({
         <View style={{ height: border.hair, backgroundColor: color.ink, opacity: 0.15 }} />
 
         <View style={{ gap: space.xxs }}>
-          <Type role="label">Why it ranked {match.score}</Type>
+          <Type role="label">Colour · {match.score}</Type>
           <Type role="body">{match.reason}</Type>
         </View>
+
+        {/* Fit is its own verdict. Colour reasoning already owns the section
+            above, so folding both into one line made neither of them land. */}
+        {profile && (
+          <View style={{ gap: space.xxs }}>
+            <Type role="label">Fit</Type>
+            <Type role="body">{fitVerdict(product, profile)}</Type>
+          </View>
+        )}
 
         <View style={{ gap: space.xxs }}>
           <Type role="label">Return risk {regret.risk}%</Type>

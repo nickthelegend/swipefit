@@ -42,6 +42,7 @@ export default function RootLayout() {
           <Stack.Screen name="onboarding" />
           <Stack.Screen name="(app)" />
           <Stack.Screen name="checkout" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="outfit" options={{ presentation: 'modal' }} />
         </Stack>
       </SafeAreaProvider>
     </GestureHandlerRootView>

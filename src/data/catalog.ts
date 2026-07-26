@@ -89,9 +89,6 @@ export function brandAccent(brandName: string): AccentName {
   return BRANDS.get(brandName)?.accent ?? 'violet';
 }
 
-export function productById(id: string): Product | undefined {
-  return ALL_PRODUCTS.find((p) => p.id === id);
-}
 
 export function formatPrice(product: Pick<Product, 'price' | 'currency'>): string {
   const symbol = product.currency === 'GBP' ? '£' : product.currency === 'EUR' ? '€' : '$';

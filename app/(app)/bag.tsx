@@ -29,6 +29,12 @@ export default function Bag() {
 
   const total = cart.reduce((sum, item) => sum + item.product.price, 0);
 
+  // A full look needs both halves; offering the builder without them would lead
+  // straight to a dead end.
+  const canBuildLook =
+    cart.some((i) => i.product.category === 'upper_body') &&
+    cart.some((i) => i.product.category === 'lower_body');
+
   if (cart.length === 0) {
     return (
       <Screen edges={{ top: true, bottom: false }}>
@@ -175,6 +181,15 @@ export default function Bag() {
         })}
 
         <View style={{ marginTop: space.xs, gap: space.sm }}>
+          {canBuildLook && (
+            <PillButton
+              label="Build the fit"
+              onPress={() => router.push('/outfit')}
+              tone={color.acid}
+              labelColor={color.ink}
+              fullWidth
+            />
+          )}
           <PillButton
             label="Hand off to brands"
             onPress={() => router.push('/checkout')}

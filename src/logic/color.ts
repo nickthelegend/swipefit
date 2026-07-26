@@ -32,11 +32,6 @@ export function hexToRgb(hex: string): Rgb {
   return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
 }
 
-export function rgbToHex({ r, g, b }: Rgb): string {
-  const to = (v: number) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0');
-  return `#${to(r)}${to(g)}${to(b)}`;
-}
-
 /** sRGB companding — the gamma curve, not a naive /255. */
 function srgbToLinear(channel: number): number {
   const c = channel / 255;
@@ -69,12 +64,6 @@ export function labToLch({ L, a, b }: Lab): Lch {
 }
 
 export const hexToLch = (hex: string): Lch => labToLch(rgbToLab(hexToRgb(hex)));
-
-/** Shortest angular distance between two hues, 0–180. */
-export function hueDistance(h1: number, h2: number): number {
-  const d = Math.abs(h1 - h2) % 360;
-  return d > 180 ? 360 - d : d;
-}
 
 /* -------------------------------------------------------------------------
  * Undertone

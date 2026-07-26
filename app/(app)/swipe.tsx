@@ -32,7 +32,11 @@ export default function SwipeScreen() {
   const setMode = useAppStore((s) => s.setMode);
   const markCoachSeen = useAppStore((s) => s.markCoachSeen);
   const ensureRendersAhead = useAppStore((s) => s.ensureRendersAhead);
+  const noteInspected = useAppStore((s) => s.noteInspected);
+  const noteHesitated = useAppStore((s) => s.noteHesitated);
+  const noteConfirmPrompted = useAppStore((s) => s.noteConfirmPrompted);
   const setSimulatedUndertone = useAppStore((s) => s.setSimulatedUndertone);
+  const resetAll = useAppStore((s) => s.resetAll);
 
   const [confirming, setConfirming] = useState<DeckCard | null>(null);
   const [showSim, setShowSim] = useState(false);
@@ -105,7 +109,14 @@ export default function SwipeScreen() {
 
         {showSim && (
           <Animated.View entering={FadeIn.duration(180)}>
-            <UndertoneSimulator value={simulated} onChange={setSimulatedUndertone} />
+            <UndertoneSimulator
+              value={simulated}
+              onChange={setSimulatedUndertone}
+              onStartOver={() => {
+                resetAll();
+                router.replace('/onboarding');
+              }}
+            />
           </Animated.View>
         )}
       </View>
@@ -115,8 +126,14 @@ export default function SwipeScreen() {
           <SwipeDeck
             cards={remaining}
             facePhotoUri={person?.faceDisplayUri ?? null}
+            profile={profile}
             onSwipe={swipe}
-            onConfirmNeeded={setConfirming}
+            onConfirmNeeded={(card) => {
+              noteConfirmPrompted();
+              setConfirming(card);
+            }}
+            onInspect={noteInspected}
+            onHesitate={noteHesitated}
           />
         ) : (
           <DeckEmpty onOpenBag={() => router.push('/(app)/bag')} />
@@ -187,9 +204,11 @@ function ModeToggle({ mode, onChange }: { mode: 'apparel' | 'beauty'; onChange: 
 function UndertoneSimulator({
   value,
   onChange,
+  onStartOver,
 }: {
   value: Undertone | null;
   onChange: (u: Undertone | null) => void;
+  onStartOver: () => void;
 }) {
   const options: { key: Undertone | null; label: string; tone: string }[] = [
     { key: null, label: 'Measured', tone: color.groundSunk },
@@ -240,6 +259,25 @@ function UndertoneSimulator({
             );
           })}
         </View>
+
+        {/* Swapping demo person without clearing app data. Also drops the render
+            cache, so the next person cannot inherit this one's images. */}
+        <Pressable
+          onPress={onStartOver}
+          accessibilityRole="button"
+          accessibilityLabel="Start over with a different person"
+          style={{
+            minHeight: 40,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderWidth: border.hair,
+            borderColor: color.ink,
+            borderRadius: radius.pill,
+            backgroundColor: color.groundSunk,
+          }}
+        >
+          <Type role="micro">Start over · new person</Type>
+        </Pressable>
       </View>
     </Shadowed>
   );
