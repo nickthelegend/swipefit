@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+/*
+ * FITCHECK — web design system.
+ *
+ * Tokens are identical to the mobile app's (src/theme/tokens.ts) so the two
+ * surfaces read as one product rather than two things wearing the same logo.
+ * Every value here was read off byooooob.com's computed styles.
+ *
+ * Two rules that are easy to "improve" by accident:
+ *   1. Borders never exceed 2px. The 3-4px outline is the generic brutalist
+ *      stereotype; the reference is thinner and more confident than that.
+ *   2. The shadow never blurs. It is a hard cut-out offset, not depth.
+ */
+
+@theme {
+  --color-ground: #fa9dcd;
+  --color-groundsunk: #f285be;
+  --color-blush: #fdc7e2;
+  --color-paper: #ffffff;
+  --color-ink: #000000;
+  --color-inksoft: #333333;
+
+  --color-violet: #4d17f5;
+  --color-tomato: #e9492d;
+  --color-acid: #ebd22f;
+  --color-forest: #1f8d42;
+
+  --radius-sm: 9px;
+  --radius-md: 13px;
+  --radius-lg: 23px;
+  --radius-xl: 30px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: #fa9dcd;
+    color: #000;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: #ebd22f;
+    color: #000;
+  }
+
+  /* Focus is drawn in the world's own vocabulary rather than the browser's
+     default ring, which would be the one un-styled thing on the page. */
+  :focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  /* The product's single shadow. Offset, zero blur, full opacity, pure black. */
+  .shadow-hard {
+    box-shadow: 4px 5px 0 0 #000;
+  }
+  .shadow-hard-sm {
+    box-shadow: 3px 4px 0 0 #000;
+  }
+  .shadow-hard-lg {
+    box-shadow: 6px 7px 0 0 #000;
+  }
+
+  /* Pressed elements travel the length of their own shadow and collapse it, so
+     they physically land on the page. This world has no grey to dim into. */
+  .press {
+    transition:
+      transform 140ms cubic-bezier(0.2, 0, 0, 1),
+      box-shadow 140ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .press:active {
+    transform: translate(4px, 5px);
+    box-shadow: 0 0 0 0 #000;
+  }
+
+  .display {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+  }
+
+  .label {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Faint printed grid behind hero sections — paper texture, never a UI grid. */
+  .grid-paper {
+    background-image:
+      linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  .marquee {
+    animation: marquee 26s linear infinite;
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      animation: none;
+    }
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
