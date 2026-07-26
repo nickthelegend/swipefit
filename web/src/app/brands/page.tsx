@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { Chevrons, Globe, IconArrow, Starburst } from '@/components/doodles';
-import { ACCENT_BG, ON_ACCENT, Panel, PillLink, Tag, type Accent } from '@/components/ui/kit';
+import { BrandMark } from '@/components/brand-mark';
+import { Panel, PillLink, Tag, type Accent } from '@/components/ui/kit';
 import { createClient, supabaseConfigured, type Brand } from '@/lib/supabase';
 
 /**
@@ -17,25 +18,67 @@ import { createClient, supabaseConfigured, type Brand } from '@/lib/supabase';
  */
 const CATALOGUE_BRANDS: Pick<Brand, 'name' | 'slug' | 'accent' | 'blurb' | 'website'>[] = [
   {
-    name: 'COS',
+    name: "COS",
     slug: 'cos',
     accent: 'violet',
-    blurb: 'Modern, functional, considered design. Eight pieces in the FITCHECK catalogue.',
-    website: 'https://www.cos.com',
+    blurb: "Modern, functional, considered design. 8 pieces in the FITCHECK catalogue.",
+    website: "https://www.cos.com",
   },
   {
-    name: 'Uniqlo',
+    name: "Uniqlo",
     slug: 'uniqlo',
     accent: 'tomato',
-    blurb: 'LifeWear — everyday essentials engineered for fit. Eight pieces in the catalogue.',
-    website: 'https://www.uniqlo.com',
+    blurb: "LifeWear \u2014 everyday essentials engineered for fit. 8 pieces in the FITCHECK catalogue.",
+    website: "https://www.uniqlo.com",
   },
   {
     name: "Levi's",
     slug: 'levis',
     accent: 'forest',
-    blurb: 'The original denim house. Eight pieces in the FITCHECK catalogue.',
-    website: 'https://www.levi.com',
+    blurb: "The original denim house. 8 pieces in the FITCHECK catalogue.",
+    website: "https://www.levi.com",
+  },
+  {
+    name: "Zara",
+    slug: 'zara',
+    accent: 'acid',
+    blurb: "Fast-moving fashion, broad silhouette range. 7 pieces in the FITCHECK catalogue.",
+    website: "https://www.zara.com",
+  },
+  {
+    name: "A.P.C.",
+    slug: 'apc',
+    accent: 'violet',
+    blurb: "French minimalism and raw denim, unchanged since 1987. 6 pieces in the FITCHECK catalogue.",
+    website: "https://www.apc.fr",
+  },
+  {
+    name: "Norse Projects",
+    slug: 'norseprojects',
+    accent: 'tomato',
+    blurb: "Scandinavian utility with a considered palette. 5 pieces in the FITCHECK catalogue.",
+    website: "https://www.norseprojects.com",
+  },
+  {
+    name: "Sunspel",
+    slug: 'sunspel',
+    accent: 'forest',
+    blurb: "English cotton, made in Long Eaton since 1860. 6 pieces in the FITCHECK catalogue.",
+    website: "https://www.sunspel.com",
+  },
+  {
+    name: "H&M",
+    slug: 'hm',
+    accent: 'acid',
+    blurb: "Wide colour range across every category. 6 pieces in the FITCHECK catalogue.",
+    website: "https://www.hm.com",
+  },
+  {
+    name: "Massimo Dutti",
+    slug: 'massimodutti',
+    accent: 'violet',
+    blurb: "Tailored, muted, quietly premium. 6 pieces in the FITCHECK catalogue.",
+    website: "https://www.massimodutti.com",
   },
 ];
 
@@ -93,11 +136,12 @@ export default function Brands() {
           <div className="grid gap-6 md:grid-cols-3">
             {brands.map((brand) => (
               <Panel key={brand.slug} className="overflow-hidden">
-                <div
-                  className={`flex items-baseline justify-between border-b-2 border-black px-6 py-5 ${ACCENT_BG[brand.accent as Accent]} ${ON_ACCENT[brand.accent as Accent]}`}
-                >
-                  <span className="display text-[30px]">{brand.name}</span>
-                  <span className="label text-[11px] opacity-80">8 SKUs</span>
+                <div className="border-b-2 border-black">
+                  <BrandMark
+                    name={brand.name}
+                    slug={brand.slug}
+                    accent={brand.accent as Accent}
+                  />
                 </div>
                 <div className="p-6">
                   <p className="min-h-[72px] text-[15px] leading-relaxed">{brand.blurb}</p>

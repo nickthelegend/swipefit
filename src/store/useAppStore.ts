@@ -91,6 +91,15 @@ type State = {
 
   /** Supabase session id, once telemetry has opened one. Null when sync is off. */
   telemetrySessionId: string | null;
+
+  /**
+   * Whether the brand is shown on the card before a decision.
+   *
+   * Off by default. Most people buy the label before they judge the garment, so
+   * hiding it is what makes the swipe an actual opinion about the clothes — and
+   * it is what makes the blind-vs-revealed comparison possible at all.
+   */
+  revealBrand: boolean;
 };
 
 type Actions = {
@@ -108,6 +117,7 @@ type Actions = {
   noteInspected: () => void;
   noteHesitated: () => void;
   noteConfirmPrompted: () => void;
+  setRevealBrand: (reveal: boolean) => void;
   buildOutfit: (topId: string, bottomId: string) => Promise<void>;
   removeOutfit: (id: string) => void;
   undoSwipe: () => void;
@@ -144,6 +154,7 @@ export const useAppStore = create<State & Actions>()(
       cardConfirmed: false,
       outfits: [],
       telemetrySessionId: null,
+      revealBrand: false,
 
       setPerson: (person) => set({ person, lastError: null }),
 
@@ -365,6 +376,7 @@ export const useAppStore = create<State & Actions>()(
           inspected: cardInspected,
           hesitated: cardHesitated,
           confirmed: cardConfirmed,
+          blind: !get().revealBrand,
           undone: false,
         };
 
@@ -421,6 +433,8 @@ export const useAppStore = create<State & Actions>()(
       noteInspected: () => set({ cardInspected: true }),
       noteHesitated: () => set({ cardHesitated: true }),
       noteConfirmPrompted: () => set({ cardConfirmed: true }),
+
+      setRevealBrand: (revealBrand) => set({ revealBrand }),
 
       /**
        * Renders a complete look by chaining two try-ons.
@@ -546,6 +560,7 @@ export const useAppStore = create<State & Actions>()(
         profile: state.profile,
         simulatedUndertone: state.simulatedUndertone,
         mode: state.mode,
+        revealBrand: state.revealBrand,
         cursor: state.cursor,
         swipes: state.swipes,
         cart: state.cart,

@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { ALL_PRODUCTS, brandAccent } from '@/data/catalog';
-import { buildDashboard, colourVerdict, type SkuRow } from '@/logic/analytics';
+import { blindComparison, buildDashboard, colourVerdict, type SkuRow } from '@/logic/analytics';
 import { useAppStore } from '@/store/useAppStore';
 import { border, color, onAccent, radius, space, type AccentName } from '@/theme/tokens';
 import { Chevrons, Starburst } from '@/ui/doodles';
@@ -35,6 +35,7 @@ export default function BrandDashboard() {
     [swipes, cart, profile],
   );
   const colour = useMemo(() => colourVerdict(ALL_PRODUCTS, swipes, profile), [swipes, profile]);
+  const blind = useMemo(() => blindComparison(swipes), [swipes]);
 
   const { totals, rows, hasData } = dashboard;
 
@@ -95,7 +96,46 @@ export default function BrandDashboard() {
           <Stat label="Bag → handoff" value={`${totals.handoffRate.toFixed(0)}%`} tone="forest" />
         </View>
 
-        {/* The measurement only this product can produce. */}
+        {/* The measurement no retailer can obtain for themselves. */}
+        {blind && (
+          <Section title="Brand blindness" note="not obtainable elsewhere">
+            {blind.significant ? (
+              <>
+                <Type role="body">
+                  With the label hidden these pieces were kept{' '}
+                  <Type role="bodyStrong">{blind.blindKeep.toFixed(0)}%</Type> of the time. With it
+                  shown, <Type role="bodyStrong">{blind.revealedKeep.toFixed(0)}%</Type>.
+                </Type>
+                <View
+                  style={{
+                    marginTop: space.xs,
+                    padding: space.sm,
+                    backgroundColor: blind.gap >= 0 ? color.forest : color.tomato,
+                    borderWidth: border.hair,
+                    borderColor: color.ink,
+                    borderRadius: radius.md,
+                  }}
+                >
+                  <Type role="label" color={color.paper}>
+                    {blind.gap >= 0 ? 'Brand premium' : 'Brand penalty'}{' '}
+                    {Math.abs(blind.gap).toFixed(0)} points
+                  </Type>
+                </View>
+              </>
+            ) : (
+              <Type role="body">
+                Seen so far: <Type role="bodyStrong">{blind.blindSeen}</Type> decisions with the
+                label hidden, <Type role="bodyStrong">{blind.revealedSeen}</Type> with it shown.
+                The comparison appears once there are at least three of each.
+              </Type>
+            )}
+            <Type role="micro" color={color.inkSoft} style={{ opacity: 0.75 }}>
+              Your own analytics cannot produce this: your shoppers can always see whose garment
+              they are looking at, so brand pull and garment appeal arrive inseparable.
+            </Type>
+          </Section>
+        )}
+
         {colour && (
           <Section title="Colour rejection" note="only visible here">
             {colour.significant ? (

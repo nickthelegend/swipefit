@@ -127,6 +127,16 @@ type BrandLookup = (productId: string) => string;
  * so a retry after a dropped connection cannot double-count a decision — which
  * would quietly corrupt every rate on the console.
  */
+/**
+ * Set once the database is known to predate migration 0003.
+ *
+ * `blind` was added after the first schema shipped. Sending a column the table
+ * does not have fails the WHOLE insert, so a deployment running older SQL would
+ * silently lose every event rather than just that one field. Detect it once,
+ * then drop the column for the rest of the session.
+ */
+let blindColumnMissing = false;
+
 export async function syncSwipes(
   sessionId: string,
   events: SwipeEvent[],
@@ -135,8 +145,8 @@ export async function syncSwipes(
   const supabase = db();
   if (!supabase || events.length === 0) return 0;
 
-  try {
-    const rows = events.map((e) => ({
+  const build = (withBlind: boolean) =>
+    events.map((e) => ({
       session_id: sessionId,
       product_id: e.productId,
       brand: brandOf(e.productId),
@@ -148,13 +158,25 @@ export async function syncSwipes(
       confirmed: e.confirmed === true,
       undone: e.undone === true,
       client_key: `${e.productId}:${e.timestamp}`,
+      ...(withBlind ? { blind: e.blind === true } : {}),
     }));
 
-    const { error } = await supabase
+  const push = (rows: ReturnType<typeof build>) =>
+    supabase
       .from('swipe_events')
       .upsert(rows, { onConflict: 'session_id,client_key', ignoreDuplicates: true });
 
-    return error ? 0 : rows.length;
+  try {
+    const { error } = await push(build(!blindColumnMissing));
+
+    // 42703 is Postgres "undefined column".
+    if (error && !blindColumnMissing && error.code === '42703') {
+      blindColumnMissing = true;
+      const retry = await push(build(false));
+      return retry.error ? 0 : events.length;
+    }
+
+    return error ? 0 : events.length;
   } catch {
     return 0;
   }

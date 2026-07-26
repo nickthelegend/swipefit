@@ -72,6 +72,16 @@ const rate = (numerator: number, denominator: number) =>
   denominator === 0 ? 0 : (numerator / denominator) * 100;
 
 /**
+ * Minimum observations in EACH arm before a rate is quoted.
+ *
+ * Without this the screen happily prints "kept 0%" off a single swipe, which is
+ * arithmetically true and completely meaningless — and a fabricated-looking
+ * number does more damage here than showing nothing, on a screen whose entire
+ * claim is that its figures are real.
+ */
+const MIN_SAMPLE = 3;
+
+/**
  * Friction: how hard this SKU was to decide on, regardless of the answer.
  *
  * Weighted toward the signals that are hardest to fake and most predictive of a
@@ -116,6 +126,7 @@ export function buildDashboard(
     inspected: e.inspected === true,
     hesitated: e.hesitated === true,
     confirmed: e.confirmed === true,
+    blind: e.blind === true,
     undone: e.undone === true,
   }));
 
@@ -182,16 +193,6 @@ export function buildDashboard(
  * which is invisible in ordinary sales data because those shoppers never
  * clicked anything.
  */
-/**
- * Minimum observations in EACH bucket before a rate is quoted.
- *
- * Without this the screen happily prints "kept 0%" off a single swipe, which is
- * arithmetically true and completely meaningless — and a fabricated-looking
- * number does more damage here than showing nothing, on a screen whose entire
- * claim is that its figures are real.
- */
-const MIN_SAMPLE = 3;
-
 export function colourVerdict(
   products: Product[],
   swipes: SwipeEvent[],
@@ -233,6 +234,38 @@ export function colourVerdict(
     foughtRightRate: rate(foughtRights, fought),
     flatteredRightRate: rate(flatteredRights, flattered),
     significant: fought >= MIN_SAMPLE && flattered >= MIN_SAMPLE,
+  };
+}
+
+/**
+ * Keep-rate with the label hidden, against keep-rate with it shown.
+ *
+ * This is the number the product exists to be able to produce. A retailer can
+ * never measure it: their shoppers can always see whose garment they are
+ * looking at, so brand pull and garment appeal arrive inseparable. Switching
+ * the label off separates them.
+ *
+ * Returns null until both arms have enough observations to mean anything —
+ * a gap computed from two swipes is noise, and this screen's whole claim is
+ * that its numbers are real.
+ */
+export function blindComparison(
+  swipes: SwipeEvent[],
+): { blindSeen: number; revealedSeen: number; blindKeep: number; revealedKeep: number; gap: number; significant: boolean } | null {
+  const blind = swipes.filter((s) => s.blind === true);
+  const revealed = swipes.filter((s) => s.blind !== true);
+  if (blind.length === 0 && revealed.length === 0) return null;
+
+  const blindKeep = rate(blind.filter((s) => s.direction === 'right').length, blind.length);
+  const revealedKeep = rate(revealed.filter((s) => s.direction === 'right').length, revealed.length);
+
+  return {
+    blindSeen: blind.length,
+    revealedSeen: revealed.length,
+    blindKeep,
+    revealedKeep,
+    gap: revealedKeep - blindKeep,
+    significant: blind.length >= MIN_SAMPLE && revealed.length >= MIN_SAMPLE,
   };
 }
 

@@ -25,16 +25,31 @@ type Props = {
   facePhotoUri?: string | null;
   /** Drives the fit verdict on the reverse of the card. */
   profile?: SkinProfile | null;
+  /**
+   * When false the brand is withheld until the shopper commits.
+   *
+   * Both the name AND the accent colour go, because the accent identifies the
+   * brand just as reliably once you have seen the deck for a minute — hiding
+   * only the name would leak the answer.
+   */
+  revealBrand?: boolean;
   flipped?: boolean;
   onFlip?: () => void;
 };
 
 const RISK_TONE = { high: color.tomato, medium: color.acid, low: color.forest } as const;
 
-export function ProductCard({ card, facePhotoUri, profile = null, flipped = false, onFlip }: Props) {
+export function ProductCard({
+  card,
+  facePhotoUri,
+  profile = null,
+  revealBrand = true,
+  flipped = false,
+  onFlip,
+}: Props) {
   const { product, match, regret, render } = card;
-  const accent = color[brandAccent(product.brand)];
-  const accentText = onAccent(brandAccent(product.brand));
+  const accent = revealBrand ? color[brandAccent(product.brand)] : color.ink;
+  const accentText = revealBrand ? onAccent(brandAccent(product.brand)) : color.ground;
 
   const flip = useSharedValue(flipped ? 1 : 0);
   useEffect(() => {
@@ -67,6 +82,7 @@ export function ProductCard({ card, facePhotoUri, profile = null, flipped = fals
           accent={accent}
           accentText={accentText}
           facePhotoUri={facePhotoUri}
+          revealBrand={revealBrand}
         />
       </Animated.View>
 
@@ -76,7 +92,13 @@ export function ProductCard({ card, facePhotoUri, profile = null, flipped = fals
           backStyle,
         ]}
       >
-        <CardBack card={card} accent={accent} accentText={accentText} profile={profile} />
+        <CardBack
+          card={card}
+          accent={accent}
+          accentText={accentText}
+          profile={profile}
+          revealBrand={revealBrand}
+        />
       </Animated.View>
     </Wrapper>
   );
@@ -91,11 +113,13 @@ function CardFace({
   accent,
   accentText,
   facePhotoUri,
+  revealBrand,
 }: {
   card: DeckCard;
   accent: string;
   accentText: string;
   facePhotoUri?: string | null;
+  revealBrand: boolean;
 }) {
   const { product, match, regret, render } = card;
 
@@ -154,7 +178,7 @@ function CardFace({
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Type role="micro" color={accentText} style={{ opacity: 0.8 }} numberOfLines={1}>
-            {product.brand}
+            {revealBrand ? product.brand : 'Brand hidden'}
           </Type>
           <PillTag label={formatPrice(product)} tone={color.ground} labelColor={color.ink} />
         </View>
@@ -335,11 +359,13 @@ function CardBack({
   accent,
   accentText,
   profile,
+  revealBrand,
 }: {
   card: DeckCard;
   accent: string;
   accentText: string;
   profile: SkinProfile | null;
+  revealBrand: boolean;
 }) {
   const { product, match, regret } = card;
 
@@ -356,7 +382,7 @@ function CardBack({
     >
       <View style={{ backgroundColor: accent, padding: space.md, borderBottomWidth: border.bold, borderBottomColor: color.ink }}>
         <Type role="micro" color={accentText} style={{ opacity: 0.8 }}>
-          {product.brand}
+          {revealBrand ? product.brand : 'Brand hidden'}
         </Type>
         <Type role="title" color={accentText} numberOfLines={2}>
           {product.name}

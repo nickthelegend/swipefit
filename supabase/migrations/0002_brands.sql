@@ -106,3 +106,28 @@ left join public.swipe_events e on e.brand = b.name
 group by b.name, b.slug, b.accent;
 
 grant select on public.brand_overview to anon, authenticated;
+
+
+-- ---------------------------------------------------------------------------
+-- Blind vs revealed
+--
+-- The measurement no retailer can obtain for themselves: their shoppers can
+-- always see whose product they are looking at. Here the label can be switched
+-- off, so the gap between the two keep-rates is the brand premium — or the
+-- brand penalty — stated as a number.
+-- ---------------------------------------------------------------------------
+
+create or replace view public.blind_signal
+with (security_invoker = off) as
+select
+  e.brand,
+  count(*) filter (where e.blind)::int                                     as blind_seen,
+  count(*) filter (where not e.blind)::int                                 as revealed_seen,
+  round(100.0 * count(*) filter (where e.blind and e.direction = 'right')
+        / nullif(count(*) filter (where e.blind), 0), 1)                   as blind_keep_rate,
+  round(100.0 * count(*) filter (where not e.blind and e.direction = 'right')
+        / nullif(count(*) filter (where not e.blind), 0), 1)               as revealed_keep_rate
+from public.swipe_events e
+group by e.brand;
+
+grant select on public.blind_signal to anon, authenticated;

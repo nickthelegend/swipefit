@@ -55,6 +55,10 @@ create table if not exists public.swipe_events (
   inspected    bool not null default false,
   hesitated    bool not null default false,
   confirmed    bool not null default false,
+  -- The brand was hidden when this decision was made. Comparing keep-rate blind
+  -- against keep-rate revealed measures how much of a brand's conversion is the
+  -- garment and how much is the label.
+  blind        bool not null default false,
   undone       bool not null default false,
   created_at   timestamptz not null default now(),
   -- A client retry must not double-count a decision.

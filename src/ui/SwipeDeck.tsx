@@ -30,6 +30,7 @@ type Props = {
   cards: DeckCard[];
   facePhotoUri?: string | null;
   profile?: SkinProfile | null;
+  revealBrand?: boolean;
   onSwipe: (direction: SwipeDirection) => void;
   /** Called instead of onSwipe when a high-risk item is swiped right. */
   onConfirmNeeded: (card: DeckCard) => void;
@@ -53,6 +54,7 @@ export function SwipeDeck({
   cards,
   facePhotoUri,
   profile = null,
+  revealBrand = true,
   onSwipe,
   onConfirmNeeded,
   onInspect,
@@ -256,13 +258,19 @@ export function SwipeDeck({
 
       {next && (
         <Animated.View style={[stackStyle, nextStyle]}>
-          <ProductCard card={next} facePhotoUri={facePhotoUri} />
+          <ProductCard card={next} facePhotoUri={facePhotoUri} revealBrand={revealBrand} />
         </Animated.View>
       )}
 
       <GestureDetector gesture={gesture}>
         <Animated.View style={[stackStyle, topStyle]}>
-          <ProductCard card={top} facePhotoUri={facePhotoUri} profile={profile} flipped={flipped} />
+          <ProductCard
+            card={top}
+            facePhotoUri={facePhotoUri}
+            profile={profile}
+            revealBrand={revealBrand}
+            flipped={flipped}
+          />
 
           <Animated.View
             pointerEvents="none"

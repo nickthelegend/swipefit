@@ -7,14 +7,15 @@ import type { Undertone } from '@/logic/color';
 import { seasonLabel } from '@/logic/matching';
 import { useAppStore } from '@/store/useAppStore';
 import { border, color, radius, space } from '@/theme/tokens';
+import { BrandReveal } from '@/ui/BrandReveal';
 import { CoachOverlay } from '@/ui/CoachOverlay';
-import { IconUndo, Starburst } from '@/ui/doodles';
+import { IconEye, IconUndo, Starburst } from '@/ui/doodles';
 import { PillButton, PillTag } from '@/ui/PillButton';
 import { Screen } from '@/ui/Screen';
 import { Shadowed } from '@/ui/Shadowed';
 import { SwipeDeck } from '@/ui/SwipeDeck';
 import { Type } from '@/ui/Type';
-import type { DeckCard } from '@/types';
+import type { DeckCard, Season } from '@/types';
 
 export default function SwipeScreen() {
   const router = useRouter();
@@ -26,6 +27,8 @@ export default function SwipeScreen() {
   const mode = useAppStore((s) => s.mode);
   const coachSeen = useAppStore((s) => s.coachSeen);
   const simulated = useAppStore((s) => s.simulatedUndertone);
+  const revealBrand = useAppStore((s) => s.revealBrand);
+  const setRevealBrand = useAppStore((s) => s.setRevealBrand);
 
   const swipe = useAppStore((s) => s.swipe);
   const undoSwipe = useAppStore((s) => s.undoSwipe);
@@ -40,6 +43,8 @@ export default function SwipeScreen() {
 
   const [confirming, setConfirming] = useState<DeckCard | null>(null);
   const [showSim, setShowSim] = useState(false);
+  /** The card whose brand is being revealed after a blind right-swipe. */
+  const [revealing, setRevealing] = useState<DeckCard | null>(null);
 
   const remaining = deck.slice(cursor);
 
@@ -63,7 +68,13 @@ export default function SwipeScreen() {
       {/* Header carries the causal link: this reading produced this deck. */}
       <View style={{ paddingTop: space.xs, gap: space.sm }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Pressable onPress={() => setShowSim((v) => !v)} accessibilityRole="button" accessibilityLabel="Change simulated undertone" hitSlop={8}>
+          <Pressable
+            onPress={() => setShowSim((v) => !v)}
+            accessibilityRole="button"
+            accessibilityLabel="Change simulated undertone"
+            hitSlop={8}
+            style={{ flexShrink: 1, minWidth: 0 }}
+          >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.xs }}>
               <View
                 style={{
@@ -75,14 +86,15 @@ export default function SwipeScreen() {
                   borderColor: color.ink,
                 }}
               />
-              <Type role="label">
-                {profile.undertone} · {seasonLabel(profile.season)}
+              <Type role="label" numberOfLines={1} style={{ flexShrink: 1 }}>
+                {profile.undertone}
               </Type>
               {simulated && <PillTag label="Sim" tone={color.acid} />}
             </View>
           </Pressable>
 
-          <View style={{ flexDirection: 'row', gap: space.xs, alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', gap: space.xs, alignItems: 'center', flexShrink: 0 }}>
+            <BlindToggle reveal={revealBrand} onChange={setRevealBrand} />
             <Pressable
               onPress={undoSwipe}
               disabled={cursor === 0}
@@ -111,6 +123,7 @@ export default function SwipeScreen() {
           <Animated.View entering={FadeIn.duration(180)}>
             <UndertoneSimulator
               value={simulated}
+              season={profile.season}
               onChange={setSimulatedUndertone}
               onStartOver={() => {
                 resetAll();
@@ -127,7 +140,12 @@ export default function SwipeScreen() {
             cards={remaining}
             facePhotoUri={person?.faceDisplayUri ?? null}
             profile={profile}
-            onSwipe={swipe}
+            revealBrand={revealBrand}
+            onSwipe={(direction) => {
+              const card = remaining[0];
+              if (direction === 'right' && !revealBrand && card) setRevealing(card);
+              swipe(direction);
+            }}
             onConfirmNeeded={(card) => {
               noteConfirmPrompted();
               setConfirming(card);
@@ -141,6 +159,8 @@ export default function SwipeScreen() {
       </View>
 
       {!coachSeen && remaining.length > 0 && <CoachOverlay onDismiss={markCoachSeen} />}
+
+      {revealing && <BrandReveal card={revealing} onDone={() => setRevealing(null)} />}
 
       {confirming && (
         <RegretSheet
@@ -160,6 +180,48 @@ export default function SwipeScreen() {
 }
 
 /* ---------------------------------------------------------------------- */
+
+/**
+ * Blind-swipe control.
+ *
+ * Reads as a state of the deck rather than a settings switch, because it
+ * changes what the shopper is being asked: with the label off the question is
+ * "do you like this garment", with it on the question is "do you like this
+ * brand". Those are different questions and the control should feel like it.
+ */
+function BlindToggle({
+  reveal,
+  onChange,
+}: {
+  reveal: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <Pressable
+      onPress={() => onChange(!reveal)}
+      accessibilityRole="switch"
+      accessibilityState={{ checked: !reveal }}
+      accessibilityLabel={reveal ? 'Hide brand names while swiping' : 'Show brand names while swiping'}
+      hitSlop={6}
+      style={{
+        height: 44,
+        paddingHorizontal: space.sm,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: space.xxs + 2,
+        borderWidth: border.hair,
+        borderColor: color.ink,
+        borderRadius: radius.pill,
+        backgroundColor: reveal ? color.ground : color.ink,
+      }}
+    >
+      <IconEye size={17} color={reveal ? color.ink : color.ground} open={reveal} />
+      <Type role="micro" color={reveal ? color.ink : color.ground}>
+        {reveal ? 'Brands on' : 'Blind'}
+      </Type>
+    </Pressable>
+  );
+}
 
 function ModeToggle({ mode, onChange }: { mode: 'apparel' | 'beauty'; onChange: (m: 'apparel' | 'beauty') => void }) {
   return (
@@ -203,10 +265,12 @@ function ModeToggle({ mode, onChange }: { mode: 'apparel' | 'beauty'; onChange: 
  */
 function UndertoneSimulator({
   value,
+  season,
   onChange,
   onStartOver,
 }: {
   value: Undertone | null;
+  season: Season;
   onChange: (u: Undertone | null) => void;
   onStartOver: () => void;
 }) {
@@ -230,7 +294,7 @@ function UndertoneSimulator({
         }}
       >
         <Type role="micro" color={color.inkSoft}>
-          Force an undertone · re-sorts the same catalogue live
+          {seasonLabel(season)} · force an undertone to re-sort the same catalogue live
         </Type>
         <View style={{ flexDirection: 'row', gap: space.xs }}>
           {options.map((o) => {

@@ -193,6 +193,26 @@ export function IconCamera({ size = 24, color: c = color.ink }: IconProps) {
   );
 }
 
+/** Open/closed eye for the blind-swipe toggle. Same ink weight as the set. */
+export function IconEye({ size = 24, color: c = color.ink, open = true }: IconProps & { open?: boolean }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 100 100">
+      <Path
+        d="M6 50 C 24 24, 76 24, 94 50 C 76 76, 24 76, 6 50 Z"
+        fill="none"
+        stroke={c}
+        strokeWidth={7}
+        strokeLinejoin="round"
+      />
+      {open ? (
+        <Circle cx={50} cy={50} r={14} fill={c} />
+      ) : (
+        <Path d="M16 78 L84 22" stroke={c} strokeWidth={9} strokeLinecap="round" />
+      )}
+    </Svg>
+  );
+}
+
 export function IconImage({ size = 24, color: c = color.ink }: IconProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">

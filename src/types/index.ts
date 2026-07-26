@@ -124,6 +124,15 @@ export type SwipeEvent = {
   hesitated: boolean;
   /** A high-risk item raised the confirm sheet before this decision landed. */
   confirmed: boolean;
+  /**
+   * The brand was hidden when this decision was made.
+   *
+   * The single most valuable column in the table. Comparing keep-rate blind
+   * against keep-rate revealed measures how much of a brand's conversion is the
+   * garment and how much is the label — a number no retailer can obtain,
+   * because their shoppers can always see whose product they are looking at.
+   */
+  blind: boolean;
   /** Later reversed with undo. Set retroactively. */
   undone: boolean;
 };
