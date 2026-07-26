@@ -43,3 +43,6 @@ yarn-error.*
 # secrets
 .env
 .env.local
+
+scripts/__pycache__/
+__pycache__/

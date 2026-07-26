@@ -7,9 +7,9 @@
   "category": "upper_body",
   "productImageUrl": "https://images.cos.com/assets/001/e8/a8/e8a83c680b9560ebbb6b0984f5685ed16611c14c_xxl-1.jpg",
   "brandProductUrl": "https://www.cos.com/en-us/men/menswear/knitwear/jumpers/product/ribbed-wool-funnel-neck-jumper-camel-mlange-1291712002",
-  "colorName": "Camel Mélange",
+  "colorName": "Camel M\u00e9lange",
   "colorHex": "#B4A48C",
-  "sizeInfo": "XS–XL",
+  "sizeInfo": "XS\u2013XL",
   "fitNote": "relaxed, ribbed funnel neck"
  },
  {
@@ -22,7 +22,7 @@
   "brandProductUrl": "https://www.cos.com/en-us/men/menswear/shirts/casualshirts/product/felted-wool-shirt-cream-1317556003",
   "colorName": "Ecru",
   "colorHex": "#F2EADC",
-  "sizeInfo": "XS–XL",
+  "sizeInfo": "XS\u2013XL",
   "fitNote": "boxy, drops at hip"
  },
  {
@@ -35,7 +35,7 @@
   "brandProductUrl": "https://www.cos.com/en-us/women/womenswear/knitwear/jumpers/product/merino-wool-polo-jumper-rust-1310488002",
   "colorName": "Rust",
   "colorHex": "#6F251A",
-  "sizeInfo": "XS–XL",
+  "sizeInfo": "XS\u2013XL",
   "fitNote": "regular fit, ribbed placket"
  },
  {
@@ -48,7 +48,7 @@
   "brandProductUrl": "https://www.cos.com/en-us/men/menswear/suits/trousers/product/the-fluid-wool-trousers-chocolate-1271736001",
   "colorName": "Chocolate",
   "colorHex": "#3B322C",
-  "sizeInfo": "28–38 waist",
+  "sizeInfo": "28\u201338 waist",
   "fitNote": "straight leg, fluid drape"
  },
  {
@@ -61,7 +61,7 @@
   "brandProductUrl": "https://www.cos.com/en-us/men/menswear/knitwear/jumpers/wool/product/merino-wool-crew-neck-jumper-burgundy-1260173003",
   "colorName": "Burgundy",
   "colorHex": "#4A2C33",
-  "sizeInfo": "XS–XL",
+  "sizeInfo": "XS\u2013XL",
   "fitNote": "slim through body and sleeve"
  },
  {
@@ -74,7 +74,7 @@
   "brandProductUrl": "https://www.cos.com/en-us/women/womenswear/dresses/jumperdresses/product/wrap-collar-merino-wool-dress-navy-1264108001",
   "colorName": "Navy",
   "colorHex": "#1B1D2C",
-  "sizeInfo": "XS–L",
+  "sizeInfo": "XS\u2013L",
   "fitNote": "straight cut, knee length"
  },
  {
@@ -87,7 +87,7 @@
   "brandProductUrl": "https://www.cos.com/en-us/women/womenswear/trousers/wool/product/wool-flannel-trousers-plum-1296137001",
   "colorName": "Plum",
   "colorHex": "#4F3F44",
-  "sizeInfo": "US 0–14",
+  "sizeInfo": "US 0\u201314",
   "fitNote": "high waist, wide straight leg"
  },
  {
@@ -100,7 +100,7 @@
   "brandProductUrl": "https://www.cos.com/en-us/men/menswear/trousers/pleated/product/straight-leg-cotton-twill-trousers-mole-1306885003",
   "colorName": "Mole",
   "colorHex": "#C1B3A8",
-  "sizeInfo": "28–38 waist",
+  "sizeInfo": "28\u201338 waist",
   "fitNote": "pleated front, straight leg"
  },
  {
@@ -113,7 +113,7 @@
   "brandProductUrl": "https://www.uniqlo.com/us/en/products/E486117-000?colorDisplayCode=28",
   "colorName": "Dark Orange",
   "colorHex": "#D64532",
-  "sizeInfo": "XXS–4XL",
+  "sizeInfo": "XXS\u20134XL",
   "fitNote": "relaxed, dropped shoulder"
  },
  {
@@ -126,7 +126,7 @@
   "brandProductUrl": "https://www.uniqlo.com/us/en/products/E486117-000?colorDisplayCode=59",
   "colorName": "Dark Green",
   "colorHex": "#314336",
-  "sizeInfo": "XXS–4XL",
+  "sizeInfo": "XXS\u20134XL",
   "fitNote": "relaxed, dropped shoulder"
  },
  {
@@ -139,7 +139,7 @@
   "brandProductUrl": "https://www.uniqlo.com/us/en/products/E465185-000?colorDisplayCode=42",
   "colorName": "Yellow",
   "colorHex": "#E1D0B2",
-  "sizeInfo": "XXS–4XL",
+  "sizeInfo": "XXS\u20134XL",
   "fitNote": "oversized, boxy half sleeve"
  },
  {
@@ -152,7 +152,7 @@
   "brandProductUrl": "https://www.uniqlo.com/us/en/products/E482880-000?colorDisplayCode=57",
   "colorName": "Olive",
   "colorHex": "#60614E",
-  "sizeInfo": "28–40 waist",
+  "sizeInfo": "28\u201340 waist",
   "fitNote": "straight leg, mid rise"
  },
  {
@@ -165,7 +165,7 @@
   "brandProductUrl": "https://www.uniqlo.com/us/en/products/E488796-000?colorDisplayCode=00",
   "colorName": "White",
   "colorHex": "#EFEFED",
-  "sizeInfo": "XXS–3XL",
+  "sizeInfo": "XXS\u20133XL",
   "fitNote": "oversized, drops past hip"
  },
  {
@@ -178,7 +178,7 @@
   "brandProductUrl": "https://www.uniqlo.com/us/en/products/E487957-000?colorDisplayCode=04",
   "colorName": "Gray",
   "colorHex": "#A5A6A8",
-  "sizeInfo": "XS–3XL",
+  "sizeInfo": "XS\u20133XL",
   "fitNote": "high rise, wide straight leg"
  },
  {
@@ -191,7 +191,7 @@
   "brandProductUrl": "https://www.uniqlo.com/us/en/products/E481040-000?colorDisplayCode=31",
   "colorName": "Beige",
   "colorHex": "#C6B9B0",
-  "sizeInfo": "XXS–4XL",
+  "sizeInfo": "XXS\u20134XL",
   "fitNote": "oversized, heavy brushed back"
  },
  {
@@ -204,12 +204,12 @@
   "brandProductUrl": "https://www.uniqlo.com/us/en/products/E471809-000?colorDisplayCode=09",
   "colorName": "Black",
   "colorHex": "#252325",
-  "sizeInfo": "XXS–4XL",
+  "sizeInfo": "XXS\u20134XL",
   "fitNote": "wide leg, elasticated waist"
  },
  {
   "brand": "Levi's",
-  "name": "568™ Loose Straight Carpenter Men's Pants",
+  "name": "568\u2122 Loose Straight Carpenter Men's Pants",
   "price": 55.65,
   "currency": "USD",
   "category": "lower_body",
@@ -217,7 +217,7 @@
   "brandProductUrl": "https://www.levi.com/US/en_US/clothing/men/pants/568TM-loose-straight-carpenter-mens-pants/p/558490067",
   "colorName": "Tiger's Eye",
   "colorHex": "#BD9E79",
-  "sizeInfo": "28–40 waist",
+  "sizeInfo": "28\u201340 waist",
   "fitNote": "loose straight, roomy through thigh"
  },
  {
@@ -230,7 +230,7 @@
   "brandProductUrl": "https://www.levi.com/US/en_US/clothing/men/pants/xx-chino-standard-taper-fit-mens-pants/p/171960111",
   "colorName": "Allspice Twill Garment Dye",
   "colorHex": "#62454B",
-  "sizeInfo": "28–40 waist",
+  "sizeInfo": "28\u201340 waist",
   "fitNote": "tapers below the knee"
  },
  {
@@ -243,12 +243,12 @@
   "brandProductUrl": "https://www.levi.com/US/en_US/clothing/men/outerwear/type-iii-sherpa-trucker-jacket/p/163650272",
   "colorName": "Kentucky Blue Sherpa",
   "colorHex": "#A2B2B1",
-  "sizeInfo": "XS–XXL",
+  "sizeInfo": "XS\u2013XXL",
   "fitNote": "boxy, cropped at the waist"
  },
  {
   "brand": "Levi's",
-  "name": "501® Original Fit Men's Jeans",
+  "name": "501\u00ae Original Fit Men's Jeans",
   "price": 98.0,
   "currency": "USD",
   "category": "lower_body",
@@ -256,7 +256,7 @@
   "brandProductUrl": "https://www.levi.com/US/en_US/clothing/men/jeans/straight/501-original-fit-mens-jeans/p/005010101",
   "colorName": "Onewash",
   "colorHex": "#30374D",
-  "sizeInfo": "28–40 waist",
+  "sizeInfo": "28\u201340 waist",
   "fitNote": "straight leg, sits at waist"
  },
  {
@@ -269,7 +269,7 @@
   "brandProductUrl": "https://www.levi.com/US/en_US/clothing/women/outerwear/original-trucker-jacket/p/299450210",
   "colorName": "Naturally Good Truck",
   "colorHex": "#E4E1D8",
-  "sizeInfo": "XS–XL",
+  "sizeInfo": "XS\u2013XL",
   "fitNote": "cropped, boxy through body"
  },
  {
@@ -282,7 +282,7 @@
   "brandProductUrl": "https://www.levi.com/US/en_US/clothing/men/shirts/classic-standard-fit-western-shirt/p/857450074",
   "colorName": "Franklin Stonewash",
   "colorHex": "#8E9EAE",
-  "sizeInfo": "S–XXL",
+  "sizeInfo": "S\u2013XXL",
   "fitNote": "standard fit, pointed western yoke"
  },
  {
@@ -295,12 +295,12 @@
   "brandProductUrl": "https://www.levi.com/US/en_US/clothing/men/shirts/classic-standard-fit-western-shirt/p/857450000",
   "colorName": "New Black Rinse",
   "colorHex": "#2E2D31",
-  "sizeInfo": "S–XXL",
+  "sizeInfo": "S\u2013XXL",
   "fitNote": "standard fit, snap front"
  },
  {
   "brand": "Levi's",
-  "name": "Levi's® XX Chino Standard Taper Fit Men's Pants",
+  "name": "Levi's\u00ae XX Chino Standard Taper Fit Men's Pants",
   "price": 44.98,
   "currency": "USD",
   "category": "lower_body",
@@ -308,7 +308,475 @@
   "brandProductUrl": "https://www.levi.com/US/en_US/clothing/men/pants/levis-xx-chino-standard-taper-fit-mens-pants/p/171960062",
   "colorName": "Pewter Garment Dye",
   "colorHex": "#7A6E66",
-  "sizeInfo": "28–40 waist",
+  "sizeInfo": "28\u201340 waist",
   "fitNote": "slim through thigh, tapered ankle"
+ },
+ {
+  "brand": "H&M",
+  "name": "Ava Ultra High Rise Wide Leg Jeans",
+  "category": "lower_body",
+  "price": 39.99,
+  "currency": "USD",
+  "productImageUrl": "https://image.hm.com/assets/hm/99/2a/992a6ceb769ee6fdb83184e6f5c430599922e3a1.jpg",
+  "brandProductUrl": "https://www2.hm.com/en_us/productpage.1222670025.html",
+  "colorName": "Denim Blue",
+  "colorHex": "#2A3F5C",
+  "sizeInfo": "US 0\u201322",
+  "fitNote": "wide leg, breaks at the ankle"
+ },
+ {
+  "brand": "Zara",
+  "name": "100% Linen Pants With Side Vents Zw Collection",
+  "category": "lower_body",
+  "price": 69.9,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/4b0f/0b5a/2fcc4cd5800b/a44fd9bb26d5/04344041679-f1/04344041679-f1.jpg?ts=1780566013657&w=1024",
+  "brandProductUrl": "https://www.zara.com/us/en/100-linen-pants-with-side-vents-zw-collection-p01936334.html",
+  "colorName": "Coral",
+  "colorHex": "#C77067",
+  "sizeInfo": "US 0\u201314",
+  "fitNote": "regular rise, straight through the leg"
+ },
+ {
+  "brand": "Massimo Dutti",
+  "name": "100% linen trousers with elasticated waist",
+  "category": "lower_body",
+  "price": 180.0,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/1ca9/ca72/27b54c15b02e/9cdd7ff41c90/02855440462-f1/02855440462-f1.jpg?ts=1776841194650&w=1024",
+  "brandProductUrl": "https://www.massimodutti.com/us/100-linen-trousers-with-elasticated-waist-l2855440.html",
+  "colorName": "Deep Blue",
+  "colorHex": "#2B2B2D",
+  "sizeInfo": "28\u201338 waist",
+  "fitNote": "regular rise, straight through the leg"
+ },
+ {
+  "brand": "A.P.C.",
+  "name": "A.P.C. x Brain Dead Type 00 selvedge denim pants",
+  "category": "lower_body",
+  "price": 375.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0007/0051/4360/files/COHTH-M09237IAL_00.jpg?v=1777576095",
+  "brandProductUrl": "https://www.apc-us.com/products/a-p-c-x-brain-dead-type-00-selvedge-denim-pants-cohth-m09237_ial",
+  "colorName": "Blue",
+  "colorHex": "#676F67",
+  "sizeInfo": "26\u201338 waist",
+  "fitNote": "regular rise, straight through the leg"
+ },
+ {
+  "brand": "Sunspel",
+  "name": "Men's Boiled Wool Trouser",
+  "category": "lower_body",
+  "price": 335.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0636/5154/5319/files/mtrs3140-brgd-1_d4f1f60a-13a3-409f-85f8-ecd09ae44d6f.jpg?v=1783593072",
+  "brandProductUrl": "https://www.sunspel.com/products/mens-boiled-wool-trouser-in-truffle-mtrs3140-brgd",
+  "colorName": "Truffle",
+  "colorHex": "#33201B",
+  "sizeInfo": "28\u201340 waist",
+  "fitNote": "regular rise, straight through the leg"
+ },
+ {
+  "brand": "Outerknown",
+  "name": "S.E.A. Shorts",
+  "category": "lower_body",
+  "price": 55.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/2445/4975/files/1710022_outerknown_seashort_mrg_f.jpg?v=1772229249",
+  "brandProductUrl": "https://www.outerknown.com/products/sea-shorts-et0fx0dvdw-resale",
+  "colorName": "Mirage",
+  "colorHex": "#C9C3C7",
+  "sizeInfo": "32\u201334 waist",
+  "fitNote": "mid thigh, flat front"
+ },
+ {
+  "brand": "H&M",
+  "name": "Baggy Jeans",
+  "category": "lower_body",
+  "price": 54.99,
+  "currency": "USD",
+  "productImageUrl": "https://image.hm.com/assets/hm/9a/2f/9a2f9144c252fd9a7295e3d638b2e000f61d83b8.jpg",
+  "brandProductUrl": "https://www2.hm.com/en_us/productpage.1344244001.html",
+  "colorName": "Light Denim Blue",
+  "colorHex": "#ACBBC5",
+  "sizeInfo": "28\u201338 waist",
+  "fitNote": "baggy through hip and thigh"
+ },
+ {
+  "brand": "Zara",
+  "name": "100% Linen Relaxed Fit Pants",
+  "category": "lower_body",
+  "price": 79.9,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/a507/edee/807b45e3813d/a7e38ee6277a/03090902811-e1/03090902811-e1.jpg?ts=1784041725684&w=1024",
+  "brandProductUrl": "https://www.zara.com/us/en/100-linen-relaxed-fit-pants-p05070902.html",
+  "colorName": "Light Gray",
+  "colorHex": "#A1A3A0",
+  "sizeInfo": "28\u201338 waist",
+  "fitNote": "loose through hip and leg"
+ },
+ {
+  "brand": "A.P.C.",
+  "name": "Denim Split Skirt",
+  "category": "lower_body",
+  "price": 340.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0007/0051/4360/files/COEUG-F06503AAC_00.jpg?v=1781645335",
+  "brandProductUrl": "https://www.apc-us.com/products/denim-split-skirt-coeug-f06503_aac",
+  "colorName": "Off-White",
+  "colorHex": "#EAE1D2",
+  "sizeInfo": "FR 34\u201342",
+  "fitNote": "straight cut, falls below the knee"
+ },
+ {
+  "brand": "Massimo Dutti",
+  "name": "Cotton and linen tapered fit jeans",
+  "category": "lower_body",
+  "price": 60.0,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/0de3/2ba3/f5f5440da943/5873b3eba37d/00451112401-f1/00451112401-f1.jpg?ts=1778845124174&w=1024",
+  "brandProductUrl": "https://www.massimodutti.com/us/cotton-and-linen-tapered-fit-jeans-l451112.html",
+  "colorName": "Navy Blue",
+  "colorHex": "#353841",
+  "sizeInfo": "28\u201338 waist",
+  "fitNote": "roomy hip, tapers to the ankle"
+ },
+ {
+  "brand": "Sunspel",
+  "name": "Men's Cotton Cashmere Drawstring Trouser",
+  "category": "lower_body",
+  "price": 201.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0636/5154/5319/files/mtrs3119-whdc-1.jpg?v=1751973870",
+  "brandProductUrl": "https://www.sunspel.com/products/mens-cotton-cashmere-drawstring-trouser-in-dark-stone-mtrs3119-whdc",
+  "colorName": "Dark Stone",
+  "colorHex": "#7D5D45",
+  "sizeInfo": "XS\u2013XXL",
+  "fitNote": "regular rise, straight through the leg"
+ },
+ {
+  "brand": "A.P.C.",
+  "name": "Faustine dress",
+  "category": "full_body",
+  "price": 222.5,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0007/0051/4360/files/VIAKX-F35106FAB_02.jpg?v=1729180593",
+  "brandProductUrl": "https://www.apc-us.com/products/robe-faustine-viakx-f35106_fab",
+  "colorName": "Pale Pink",
+  "colorHex": "#DECFC7",
+  "sizeInfo": "FR 34\u201342",
+  "fitNote": "straight cut, falls at the knee"
+ },
+ {
+  "brand": "Outerknown",
+  "name": "Seventyseven Cord Utility Shorts",
+  "category": "lower_body",
+  "price": 59.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/2445/4975/files/1670002_Seventyseven_Cord_Utiliity_Shorts_BKZ_0621.jpg?v=1743030735",
+  "brandProductUrl": "https://www.outerknown.com/products/seventyseven-cord-utility-shorts-blue-skies",
+  "colorName": "Blue Skies",
+  "colorHex": "#88AFBB",
+  "sizeInfo": "28\u201342 waist",
+  "fitNote": "mid thigh, flat front"
+ },
+ {
+  "brand": "A.P.C.",
+  "name": "On Court Dress",
+  "category": "full_body",
+  "price": 75.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0007/0051/4360/files/PSAKX-F35202AAB_00.jpg?v=1743022741",
+  "brandProductUrl": "https://www.apc-us.com/products/on-court-dress-psakx-f35202_aab",
+  "colorName": "White",
+  "colorHex": "#DFDFEA",
+  "sizeInfo": "S\u2013XL",
+  "fitNote": "straight cut, falls at the knee"
+ },
+ {
+  "brand": "H&M",
+  "name": "Loose Fit Nylon track pants",
+  "category": "lower_body",
+  "price": 49.99,
+  "currency": "USD",
+  "productImageUrl": "https://image.hm.com/assets/hm/b0/1c/b01c2462be2b3cd1fedfd40af7d1050beda2e95a.jpg",
+  "brandProductUrl": "https://www2.hm.com/en_us/productpage.1343644003.html",
+  "colorName": "Brown",
+  "colorHex": "#4E342C",
+  "sizeInfo": "XS\u2013XXL",
+  "fitNote": "loose through hip and leg"
+ },
+ {
+  "brand": "Zara",
+  "name": "Beaded Wrinkle-Effect Midi Dress",
+  "category": "full_body",
+  "price": 69.9,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/387d/4540/f6db4e638c4d/8fe1f04eb31f/03897161712-f1/03897161712-f1.jpg?ts=1784814826512&w=1024",
+  "brandProductUrl": "https://www.zara.com/us/en/beaded-wrinkle-effect-midi-dress-p03897161.html",
+  "colorName": "Ecru",
+  "colorHex": "#F3F1EA",
+  "sizeInfo": "US 0\u201314",
+  "fitNote": "straight cut, falls mid calf"
+ },
+ {
+  "brand": "Massimo Dutti",
+  "name": "100% cashmere long sleeve sweater",
+  "category": "upper_body",
+  "price": 320.0,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/9e50/f18c/6d1e4dc1ba4f/545032257057/05629565742-f1/05629565742-f1.jpg?ts=1780411782342&w=1024",
+  "brandProductUrl": "https://www.massimodutti.com/us/100-cashmere-long-sleeve-sweater-l5629565.html",
+  "colorName": "Dark Mink",
+  "colorHex": "#DBBA96",
+  "sizeInfo": "XS\u2013XL",
+  "fitNote": "regular knit, holds its shape"
+ },
+ {
+  "brand": "Sunspel",
+  "name": "Men's Classic T-shirt",
+  "category": "upper_body",
+  "price": 57.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0636/5154/5319/files/mtsh0001-whdc-1_0fd2a419-2fd9-46f6-84ab-a7da87ceaa0d.jpg?v=1733411098",
+  "brandProductUrl": "https://www.sunspel.com/products/mens-classic-tshirt-in-dark-stone-mtsh0001-whdc",
+  "colorName": "Dark Stone",
+  "colorHex": "#9E866F",
+  "sizeInfo": "XS\u2013XXXL",
+  "fitNote": "regular fit, straight hem"
+ },
+ {
+  "brand": "Outerknown",
+  "name": "Groovy Pocket Tee",
+  "category": "upper_body",
+  "price": 27.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/2445/4975/files/1210104_Groovy_Pocket_Tee_LTN_0246.jpg?v=1740595703",
+  "brandProductUrl": "https://www.outerknown.com/products/groovy-pocket-tee-lantana",
+  "colorName": "Lantana",
+  "colorHex": "#D17F7B",
+  "sizeInfo": "XS\u2013XXXL",
+  "fitNote": "regular fit, straight hem"
+ },
+ {
+  "brand": "H&M",
+  "name": "Boxy T-Shirt",
+  "category": "upper_body",
+  "price": 12.99,
+  "currency": "USD",
+  "productImageUrl": "https://image.hm.com/assets/hm/40/84/40840d7986cfcf212a4dd9b8b3d530e23b05ae31.jpg",
+  "brandProductUrl": "https://www2.hm.com/en_us/productpage.1290209030.html",
+  "colorName": "Light Pink",
+  "colorHex": "#F6C7B9",
+  "sizeInfo": "XS\u2013XXL",
+  "fitNote": "boxy, drops at hip"
+ },
+ {
+  "brand": "Zara",
+  "name": "Regular Fit Cotton-Linen Jumper",
+  "category": "upper_body",
+  "price": 79.9,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/7c1a/dd81/c0a24a9fbfcb/2cb913bf0389/02632309406-e1/02632309406-e1.jpg?ts=1784624547612&w=1024",
+  "brandProductUrl": "https://www.zara.com/us/en/regular-fit-cotton-linen-jumper-p02632309.html",
+  "colorName": "Light Blue",
+  "colorHex": "#577FA1",
+  "sizeInfo": "XS\u2013XL",
+  "fitNote": "regular knit, holds its shape"
+ },
+ {
+  "brand": "Massimo Dutti",
+  "name": "100% cashmere high neck knit sweater",
+  "category": "upper_body",
+  "price": 390.0,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/7a5d/d4f7/2ac44b118b84/538d7576ce72/05608565420-f1/05608565420-f1.jpg?ts=1780406564542&w=1024",
+  "brandProductUrl": "https://www.massimodutti.com/us/100-cashmere-high-neck-knit-sweater-l5608565.html",
+  "colorName": "Bluish",
+  "colorHex": "#023D99",
+  "sizeInfo": "XS\u2013XL",
+  "fitNote": "regular knit, holds its shape"
+ },
+ {
+  "brand": "Sunspel",
+  "name": "Men's Donegal Tweed Zip Jacket",
+  "category": "upper_body",
+  "price": 595.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0636/5154/5319/files/mjac7222-brhp-1_6cfc6367-7f9b-4ffd-b5e6-343f6cc84d10.jpg?v=1783593061",
+  "brandProductUrl": "https://www.sunspel.com/products/mens-donegal-tweed-zip-jacket-in-dark-brown-melange-mjac7222-brhp",
+  "colorName": "Dark Brown Melange",
+  "colorHex": "#5B4338",
+  "sizeInfo": "XS\u2013XXL",
+  "fitNote": "regular fit, hits at the hip"
+ },
+ {
+  "brand": "Outerknown",
+  "name": "The S/S Artist Oxford",
+  "category": "upper_body",
+  "price": 98.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/2445/4975/files/1320031_TheS_SArtistOxford_Marine_MRN_0649.jpg?v=1784062720",
+  "brandProductUrl": "https://www.outerknown.com/products/the-s-s-artist-oxford-marine",
+  "colorName": "Marine",
+  "colorHex": "#434A5A",
+  "sizeInfo": "XS\u2013XXXL",
+  "fitNote": "regular fit, straight point collar"
+ },
+ {
+  "brand": "H&M",
+  "name": "Baggy Regular Waist Jeans",
+  "category": "lower_body",
+  "price": 34.99,
+  "currency": "USD",
+  "productImageUrl": "https://image.hm.com/assets/hm/69/15/691589bc58756b30333f55167144f7837a97104e.jpg",
+  "brandProductUrl": "https://www2.hm.com/en_us/productpage.1323075003.html",
+  "colorName": "Washed Denim Blue",
+  "colorHex": "#7F95A0",
+  "sizeInfo": "US 0\u201320",
+  "fitNote": "baggy through hip and thigh"
+ },
+ {
+  "brand": "Zara",
+  "name": "Cable Knit Midi Skirt",
+  "category": "lower_body",
+  "price": 59.9,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/7356/6f5b/62f645ad8157/3109f0940d78/09874014472-f1/09874014472-f1.jpg?ts=1784187404938&w=1024",
+  "brandProductUrl": "https://www.zara.com/us/en/cable-knit-midi-skirt-p09874014.html",
+  "colorName": "Mink Brown",
+  "colorHex": "#807064",
+  "sizeInfo": "US 0\u201314",
+  "fitNote": "straight cut, falls mid calf"
+ },
+ {
+  "brand": "Massimo Dutti",
+  "name": "100% cotton moulin\u00e9 polo sweater",
+  "category": "upper_body",
+  "price": 100.0,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/3924/6b1e/ae5740af8df2/a1efb99741e3/01371201710-f1/01371201710-f1.jpg?ts=1782828747652&w=1024",
+  "brandProductUrl": "https://www.massimodutti.com/us/100-cotton-mouline-polo-sweater-l1371201.html",
+  "colorName": "Beige",
+  "colorHex": "#C2B0A4",
+  "sizeInfo": "XS\u2013XL",
+  "fitNote": "regular fit, ribbed placket"
+ },
+ {
+  "brand": "A.P.C.",
+  "name": "Alex sweater",
+  "category": "upper_body",
+  "price": 222.5,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0007/0051/4360/files/WVBAJ-H23057CAB_00_df289729-e185-4770-9d81-283b13a58161.jpg?v=1764107919",
+  "brandProductUrl": "https://www.apc-us.com/products/wvbaj-h23057",
+  "colorName": "Camel",
+  "colorHex": "#AD7A51",
+  "sizeInfo": "XS\u20133XL",
+  "fitNote": "regular knit, holds its shape"
+ },
+ {
+  "brand": "Sunspel",
+  "name": "Men's Classic Long Sleeve T-shirt",
+  "category": "upper_body",
+  "price": 63.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0636/5154/5319/files/mtsh0003-buvm-1_39ca09cb-f627-4fc6-be99-f186e1bfff1f.jpg?v=1726153164",
+  "brandProductUrl": "https://www.sunspel.com/products/mens-classic-long-sleeve-tshirt-in-naval-blue-mtsh0003-buvm",
+  "colorName": "Naval Blue",
+  "colorHex": "#0F2944",
+  "sizeInfo": "XS\u2013XXL",
+  "fitNote": "regular fit, straight hem"
+ },
+ {
+  "brand": "Outerknown",
+  "name": "The Women's Big Heavy Tee",
+  "category": "upper_body",
+  "price": 44.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/2445/4975/files/2280028_The_Womens_Big_Heavy_Tee_CHS_3902.jpg?v=1769031066",
+  "brandProductUrl": "https://www.outerknown.com/products/the-women-s-big-heavy-tee-chestnut",
+  "colorName": "Chestnut",
+  "colorHex": "#C3A589",
+  "sizeInfo": "XS\u2013XXL",
+  "fitNote": "regular fit, straight hem"
+ },
+ {
+  "brand": "H&M",
+  "name": "Loose-Fit Sweatshirt",
+  "category": "upper_body",
+  "price": 19.99,
+  "currency": "USD",
+  "productImageUrl": "https://image.hm.com/assets/hm/42/70/427071fb74f5e95f6d98ba168713574853859dac.jpg",
+  "brandProductUrl": "https://www2.hm.com/en_us/productpage.1308076010.html",
+  "colorName": "Light Blue",
+  "colorHex": "#AED0EA",
+  "sizeInfo": "XS\u20133XL",
+  "fitNote": "regular fit, ribbed hem and cuff"
+ },
+ {
+  "brand": "Zara",
+  "name": "Relaxed Fit 100% Linen Pleated Shirt",
+  "category": "upper_body",
+  "price": 79.9,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/b400/7e42/2ac447cfb6d7/f69e43c9766d/02634364403-e1/02634364403-e1.jpg?ts=1784130960336&w=1024",
+  "brandProductUrl": "https://www.zara.com/us/en/relaxed-fit-100-linen-pleated-shirt-p02634364.html",
+  "colorName": "Sky Blue",
+  "colorHex": "#C5D0DF",
+  "sizeInfo": "XS\u2013XL",
+  "fitNote": "relaxed, dropped shoulder"
+ },
+ {
+  "brand": "Massimo Dutti",
+  "name": "100% cotton V-neck knit polo",
+  "category": "upper_body",
+  "price": 90.0,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/d01c/750d/c4b24ddca0a7/5dd133b2acff/01367201670-f1/01367201670-f1.jpg?ts=1782826320793&w=1024",
+  "brandProductUrl": "https://www.massimodutti.com/us/100-cotton-v-neck-knit-polo-l1367201.html",
+  "colorName": "Russet",
+  "colorHex": "#7F2720",
+  "sizeInfo": "XS\u2013XL",
+  "fitNote": "regular fit, ribbed placket"
+ },
+ {
+  "brand": "A.P.C.",
+  "name": "Cable-Knit Sweater",
+  "category": "upper_body",
+  "price": 590.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0007/0051/4360/files/WOASV-F23495IAA_00.jpg?v=1780604435",
+  "brandProductUrl": "https://www.apc-us.com/products/cable-knit-sweater-woasv-f23495_iaa",
+  "colorName": "Blue",
+  "colorHex": "#425AA2",
+  "sizeInfo": "XS\u2013XL",
+  "fitNote": "regular knit, holds its shape"
+ },
+ {
+  "brand": "Sunspel",
+  "name": "Men's Lambswool Crew Neck Jumper",
+  "category": "upper_body",
+  "price": 285.0,
+  "currency": "USD",
+  "productImageUrl": "https://cdn.shopify.com/s/files/1/0636/5154/5319/files/mjum8066-gnji-1_f6afeca5-1c92-4d4b-a4fd-780ba1429514.jpg?v=1783593064",
+  "brandProductUrl": "https://www.sunspel.com/products/mens-lambswool-crew-neck-jumper-in-uniform-mjum8066-gnji",
+  "colorName": "Uniform",
+  "colorHex": "#66572E",
+  "sizeInfo": "XS\u2013XXL",
+  "fitNote": "regular knit, ribbed crew neck"
+ },
+ {
+  "brand": "Zara",
+  "name": "Z1975 High Rise Regular Long Length Jeans",
+  "category": "lower_body",
+  "price": 49.9,
+  "currency": "USD",
+  "productImageUrl": "https://static.zara.net/assets/public/df71/6f12/ba5748f7a494/285c2855ceda/08228021427-f1/08228021427-f1.jpg?ts=1784107703339&w=1024",
+  "brandProductUrl": "https://www.zara.com/us/en/z1975-high-rise-regular-long-length-jeans-p08228021.html",
+  "colorName": "Mid-Blue",
+  "colorHex": "#425871",
+  "sizeInfo": "US 0\u201314",
+  "fitNote": "regular rise, straight through the leg"
  }
 ]

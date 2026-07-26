@@ -45,6 +45,7 @@ from build_catalog import (  # noqa: E402
     chroma_of,
     dominant_garment_color,
     is_flat_lay,
+    rgb_to_lch,
     temperature,
     to_hex,
 )
@@ -92,6 +93,42 @@ def _skin_profile(img: Image.Image) -> tuple[float, float, tuple[int, int, int] 
     return 100 * len(skin) / len(pixels), extent, mean
 
 
+def plain_background(img: Image.Image) -> bool:
+    """
+    True when the frame's border is a uniform studio sweep.
+
+    Needed because the skin-colour rescue below has one blind spot: a cream
+    garment on a model has skin pixels that really are close to the garment
+    colour, so a cropped lifestyle shot can satisfy every other test. A Zara
+    beach photograph reached the catalogue that way on the first build.
+
+    Measured over 28 verified packshots the border's worst channel deviation is
+    0.51 and the largest corner-to-corner distance is 1.7; the lifestyle frame
+    scores 43.4 and 130.4. The thresholds below sit an order of magnitude above
+    the packshots and far under the lifestyle shot.
+    """
+    small = img.convert("RGB").resize((120, 160))
+    px = small.load()
+    border = []
+    for x in range(120):
+        border += [px[x, 0], px[x, 1], px[x, 158], px[x, 159]]
+    for y in range(160):
+        border += [px[0, y], px[1, y], px[118, y], px[119, y]]
+    spread = max(
+        max(c) - min(c) if len(set(c)) == 1 else _pstdev(c)
+        for c in zip(*border)
+    )
+    corners = [px[3, 3], px[116, 3], px[3, 156], px[116, 156]]
+    worst = max(math.dist(a, b) for a in corners for b in corners)
+    return spread < 4.0 and worst < 12.0
+
+
+def _pstdev(values: tuple[int, ...]) -> float:
+    n = len(values)
+    mean = sum(values) / n
+    return math.sqrt(sum((v - mean) ** 2 for v in values) / n)
+
+
 def looks_like_flat_lay(img: Image.Image, garment: tuple[int, int, int] | None) -> bool:
     """
     is_flat_lay() plus a correction for warm garments.
@@ -115,6 +152,8 @@ def looks_like_flat_lay(img: Image.Image, garment: tuple[int, int, int] | None) 
     image whose skin-range pixels are essentially the garment's own colour and
     which does not span the frame the way a person does.
     """
+    if not plain_background(img):
+        return False
     if is_flat_lay(img):
         return True
     if garment is None:
@@ -166,10 +205,14 @@ EXCLUDE_RE = re.compile(
     r"\b(kids?|baby|babies|toddler|children|socks?|hats?|caps?|beanies?|scarf|scarves"
     r"|gloves?|belts?|bags?|totes?|backpacks?|shoes?|sneakers?|boots?|sandals?|loafers?"
     r"|slippers?|trainers?|underwear|boxers?|briefs?|thongs?|boyshorts?|bras?|lingerie"
-    r"|swimwear|swimsuits?|bikinis?|sunglasses|watch|wallets?|towels?|blankets?|candles?"
+    r"|swim\w*|bikinis?|trunks|boardshorts?|sunglasses|watch|wallets?|towels?|blankets?|candles?"
     r"|fragrance|perfume|soap|shampoo|lotion|cream\s+cleanser|keyring|necklaces?|earrings?"
     r"|bracelets?|pouches?|cardholders?|masks?|gift\s+cards?|stickers?|umbrellas?|ties?"
-    r"|cufflinks?|robes?|pyjamas?|pajamas?|nightwear|loungewear\s+set)\b")
+    r"|cufflinks?|robes?|pyjamas?|pajamas?|nightwear|loungewear\s+set|\d+[- ]pack|multipack|pack\s+of)\b")
+PATTERN_RE = re.compile(
+    r"\b(stripe[ds]?|check(ed)?|gingham|print(ed)?|floral|plaid|tartan|leopard"
+    r"|camo|camouflage|polka|paisley|houndstooth|argyle|colou?rblock|tie[- ]dye"
+    r"|patterned|graphic|jacquard|fair\s*isle)\b")
 NON_APPAREL_TYPE = re.compile(
     r"bag|shoe|accessor|beauty|home|sock|hat|belt|jewel|fragrance|care|candle|gift"
     r"|underwear|swim|lingerie|sunglass|scarf|glove|wallet|footwear|grooming|small\s+leather")
@@ -217,12 +260,15 @@ FIT_RULES_LOWER: list[tuple[str, str]] = [
     (r"midi skirt|midi", "straight cut, falls mid calf"),
     (r"mini skirt|mini", "straight cut, sits above the knee"),
     (r"maxi", "column cut, falls to the ankle"),
-    (r"short|bermuda|jort", "mid thigh, flat front"),
+    (r"\bskirt", "straight cut, falls below the knee"),
+    (r"\bshorts?\b|bermuda|jort", "mid thigh, flat front"),
     (r"chino", "flat front, straight through the leg"),
-    (r"skirt", "straight cut, falls below the knee"),
 ]
 FIT_RULES_UPPER: list[tuple[str, str]] = [
     (r"overshirt", "boxy overshirt, drops at hip"),
+    (r"oversize", "oversized, drops off the shoulder"),
+    (r"boxy", "boxy, drops at hip"),
+    (r"cropped|crop ", "cropped, sits above the waist"),
     (r"blazer", "structured shoulder, single breasted"),
     (r"trench", "straight cut, belted at the waist"),
     (r"parka", "long cut, drops below the hip"),
@@ -233,10 +279,7 @@ FIT_RULES_UPPER: list[tuple[str, str]] = [
     (r"cardigan", "regular knit, buttons through"),
     (r"turtleneck|polo neck|roll neck|funnel", "close knit, high rolled neck"),
     (r"crew ?neck", "regular knit, ribbed crew neck"),
-    (r"cropped|crop ", "cropped, sits above the waist"),
-    (r"oversize", "oversized, drops off the shoulder"),
     (r"relaxed", "relaxed, dropped shoulder"),
-    (r"boxy", "boxy, drops at hip"),
     (r"slim", "slim through body and sleeve"),
     (r"polo", "regular fit, ribbed placket"),
     (r"cashmere|merino|cable|sweater|jumper|knit", "regular knit, holds its shape"),
@@ -244,8 +287,8 @@ FIT_RULES_UPPER: list[tuple[str, str]] = [
     (r"t-?shirt|\btee\b", "regular fit, straight hem"),
     (r"blouse", "soft drape, falls at the hip"),
     (r"shirt", "regular fit, straight point collar"),
-    (r"coat", "straight cut, falls below the knee"),
     (r"jacket", "regular fit, hits at the hip"),
+    (r"coat", "straight cut, falls below the knee"),
     (r"vest|waistcoat|gilet", "close fit, cut away at the arm"),
     (r"top", "regular fit, straight hem"),
 ]
@@ -314,8 +357,10 @@ PALETTE: list[tuple[str, str, str, str]] = [
     ("Purple",      "#6B4C93", "purple", "cool"),
     ("Plum",        "#5A3A4E", "purple", "cool"),
     ("Lilac",       "#B7A8CE", "purple", "cool"),
+    ("Blush",       "#EAC9C6", "pink",   "warm"),
     ("Pink",        "#E6A2B4", "pink",   "cool"),
     ("Fuchsia",     "#C4177A", "pink",   "cool"),
+    ("Mahogany",    "#4E241A", "brown",  "warm"),
     ("Burgundy",    "#5A2029", "red",    "cool"),
     ("Red",         "#B3231F", "red",    "warm"),
     ("Tomato",      "#D6432F", "red",    "warm"),
@@ -359,8 +404,6 @@ COLOR_WORDS: dict[str, str] = {
 
 
 def _lab(rgb: tuple[int, int, int]) -> tuple[float, float, float]:
-    L, C, h = 0.0, 0.0, 0.0
-    from build_catalog import rgb_to_lch
     L, C, h = rgb_to_lch(rgb)
     return L, C * math.cos(math.radians(h)), C * math.sin(math.radians(h))
 
@@ -375,12 +418,23 @@ def nearest_family(rgb: tuple[int, int, int]) -> tuple[str, str, str]:
     return best[0], best[2], best[3]
 
 
-def color_name_agrees(brand_name: str, bucket: str) -> bool:
+def color_name_agrees(brand_name: str, bucket: str, rgb: tuple[int, int, int] | None = None) -> bool:
     """False only when the brand names a colour family the pixels contradict."""
     words = re.findall(r"[a-z]+", (brand_name or "").lower())
     claimed = {COLOR_WORDS[w] for w in words if w in COLOR_WORDS}
     if not claimed:
         return True
+
+    # Lightness guard. A ribbed black dress can sample to #8B8A87 because the
+    # knit's highlights beat the shadow for pixel share, and "black" plus a mid
+    # grey hex is the one disagreement the family buckets let through — grey is
+    # a legal neighbour of black. The deck sorts on lightness, so this matters.
+    if rgb is not None:
+        L = rgb_to_lch(rgb)[0]
+        if "black" in claimed and L > 42:
+            return False
+        if "white" in claimed and L < 72:
+            return False
     compatible = {
         "beige": {"beige", "white", "brown"},
         "brown": {"brown", "beige", "orange", "red"},
@@ -398,25 +452,43 @@ def color_name_agrees(brand_name: str, bucket: str) -> bool:
     return any(bucket in compatible.get(c, {c}) for c in claimed)
 
 
-def size_range(labels: list[str], category: str) -> str:
+def size_range(labels: list[str], category: str, womens: bool = False) -> str:
+    """
+    Numeric size labels are only waist measurements on menswear. H&M's ladies
+    jeans run 2–18 and A.P.C.'s womenswear runs FR 34–42; calling either of
+    those "waist" would print a garment size that does not exist.
+    """
     labels = [str(s).strip() for s in labels if str(s).strip()]
-    if not labels:
-        return "28–38 waist" if category == "lower_body" else "XS–XL"
-    nums = sorted({int(re.sub(r"\D", "", s)) for s in labels if re.fullmatch(r"\d{2}", s.strip())})
-    if category == "lower_body" and len(nums) >= 2:
-        return f"{nums[0]}–{nums[-1]} waist"
     order = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL", "3XL", "4XL"]
     letters = [s.upper() for s in labels if s.upper() in order]
     if letters:
         idx = sorted({order.index(s) for s in letters})
         return f"{order[idx[0]]}–{order[idx[-1]]}"
-    us = sorted({int(re.sub(r"\D", "", s)) for s in labels if re.fullmatch(r"\d{1,2}", s.strip())})
-    if len(us) >= 2:
-        return f"US {us[0]}–{us[-1]}"
+
+    nums = sorted({
+        int(s.split("/")[0]) for s in labels
+        if re.fullmatch(r"\d{1,2}(/\d{1,2})?", s.strip())
+    })
+    if len(nums) >= 2:
+        if womens:
+            return f"FR {nums[0]}–{nums[-1]}" if nums[0] >= 30 else f"US {nums[0]}–{nums[-1]}"
+        if 24 <= nums[0] and nums[-1] <= 48:
+            unit = "chest" if category == "upper_body" else "waist"
+            return f"{nums[0]}–{nums[-1]} {unit}"
+        return f"US {nums[0]}–{nums[-1]}"
+
+    if category == "upper_body":
+        return "XS–XL"
+    if womens:
+        return "US 0–14"
     return "28–38 waist" if category == "lower_body" else "XS–XL"
 
 
 def clean_name(name: str) -> str:
+    for _ in range(3):
+        name = re.sub(r"\s*[-–—(]\s*(final\s*sale|sale|outerworn|clearance|last\s*chance)\s*[)]*\s*$",
+                      "", name, flags=re.I)
+    name = re.sub(r"\s*\((?:M|W|F|Men|Women)\)\s*$", "", name, flags=re.I)
     name = re.sub(r"\s+", " ", name).strip(" -|")
     if name.isupper():
         name = name.title()
@@ -425,7 +497,16 @@ def clean_name(name: str) -> str:
 
 def clean_color(color: str) -> str:
     color = re.sub(r"\s+", " ", color or "").strip(" -|")
-    return color.title() if color else ""
+    # Massimo Dutti publishes bare numeric colour codes ("456"); those are not a
+    # colour name a shopper can read, so they are dropped and the name is taken
+    # from the measured pixels instead.
+    if not re.search(r"[a-zA-Z]{3}", color):
+        return ""
+    # "Navy / White" cannot be represented by one hex, and the sampled dominant
+    # of a two-tone garment is a blend of neither.
+    if re.search(r"[/&+]|\bmulti\b", color, re.I):
+        return ""
+    return color.title()
 
 
 # --------------------------------------------------------------------------
@@ -466,12 +547,15 @@ def harvest_hm() -> list[dict]:
                 name = clean_name(p.get("productName", ""))
                 if not name or excluded(name) or not is_garment(name):
                     continue
+                if PATTERN_RE.search(name.lower()):
+                    continue
                 prices = {x["priceType"]: x["price"] for x in p.get("prices", [])}
                 price = prices.get("redPrice") or prices.get("whitePrice")
                 if not price:
                     continue
                 category = category_for(name)
-                sizes = size_range([s.get("label", "") for s in p.get("sizes", [])], category)
+                womens = cat.startswith("ladies")
+                sizes = size_range([s.get("label", "") for s in p.get("sizes", [])], category, womens)
 
                 variants = [{
                     "articleId": p.get("id"),
@@ -499,7 +583,7 @@ def harvest_hm() -> list[dict]:
                         "currency": "USD",
                         "productImageUrl": v["image"],
                         "brandProductUrl": "https://www2.hm.com" + (v["url"] or f"/en_us/productpage.{v['articleId']}.html"),
-                        "colorName": clean_color(v["colorName"]),
+                        "colorName": "" if PATTERN_RE.search((v["colorName"] or "").lower()) else clean_color(v["colorName"]),
                         "colorHex": "",
                         "sizeInfo": sizes,
                         "fitNote": fit_note_for(name, category),
@@ -555,6 +639,9 @@ def harvest_inditex(brand: str, categories: list[int]) -> list[dict]:
                 continue
             if excluded(name) or not is_garment(name):
                 continue
+            if PATTERN_RE.search(name.lower()):
+                continue
+            womens = (product.get("sectionName") or "").upper().startswith("WOMAN")
             category = category_for(name)
             pid = str(seo["seoProductId"])
             pdp = INDITEX_PDP[brand].format(
@@ -590,9 +677,9 @@ def harvest_inditex(brand: str, categories: list[int]) -> list[dict]:
                     "productImageUrl": urls[0],
                     "_altImages": urls[1:],
                     "brandProductUrl": pdp,
-                    "colorName": clean_color(color.get("name", "")),
+                    "colorName": clean_color(color.get("name", "")) if not PATTERN_RE.search((color.get("name") or "").lower()) else "",
                     "colorHex": "",
-                    "sizeInfo": size_range([s.get("name", "") for s in color.get("sizes", [])], category),
+                    "sizeInfo": size_range([s.get("name", "") for s in color.get("sizes", [])], category, womens),
                     "fitNote": fit_note_for(name, category),
                 })
         time.sleep(0.2)
@@ -618,13 +705,23 @@ SHOPIFY = {
 def harvest_shopify(brand: str, host: str, pages: int = 4) -> list[dict]:
     out: list[dict] = []
     for page in range(1, pages + 1):
-        try:
-            r = requests.get(f"{host}/products.json", params={"limit": 250, "page": page},
-                             headers=HEADERS, timeout=40)
-            r.raise_for_status()
-            products = r.json().get("products", [])
-        except Exception as exc:  # noqa: BLE001
-            print(f"  ! {brand} p{page}: {exc}")
+        products = None
+        # Shopify storefronts throttle hard on /products.json; a 429 here is a
+        # pause, not a dead source, and giving up on it silently loses a brand.
+        for attempt in range(4):
+            try:
+                r = requests.get(f"{host}/products.json", params={"limit": 250, "page": page},
+                                 headers=HEADERS, timeout=40)
+                if r.status_code == 429:
+                    time.sleep(6 * (attempt + 1))
+                    continue
+                r.raise_for_status()
+                products = r.json().get("products", [])
+                break
+            except Exception as exc:  # noqa: BLE001
+                print(f"  ! {brand} p{page} attempt {attempt + 1}: {exc}")
+                time.sleep(4)
+        if products is None:
             break
         if not products:
             break
@@ -636,6 +733,8 @@ def harvest_shopify(brand: str, host: str, pages: int = 4) -> list[dict]:
             # product_type is the reliable signal on Shopify; the title alone
             # let a hand soap and a pair of knickers into the first build.
             if NON_APPAREL_TYPE.search(ptype.lower()) or excluded(blob) or not is_garment(blob):
+                continue
+            if PATTERN_RE.search(blob.lower()):
                 continue
 
             opts = {o.get("name", "").lower(): o.get("values", []) for o in p.get("options", [])}
@@ -649,6 +748,8 @@ def harvest_shopify(brand: str, host: str, pages: int = 4) -> list[dict]:
             if not colour:
                 opt = (opts.get("color") or opts.get("colour") or [""])[0]
                 colour = opt.split(" - ")[-1] if " - " in opt else opt
+            if colour and PATTERN_RE.search(colour.lower()):
+                colour = ""
             if not colour and " - " in raw:
                 head, _, tail = raw.partition(" - ")
                 if is_garment(head) and not is_garment(tail):
@@ -662,7 +763,8 @@ def harvest_shopify(brand: str, host: str, pages: int = 4) -> list[dict]:
                 continue
 
             category = category_for(f"{name} {ptype}")
-            sizes = size_range(opts.get("size", []), category)
+            womens = bool(re.search(r"\bwomen|\bladies|gender:female", f"{blob} {p.get('tags')}", re.I))
+            sizes = size_range(opts.get("size", []), category, womens)
             images = [i.get("src") for i in p.get("images", []) if i.get("src")][:4]
             if not images:
                 continue
@@ -701,7 +803,7 @@ def verify(candidate: dict) -> dict | None:
         # A published colour name the pixels contradict means the record and the
         # image are not the same colourway; the shopper would be shown one thing
         # and sorted on another, so the candidate is dropped rather than patched.
-        if published and not color_name_agrees(published, bucket):
+        if published and not color_name_agrees(published, bucket, rgb):
             return None
         candidate["productImageUrl"] = url
         candidate["colorHex"] = hexcode
@@ -724,7 +826,7 @@ def verify_all(pool: list[dict], workers: int = 12) -> list[dict]:
 # Ted Baker (2/30), Faherty (2/30), Marine Layer (6/30) and Alo Yoga (0/30)
 # photograph almost everything on a model, so they cannot supply a try-on
 # reference image and are dropped rather than padded out with bad URLs.
-KEEP_BRANDS = ["H&M", "Zara", "Massimo Dutti", "A.P.C.", "Sunspel", "Norse Projects"]
+KEEP_BRANDS = ["H&M", "Zara", "Massimo Dutti", "A.P.C.", "Sunspel", "Outerknown"]
 
 PER_BRAND = 7
 LOWER_FLOOR = 13
@@ -758,18 +860,21 @@ def select(verified: list[dict], target: int) -> list[dict]:
     def score(c: dict) -> float | None:
         if used_names[_dedupe_key(c)] >= 1:
             return None
+        lo, _, hi = c["sizeInfo"].partition("–")
+        if not hi or lo.strip() == hi.strip():
+            return None
         if have_brand[c["brand"]] >= PER_BRAND:
             return None
         rgb = tuple(int(c["colorHex"][i:i + 2], 16) for i in (1, 3, 5))
-        if any(math.dist(rgb, p) < 30 for p in picked_hex):
+        if any(math.dist(rgb, p) < 22 for p in picked_hex):
             return None
         s = 0.0
-        s += 4.0 * max(0, want_temp[c["_temp"]] - have_temp[c["_temp"]])
+        s += 16.0 * max(0, want_temp[c["_temp"]] - have_temp[c["_temp"]])
         s += 5.0 * max(0, want_cat.get(c["category"], 0) - have_cat[c["category"]])
         s += 3.0 * (PER_BRAND - have_brand[c["brand"]])
         # Spread across named families, so the "warm" third is camel/rust/olive
         # and not six variations on the same clay.
-        s -= 2.5 * have_family[c["_family"]]
+        s -= 2.5 * max(0, have_family[c["_family"]] - 3)
         return s
 
     while len(chosen) < target and remaining:
@@ -813,17 +918,35 @@ def main() -> None:
     for brand, pool in pools.items():
         print(f"  {brand:16} {len(pool):5} colourway candidates")
 
-    print("\nVerifying images (HTTP 200 + image/* + flat-lay + sampled hex)…")
-    verified: list[dict] = []
-    for brand in KEEP_BRANDS:
-        pool = [dict(c) for c in pools[brand]]
-        # Spread the verification budget over the whole pool rather than the
-        # first N, which would all come from one category.
-        pool.sort(key=lambda c: (c["name"], c["colorName"]))
-        step = max(1, len(pool) // 120)
-        ok = verify_all(pool[::step][:120], workers=16)
-        print(f"  {brand:16} {len(ok):3} verified")
-        verified += ok
+    global PER_BRAND
+    brands = [b for b in KEEP_BRANDS if pools.get(b)]
+    PER_BRAND = max(PER_BRAND, -(-TARGET_NEW // len(brands)) + 1)
+
+    vcache = ROOT / "scripts" / ".catalog_verified.json"
+    if vcache.exists():
+        verified = [
+            c for c in json.loads(vcache.read_text())
+            if c["brand"] in brands
+            and color_name_agrees(
+                c["colorName"],
+                nearest_family(tuple(int(c["colorHex"][i:i + 2], 16) for i in (1, 3, 5)))[1],
+                tuple(int(c["colorHex"][i:i + 2], 16) for i in (1, 3, 5)),
+            )
+        ]
+        print(f"\nreusing {len(verified)} verified items from {vcache.name}")
+    else:
+        print("\nVerifying images (HTTP 200 + image/* + flat-lay + sampled hex)…")
+        verified = []
+        for brand in brands:
+            pool = [dict(c) for c in pools[brand]]
+            # Spread the verification budget over the whole pool rather than the
+            # first N, which would all come from one category.
+            pool.sort(key=lambda c: (c["name"], c["colorName"]))
+            step = max(1, len(pool) // 120)
+            ok = verify_all(pool[::step][:120], workers=16)
+            print(f"  {brand:16} {len(ok):3} verified")
+            verified += ok
+        vcache.write_text(json.dumps(verified))
 
     chosen = select(verified, TARGET_NEW)
 
