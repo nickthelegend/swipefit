@@ -41,11 +41,19 @@ let client: SupabaseClient | null = null;
 function db(): SupabaseClient | null {
   if (!telemetryConfigured()) return null;
   if (!client) {
-    client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      // There are no user accounts. Disabling session persistence stops the
-      // client from reaching for storage it will never populate.
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
+    try {
+      client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        // There are no user accounts. Disabling session persistence stops the
+        // client from reaching for storage it will never populate.
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+    } catch {
+      // A malformed URL makes createClient throw synchronously. Callers invoke
+      // this outside their try blocks, so letting it escape would surface as an
+      // unhandled rejection — telemetry taking the app down is the one outcome
+      // this module exists to prevent.
+      return null;
+    }
   }
   return client;
 }

@@ -225,12 +225,17 @@ export const useAppStore = create<State & Actions>()(
 
         // Fire-and-forget. A telemetry failure must never stop onboarding, so
         // this is deliberately not awaited and never rejects into the caller.
-        void telemetry.openSession(profile).then((id) => {
-          if (id) {
-            set({ telemetrySessionId: id });
-            scheduleSync(get);
-          }
-        });
+        void telemetry
+          .openSession(profile)
+          .then((id) => {
+            if (id) {
+              set({ telemetrySessionId: id });
+              scheduleSync(get);
+            }
+          })
+          .catch(() => {
+            // Sync stays off for this session. Nothing else changes.
+          });
       },
 
       /**
