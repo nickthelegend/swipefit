@@ -24,6 +24,64 @@ export const hasCredentials = () => API_KEY.length > 0;
 
 export type Feature = 'cloth-v3' | 'skin-analysis' | 'skin-tone-analysis';
 
+/* -------------------------------------------------------------------------
+ * Unit budget
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Published unit cost per successful task. Units bill on `success` only, so
+ * failures and polls are free — which is exactly why an unbounded retry loop is
+ * so easy to write and so expensive to run.
+ *
+ * This guard exists because the first grant on this project was exhausted by a
+ * verification loop that re-ran `skin-tone-analysis` (20 units — ten times the
+ * cost of a try-on) against an unreachable target with no attempt limit. The
+ * spend was invisible until every endpoint started returning CreditInsufficiency.
+ */
+const UNIT_COST: Record<Feature, number> = {
+  'cloth-v3': 2,
+  'skin-analysis': 12,
+  'skin-tone-analysis': 20,
+};
+
+/**
+ * Ceiling for a single app session. Generous next to real usage — a full
+ * onboarding plus a 24-card deck is about 85 units — but low enough that a
+ * runaway loop trips it long before it drains a grant.
+ */
+const SESSION_UNIT_BUDGET = Number(process.env.EXPO_PUBLIC_YOUCAM_UNIT_BUDGET ?? 400);
+
+let unitsSpent = 0;
+
+/** Estimated units consumed this session, and what remains of the ceiling. */
+export function unitLedger(): { spent: number; budget: number; remaining: number } {
+  return {
+    spent: unitsSpent,
+    budget: SESSION_UNIT_BUDGET,
+    remaining: Math.max(0, SESSION_UNIT_BUDGET - unitsSpent),
+  };
+}
+
+function reserve(feature: Feature): void {
+  const cost = UNIT_COST[feature];
+  if (unitsSpent + cost > SESSION_UNIT_BUDGET) {
+    throw new YouCamError(
+      `Session unit budget reached (${unitsSpent}/${SESSION_UNIT_BUDGET}). Raise EXPO_PUBLIC_YOUCAM_UNIT_BUDGET to continue.`,
+      'budget_exhausted',
+      false,
+    );
+  }
+}
+
+function chargeOnSuccess(feature: Feature): void {
+  unitsSpent += UNIT_COST[feature];
+  if (__DEV__) {
+    console.log(
+      `[youcam] ${feature} +${UNIT_COST[feature]}u · session ${unitsSpent}/${SESSION_UNIT_BUDGET}`,
+    );
+  }
+}
+
 /** A photo we can hand to the API: either already public, or local to the device. */
 export type PhotoSource = { kind: 'url'; url: string } | { kind: 'file'; uri: string };
 
@@ -220,6 +278,10 @@ async function runTask<R>(
   body: Record<string, unknown>,
   signal?: AbortSignal,
 ): Promise<R> {
+  // Checked before the task is created, so a loop stops at the ceiling rather
+  // than one call past it.
+  reserve(feature);
+
   const start = await withSlot(() =>
     api<TaskStartResponse>(`/s2s/v2.0/task/${feature}`, {
       method: 'POST',
@@ -239,7 +301,10 @@ async function runTask<R>(
     const poll = await withSlot(() => api<TaskPollResponse<R>>(path));
     const { task_status: status, error, results } = poll.data;
 
-    if (status === 'success' && results) return results;
+    if (status === 'success' && results) {
+      chargeOnSuccess(feature);
+      return results;
+    }
     if (status === 'error') {
       throw new YouCamError(humanise(error), error ?? 'task_error', false);
     }

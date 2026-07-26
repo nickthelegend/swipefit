@@ -40,7 +40,20 @@ Base URL `https://yce-api-01.makeupar.com`. Auth is a plain `Authorization: Bear
 | `skin-tone-analysis` | 20 units | ❌ `CreditInsufficiency` |
 | `skin-analysis` | 9–15 units | ❌ `CreditInsufficiency` |
 
-The 1,000-unit grant was consumed largely by iterating on demo-model face photos — each accepted skin-tone reading costs 20 units, and finding three faces the API would accept took many attempts.
+**How the first grant was spent** — recorded so it is not repeated:
+
+| Consumer | Est. units |
+|---|---|
+| Searching for demo-model faces — ~60 candidates through `skin-tone-analysis` | ~500–800 |
+| Verification scripts (`smoke-pipeline`, `check-faces`, `check-divergence`) | ~160 |
+| On-device testing — 2 onboardings + ~26 deck renders | ~110 |
+| API validation probes | ~15 |
+
+The dominant cost was an **unbounded verification loop against the most expensive endpoint**. `skin-tone-analysis` bills 20 units per success — ten times a try-on — and the search was given a target lightness the API cannot actually return (it compresses toward a canonical skin range and tops out near L\* 68), so it iterated far past the point of diminishing returns. Units bill on `success` only, which makes exactly this pattern invisible until the balance is gone.
+
+`src/services/youcam.ts` now enforces a per-session unit ceiling (`EXPO_PUBLIC_YOUCAM_UNIT_BUDGET`, default 400) and logs running spend in dev. For reference, real usage is small: **~85 units for a complete run** — one skin scan (29) plus a full 24-card deck (48) plus a couple of outfit chains.
+
+Also worth checking before assuming a grant is spent: the 1,000 hackathon units arrive as a **redeem code by email after Devpost registration**, applied at Account → Redeem Code. A key that never had the code applied is running on a much smaller default balance.
 
 The app handles this rather than breaking. Each bundled demo model ships with the `skin_color` hex a **real** `skin-tone-analysis` run returned for that exact file, and the scan falls back to it when the live call fails. The reveal screen then says `RECORDED` instead of `MEASURED` and explains why. Redeem a fresh code at Account → Redeem Code to restore live scanning; nothing in the code needs to change.
 
