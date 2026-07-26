@@ -30,6 +30,13 @@
   --radius-md: 13px;
   --radius-lg: 23px;
   --radius-xl: 30px;
+
+  /* One easing vocabulary, matching the app's. `.press` predates these tokens
+     and hardcodes its own curve; it is left alone because press feedback wants
+     to arrive faster than anything else here and changing it would slow the
+     most-touched interaction on the site. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 @layer base {
@@ -101,6 +108,40 @@
     background-size: 44px 44px;
   }
 
+  /*
+     Scroll-triggered entrance, used sparingly — the proof panels and the brand
+     grid, nothing else. A marketing page where every section slides in reads
+     cheap and, worse, makes the content arrive later than the scroll.
+     Transform + opacity only, so this never triggers layout.
+  */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 320ms var(--ease-out),
+      transform 320ms var(--ease-out);
+  }
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Appears once, on mount, so a keyframe is right here — a transition would
+     need a frame of the "before" state to animate from. */
+  .rise-in {
+    animation: rise-in 180ms var(--ease-out) both;
+  }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   .marquee {
     animation: marquee 26s linear infinite;
   }
@@ -119,6 +160,23 @@
     }
     html {
       scroll-behavior: auto;
+    }
+    /* Gentler, not absent: the fade still marks that something arrived, but
+       nothing travels. Movement is the part that causes trouble. */
+    .reveal {
+      transform: none;
+      transition-duration: 200ms;
+    }
+    .rise-in {
+      animation-name: fade-in;
+    }
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
   }
 }

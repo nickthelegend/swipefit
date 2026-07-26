@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import Animated, { FadeIn, LinearTransition } from 'react-native-reanimated';
 
 import { brandAccent, formatPrice } from '@/data/catalog';
@@ -11,6 +11,7 @@ import { Globe, IconX } from '@/ui/doodles';
 import { PillButton, PillTag } from '@/ui/PillButton';
 import { Screen } from '@/ui/Screen';
 import { Shadowed } from '@/ui/Shadowed';
+import { Tap } from '@/ui/Tap';
 import { Type } from '@/ui/Type';
 
 /**
@@ -155,7 +156,7 @@ export default function Bag() {
                         {item.sentToBrand && <PillTag label="Sent to brand" tone={color.forest} labelColor={color.paper} />}
                       </View>
 
-                      <Pressable
+                      <Tap
                         onPress={() => removeFromCart(item.product.id)}
                         accessibilityRole="button"
                         accessibilityLabel={`Remove ${item.product.name}`}
@@ -171,7 +172,7 @@ export default function Bag() {
                         }}
                       >
                         <IconX size={14} />
-                      </Pressable>
+                      </Tap>
                     </View>
                   ))}
                 </View>

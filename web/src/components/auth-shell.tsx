@@ -69,8 +69,18 @@ export function Notice({
         ? 'bg-[#1F8D42] text-white'
         : 'bg-[#EBD22F] text-black';
 
+  // A notice always arrives as the answer to something the user just did — a
+  // failed sign-in, a submitted application. Appearing instantly above the form
+  // reads as though it had been there all along and was simply missed; a short
+  // rise ties it to the button press that caused it.
+  //
+  // `role` is assertive for errors so a screen reader interrupts rather than
+  // waiting for the user to reach the notice on their own.
   return (
-    <div className={`rounded-[13px] border-2 border-black px-4 py-3 text-[14px] leading-relaxed ${fill}`}>
+    <div
+      role={tone === 'error' ? 'alert' : 'status'}
+      className={`rise-in rounded-[13px] border-2 border-black px-4 py-3 text-[14px] leading-relaxed ${fill}`}
+    >
       {children}
     </div>
   );

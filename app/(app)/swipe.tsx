@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 
 import type { Undertone } from '@/logic/color';
@@ -14,6 +14,7 @@ import { PillButton, PillTag } from '@/ui/PillButton';
 import { Screen } from '@/ui/Screen';
 import { Shadowed } from '@/ui/Shadowed';
 import { SwipeDeck } from '@/ui/SwipeDeck';
+import { Tap } from '@/ui/Tap';
 import { Type } from '@/ui/Type';
 import type { DeckCard, Season } from '@/types';
 
@@ -68,7 +69,7 @@ export default function SwipeScreen() {
       {/* Header carries the causal link: this reading produced this deck. */}
       <View style={{ paddingTop: space.xs, gap: space.sm }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Pressable
+          <Tap
             onPress={() => setShowSim((v) => !v)}
             accessibilityRole="button"
             accessibilityLabel="Change simulated undertone"
@@ -91,11 +92,11 @@ export default function SwipeScreen() {
               </Type>
               {simulated && <PillTag label="Sim" tone={color.acid} />}
             </View>
-          </Pressable>
+          </Tap>
 
           <View style={{ flexDirection: 'row', gap: space.xs, alignItems: 'center', flexShrink: 0 }}>
             <BlindToggle reveal={revealBrand} onChange={setRevealBrand} />
-            <Pressable
+            <Tap
               onPress={undoSwipe}
               disabled={cursor === 0}
               accessibilityRole="button"
@@ -114,7 +115,7 @@ export default function SwipeScreen() {
               }}
             >
               <IconUndo size={19} />
-            </Pressable>
+            </Tap>
             <ModeToggle mode={mode} onChange={setMode} />
           </View>
         </View>
@@ -197,7 +198,7 @@ function BlindToggle({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <Pressable
+    <Tap
       onPress={() => onChange(!reveal)}
       accessibilityRole="switch"
       accessibilityState={{ checked: !reveal }}
@@ -219,7 +220,7 @@ function BlindToggle({
       <Type role="micro" color={reveal ? color.ink : color.ground}>
         {reveal ? 'Brands on' : 'Blind'}
       </Type>
-    </Pressable>
+    </Tap>
   );
 }
 
@@ -236,7 +237,7 @@ function ModeToggle({ mode, onChange }: { mode: 'apparel' | 'beauty'; onChange: 
       }}
     >
       {(['apparel', 'beauty'] as const).map((m) => (
-        <Pressable
+        <Tap
           key={m}
           onPress={() => onChange(m)}
           accessibilityRole="tab"
@@ -250,7 +251,7 @@ function ModeToggle({ mode, onChange }: { mode: 'apparel' | 'beauty'; onChange: 
           <Type role="micro" color={mode === m ? color.ground : color.ink}>
             {m === 'apparel' ? 'Fit' : 'Face'}
           </Type>
-        </Pressable>
+        </Tap>
       ))}
     </View>
   );
@@ -300,7 +301,7 @@ function UndertoneSimulator({
           {options.map((o) => {
             const active = value === o.key;
             return (
-              <Pressable
+              <Tap
                 key={o.label}
                 onPress={() => onChange(o.key)}
                 accessibilityRole="button"
@@ -319,14 +320,14 @@ function UndertoneSimulator({
                 <Type role="micro" color={active && o.key !== null ? color.paper : color.ink}>
                   {o.label}
                 </Type>
-              </Pressable>
+              </Tap>
             );
           })}
         </View>
 
         {/* Swapping demo person without clearing app data. Also drops the render
             cache, so the next person cannot inherit this one's images. */}
-        <Pressable
+        <Tap
           onPress={onStartOver}
           accessibilityRole="button"
           accessibilityLabel="Start over with a different person"
@@ -341,7 +342,7 @@ function UndertoneSimulator({
           }}
         >
           <Type role="micro">Start over · new person</Type>
-        </Pressable>
+        </Tap>
       </View>
     </Shadowed>
   );

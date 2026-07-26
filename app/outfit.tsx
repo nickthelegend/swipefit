@@ -1,16 +1,22 @@
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import { useEffect, useMemo, useState } from 'react';
+import { ScrollView, View } from 'react-native';
+import Animated, {
+  FadeIn,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
 import { brandAccent, formatPrice } from '@/data/catalog';
 import { useAppStore } from '@/store/useAppStore';
-import { border, color, onAccent, radius, space } from '@/theme/tokens';
+import { border, color, motion, onAccent, radius, space } from '@/theme/tokens';
 import { Chevrons, IconX, Starburst } from '@/ui/doodles';
 import { PillButton, PillTag } from '@/ui/PillButton';
 import { Screen } from '@/ui/Screen';
 import { Shadowed } from '@/ui/Shadowed';
+import { Tap } from '@/ui/Tap';
 import { Type } from '@/ui/Type';
 import type { CartItem } from '@/types';
 
@@ -41,6 +47,19 @@ export default function OutfitBuilder() {
 
   const current = outfits.find((o) => o.id === `${topId}+${bottomId}`) ?? null;
   const canBuild = topId !== null && bottomId !== null;
+
+  // The result box more than doubles in height when a render lands (200 -> 460).
+  // Snapping between the two sizes shoves the pickers below off the screen with
+  // no warning; springing the height means the page opens up rather than jumps.
+  //
+  // Declared above the early return below so hook order stays stable when the
+  // bag is missing a half.
+  const ready = current?.status === 'ready' && Boolean(current.uri);
+  const boxHeight = useSharedValue(ready ? 460 : 200);
+  useEffect(() => {
+    boxHeight.value = withSpring(ready ? 460 : 200, motion.springLoose);
+  }, [ready, boxHeight]);
+  const boxStyle = useAnimatedStyle(() => ({ height: boxHeight.value }));
 
   if (tops.length === 0 || bottoms.length === 0) {
     return (
@@ -73,7 +92,7 @@ export default function OutfitBuilder() {
           <View style={{ flex: 1 }}>
             <Type role="title">Build the fit</Type>
           </View>
-          <Pressable
+          <Tap
             onPress={() => router.back()}
             accessibilityRole="button"
             accessibilityLabel="Close"
@@ -89,7 +108,7 @@ export default function OutfitBuilder() {
             }}
           >
             <IconX size={14} />
-          </Pressable>
+          </Tap>
         </View>
 
         <Type role="body">
@@ -99,20 +118,27 @@ export default function OutfitBuilder() {
 
         {/* The result. */}
         <Shadowed radius={radius.lg}>
-          <View
-            style={{
-              backgroundColor: color.paper,
-              borderWidth: border.bold,
-              borderColor: color.ink,
-              borderRadius: radius.lg,
-              overflow: 'hidden',
-              height: current?.status === 'ready' ? 460 : 200,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+          <Animated.View
+            style={[
+              {
+                backgroundColor: color.paper,
+                borderWidth: border.bold,
+                borderColor: color.ink,
+                borderRadius: radius.lg,
+                overflow: 'hidden',
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+              boxStyle,
+            ]}
           >
-            {current?.status === 'ready' && current.uri ? (
-              <Image source={{ uri: current.uri }} style={{ width: '100%', height: 460 }} contentFit="cover" transition={220} />
+            {ready && current?.uri ? (
+              // The one genuinely high-emotion moment in the app: the shopper's
+              // own body wearing a complete outfit. It earns a beat, so the
+              // image settles in rather than appearing.
+              <Animated.View entering={FadeIn.duration(motion.base)} style={{ width: '100%' }}>
+                <Image source={{ uri: current.uri }} style={{ width: '100%', height: 460 }} contentFit="cover" transition={220} />
+              </Animated.View>
             ) : current?.status === 'rendering' ? (
               <View style={{ alignItems: 'center', gap: space.sm, padding: space.lg }}>
                 <Starburst size={64} fill={color.violet} rotate={8} />
@@ -142,7 +168,7 @@ export default function OutfitBuilder() {
                 </Type>
               </View>
             )}
-          </View>
+          </Animated.View>
         </Shadowed>
 
         <Picker label="Top" items={tops} selectedId={topId} onSelect={setTopId} />
@@ -184,7 +210,9 @@ export default function OutfitBuilder() {
                 .map((o) => (
                   <Animated.View key={o.id} entering={FadeIn.duration(200)}>
                     <Shadowed radius={radius.md} offset={{ x: 3, y: 4 }}>
-                      <Pressable
+                      <Tap
+                        feel="travel"
+                        offset={{ x: 3, y: 4 }}
                         onPress={() => {
                           setTopId(o.topId);
                           setBottomId(o.bottomId);
@@ -202,7 +230,7 @@ export default function OutfitBuilder() {
                         }}
                       >
                         <Image source={{ uri: o.uri! }} style={{ flex: 1 }} contentFit="cover" />
-                      </Pressable>
+                      </Tap>
                     </Shadowed>
                   </Animated.View>
                 ))}
@@ -237,7 +265,7 @@ function Picker({
 
           return (
             <Shadowed key={item.product.id} radius={radius.md} offset={{ x: 3, y: 4 }} scale={selected ? 1 : 0.6}>
-              <Pressable
+              <Tap
                 onPress={() => onSelect(item.product.id)}
                 accessibilityRole="button"
                 accessibilityState={{ selected }}
@@ -281,7 +309,7 @@ function Picker({
                     {formatPrice(item.product)}
                   </Type>
                 </View>
-              </Pressable>
+              </Tap>
             </Shadowed>
           );
         })}

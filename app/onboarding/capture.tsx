@@ -3,7 +3,7 @@ import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { DEMO_MODELS, resolveDemoPerson } from '@/data/demoModels';
@@ -13,6 +13,7 @@ import { Cursor, IconCamera, IconImage, Starburst } from '@/ui/doodles';
 import { PillButton, PillTag } from '@/ui/PillButton';
 import { Screen } from '@/ui/Screen';
 import { Shadowed } from '@/ui/Shadowed';
+import { Tap } from '@/ui/Tap';
 import { Type } from '@/ui/Type';
 
 type Step = 'face' | 'body';
@@ -140,7 +141,8 @@ export default function Capture() {
           <View style={{ gap: space.sm, marginTop: space.xs }}>
             {DEMO_MODELS.map((model, i) => (
               <Shadowed key={model.id} radius={radius.lg}>
-                <Pressable
+                <Tap
+                  feel="travel"
                   accessibilityRole="button"
                   accessibilityLabel={`Use demo model ${model.label}`}
                   onPress={() => void useDemoModel(model.id)}
@@ -173,7 +175,7 @@ export default function Capture() {
                     </Type>
                   </View>
                   {i === 1 && <Starburst size={30} fill={color.acid} rotate={14} />}
-                </Pressable>
+                </Tap>
               </Shadowed>
             ))}
           </View>
@@ -224,7 +226,7 @@ function ActionTile({
   tone?: string;
 }) {
   return (
-    <Pressable
+    <Tap
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
@@ -242,7 +244,7 @@ function ActionTile({
     >
       {icon}
       <Type role="heading">{label}</Type>
-    </Pressable>
+    </Tap>
   );
 }
 
@@ -261,9 +263,9 @@ function Thumb({ uri, label, onClear }: { uri: string; label: string; onClear: (
         <Image source={{ uri }} style={{ width: '100%', height: 168 }} contentFit="cover" />
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: space.xs }}>
           <Type role="label">{label}</Type>
-          <Pressable onPress={onClear} accessibilityRole="button" accessibilityLabel={`Retake ${label}`} hitSlop={12}>
+          <Tap onPress={onClear} accessibilityRole="button" accessibilityLabel={`Retake ${label}`} hitSlop={12}>
             <PillTag label="Retake" tone={color.groundSunk} />
-          </Pressable>
+          </Tap>
         </View>
       </View>
     </Shadowed>

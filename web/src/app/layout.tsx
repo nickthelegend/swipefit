@@ -19,7 +19,20 @@ const archivo = Archivo({
   display: 'swap',
 });
 
+/**
+ * Absolute base for OG/Twitter image URLs.
+ *
+ * Without it Next resolves /og.png against http://localhost:3000, which every
+ * scraper then fails to fetch — the card silently falls back to a bare link.
+ * No domain is hardcoded because none is owned yet: Vercel supplies its own at
+ * build time, and NEXT_PUBLIC_SITE_URL overrides once there is a real one.
+ */
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: 'FITCHECK — the face decides what you wear',
   description:
     'A swipe-to-shop app where every card is the garment rendered on your own body. One skin scan decides what you see. Built on YouCam Skin AI and Apparel VTO.',
@@ -52,6 +65,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={archivo.variable}>
+      <head>
+        {/* Reveal-on-scroll starts at opacity 0 and is un-hidden by JS. Without
+            this the whole proof section and the brand grid would be invisible,
+            not merely un-animated, to anyone with scripting off. */}
+        <noscript>
+          {/* eslint-disable-next-line react/no-danger */}
+          <style dangerouslySetInnerHTML={{ __html: '.reveal{opacity:1;transform:none}' }} />
+        </noscript>
+      </head>
       <body className={`${archivo.className} min-h-screen antialiased`}>
         <Nav />
         <main>{children}</main>

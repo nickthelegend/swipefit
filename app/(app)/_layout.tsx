@@ -1,10 +1,11 @@
 import { Tabs } from 'expo-router';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAppStore } from '@/store/useAppStore';
 import { HIT, border, color, radius, space } from '@/theme/tokens';
 import { IconBag, IconCards, IconChart } from '@/ui/doodles';
+import { Tap } from '@/ui/Tap';
 import { Type } from '@/ui/Type';
 
 /**
@@ -73,7 +74,7 @@ function BrutalTabBar({ state, navigation }: TabBarProps) {
         const fg = focused ? color.paper : color.ink;
 
         return (
-          <Pressable
+          <Tap
             key={route.key}
             accessibilityRole="tab"
             accessibilityState={{ selected: focused }}
@@ -96,7 +97,7 @@ function BrutalTabBar({ state, navigation }: TabBarProps) {
             <Type role="label" color={fg}>
               {route.name === 'bag' && cartCount > 0 ? `Bag ${cartCount}` : route.name}
             </Type>
-          </Pressable>
+          </Tap>
         );
       })}
     </View>

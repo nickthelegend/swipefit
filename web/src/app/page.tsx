@@ -1,6 +1,7 @@
 import Image from 'next/image';
 
 import { Blob, Chevrons, Cursor, Eyes, Globe, IconAndroid, IconApple, Squiggle, Starburst } from '@/components/doodles';
+import { Reveal } from '@/components/reveal';
 import { Panel, PillLink, Sticker, Tag } from '@/components/ui/kit';
 
 /**
@@ -117,28 +118,43 @@ export default function Home() {
             <Blob size={80} fill="#4D17F5" rotate={-10} />
           </div>
 
+          {/*
+            The page's proof. These three numbers are the argument, and they are
+            the one place on the site worth a staggered entrance: read in
+            sequence they land as three separate claims rather than a wall.
+
+            60ms apart, revealed once. This is the ONLY scroll-triggered
+            entrance on the landing page — the surrounding sections deliberately
+            do not move.
+          */}
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            <Panel tone="acid" className="p-7">
-              <div className="display text-[54px] leading-none">24/24</div>
-              <p className="mt-3 text-[15px] leading-relaxed">
-                items change position between a warm-undertone and a cool-undertone shopper,
-                against an identical 24-piece catalogue.
-              </p>
-            </Panel>
-            <Panel tone="violet" className="p-7">
-              <div className="display text-[54px] leading-none">0/6</div>
-              <p className="mt-3 text-[15px] leading-relaxed">
-                overlap in the top six. The two people are shown a genuinely different rail, not a
-                reshuffle of the same favourites.
-              </p>
-            </Panel>
-            <Panel className="p-7">
-              <div className="display text-[54px] leading-none">CIELAB</div>
-              <p className="mt-3 text-[15px] leading-relaxed">
-                The API returns colour only — no undertone field. Every warm/cool judgement is
-                derived here, in perceptual colour space.
-              </p>
-            </Panel>
+            <Reveal>
+              <Panel tone="acid" className="h-full p-7">
+                <div className="display text-[54px] leading-none">24/24</div>
+                <p className="mt-3 text-[15px] leading-relaxed">
+                  items change position between a warm-undertone and a cool-undertone shopper,
+                  against an identical 24-piece catalogue.
+                </p>
+              </Panel>
+            </Reveal>
+            <Reveal delay={60}>
+              <Panel tone="violet" className="h-full p-7">
+                <div className="display text-[54px] leading-none">0/6</div>
+                <p className="mt-3 text-[15px] leading-relaxed">
+                  overlap in the top six. The two people are shown a genuinely different rail, not a
+                  reshuffle of the same favourites.
+                </p>
+              </Panel>
+            </Reveal>
+            <Reveal delay={120}>
+              <Panel className="h-full p-7">
+                <div className="display text-[54px] leading-none">CIELAB</div>
+                <p className="mt-3 text-[15px] leading-relaxed">
+                  The API returns colour only — no undertone field. Every warm/cool judgement is
+                  derived here, in perceptual colour space.
+                </p>
+              </Panel>
+            </Reveal>
           </div>
 
           <p className="mt-8 max-w-3xl text-[15px] leading-relaxed opacity-80">

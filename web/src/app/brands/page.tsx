@@ -5,16 +5,19 @@ import { useEffect, useState } from 'react';
 
 import { Chevrons, Globe, IconArrow, Starburst } from '@/components/doodles';
 import { BrandMark } from '@/components/brand-mark';
+import { Reveal } from '@/components/reveal';
 import { Panel, PillLink, Tag, type Accent } from '@/components/ui/kit';
 import { createClient, supabaseConfigured, type Brand } from '@/lib/supabase';
 
 /**
  * The public brand directory.
  *
- * Falls back to the three brands already in the app's catalogue when Supabase
- * is unreachable or the schema has not been applied. That is not a mock — those
- * three ARE the shipping catalogue, and the page stating so is more honest than
- * an empty state that implies nobody has signed up.
+ * The list below is the nine brands in the app's shipping catalogue, generated
+ * from src/data/catalog.json. It is the floor, not a mock: those nine ARE the
+ * catalogue, and stating so beats an empty state implying nobody has signed up.
+ *
+ * Live rows from Supabase are merged over the top rather than swapped in, so the
+ * directory can only ever gain brands from being online.
  */
 const CATALOGUE_BRANDS: Pick<Brand, 'name' | 'slug' | 'accent' | 'blurb' | 'website'>[] = [
   {
@@ -101,7 +104,20 @@ export default function Brands() {
           .order('name');
 
         if (cancelled || error || !data || data.length === 0) return;
-        setBrands(data as Row[]);
+
+        // Merge, never replace. The database is authoritative for a brand's own
+        // copy — it can edit its blurb from the console — but it is NOT
+        // authoritative for who is in the catalogue. Replacing outright meant
+        // that a database holding a subset of the shipping brands rendered a
+        // SHORTER directory than the offline fallback, which is the wrong way
+        // round: live data made the page less accurate, not more.
+        const rows = data as Row[];
+        const bySlug = new Map(rows.map((r) => [r.slug, r]));
+
+        setBrands([
+          ...CATALOGUE_BRANDS.map((b) => bySlug.get(b.slug) ?? b),
+          ...rows.filter((r) => !CATALOGUE_BRANDS.some((b) => b.slug === r.slug)),
+        ]);
         setLive(true);
       } catch {
         // Directory stays on the catalogue list. Nothing to surface.
@@ -133,31 +149,39 @@ export default function Brands() {
 
       <section className="border-b-2 border-black">
         <div className="mx-auto max-w-6xl px-5 py-16">
+          {/*
+            Nine logos landing at once is a slab; 40ms apart they read as a list.
+            The stagger is capped at six steps so the last card never waits a
+            noticeable amount of time — with an unbounded index a directory of
+            thirty brands would leave the bottom row hanging for over a second.
+          */}
           <div className="grid gap-6 md:grid-cols-3">
-            {brands.map((brand) => (
-              <Panel key={brand.slug} className="overflow-hidden">
-                <div className="border-b-2 border-black">
-                  <BrandMark
-                    name={brand.name}
-                    slug={brand.slug}
-                    accent={brand.accent as Accent}
-                  />
-                </div>
-                <div className="p-6">
-                  <p className="min-h-[72px] text-[15px] leading-relaxed">{brand.blurb}</p>
-                  {brand.website && (
-                    <a
-                      href={brand.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] underline-offset-4 hover:underline"
-                    >
-                      Visit site
-                      <IconArrow size={16} />
-                    </a>
-                  )}
-                </div>
-              </Panel>
+            {brands.map((brand, i) => (
+              <Reveal key={brand.slug} delay={Math.min(i, 6) * 40}>
+                <Panel className="h-full overflow-hidden">
+                  <div className="border-b-2 border-black">
+                    <BrandMark
+                      name={brand.name}
+                      slug={brand.slug}
+                      accent={brand.accent as Accent}
+                    />
+                  </div>
+                  <div className="p-6">
+                    <p className="min-h-[72px] text-[15px] leading-relaxed">{brand.blurb}</p>
+                    {brand.website && (
+                      <a
+                        href={brand.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] underline-offset-4 hover:underline"
+                      >
+                        Visit site
+                        <IconArrow size={16} />
+                      </a>
+                    )}
+                  </div>
+                </Panel>
+              </Reveal>
             ))}
           </div>
         </div>

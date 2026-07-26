@@ -1,15 +1,17 @@
 import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { brandAccent, formatPrice } from '@/data/catalog';
 import { groupCartByBrand, useAppStore } from '@/store/useAppStore';
-import { border, color, onAccent, radius, space } from '@/theme/tokens';
+import { border, color, motion, onAccent, radius, space } from '@/theme/tokens';
 import { Cursor, Globe, IconArrow } from '@/ui/doodles';
 import { PillButton, PillTag } from '@/ui/PillButton';
 import { Screen } from '@/ui/Screen';
 import { Shadowed } from '@/ui/Shadowed';
+import { Tap } from '@/ui/Tap';
 import { Type } from '@/ui/Type';
 
 /**
@@ -119,7 +121,7 @@ export default function Checkout() {
                 </View>
 
                 {items.map((item) => (
-                  <Pressable
+                  <Tap
                     key={item.product.id}
                     onPress={() => void openOne(item.product.brandProductUrl, item.product.id)}
                     accessibilityRole="link"
@@ -141,14 +143,27 @@ export default function Checkout() {
                         {formatPrice(item.product)} · {item.product.colorName}
                       </Type>
                     </View>
-                    {item.sentToBrand ? (
-                      <PillTag label="Opened" tone={color.forest} labelColor={color.paper} />
-                    ) : opening === item.product.id ? (
-                      <PillTag label="Opening" tone={color.acid} />
-                    ) : (
-                      <IconArrow size={20} />
-                    )}
-                  </Pressable>
+                    {/*
+                      Handoff is the whole point of this screen, so the row has
+                      to make the transition legible: arrow -> Opening -> Opened.
+                      Keyed per state so each one actually mounts and fades in;
+                      without the key React reuses the node and the label
+                      substitutes itself in place, which reads as a glitch rather
+                      than a confirmation.
+                    */}
+                    <Animated.View
+                      key={item.sentToBrand ? 'sent' : opening === item.product.id ? 'opening' : 'idle'}
+                      entering={FadeIn.duration(motion.base)}
+                    >
+                      {item.sentToBrand ? (
+                        <PillTag label="Opened" tone={color.forest} labelColor={color.paper} />
+                      ) : opening === item.product.id ? (
+                        <PillTag label="Opening" tone={color.acid} />
+                      ) : (
+                        <IconArrow size={20} />
+                      )}
+                    </Animated.View>
+                  </Tap>
                 ))}
 
                 <View style={{ padding: space.md, paddingTop: space.xs }}>
