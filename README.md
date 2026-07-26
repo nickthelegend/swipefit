@@ -79,6 +79,12 @@ Writes are debounced 2.5s and carry a unique `client_key`, so a retry after a dr
 npm install
 cp .env.example .env      # then add your YouCam key
 npx expo run:android      # or run:ios
+
+npm test                  # 45 tests, no network, ~150ms
+npm run typecheck         # app and tests, separate configs
+npm run db:sql | pbcopy   # schema, as one paste — see Telemetry below
+npm run db:verify         # confirm the schema landed, using only the anon key
+npm run check:links       # 120 catalogue URLs against the live web (slow)
 ```
 
 `.env`:
@@ -89,6 +95,20 @@ EXPO_PUBLIC_YOUCAM_BASE_URL=https://yce-api-01.makeupar.com
 ```
 
 **On an emulator, use a demo model.** The Android emulator's camera renders a synthetic test scene with no person in it, so the real capture flow cannot be exercised there. The bottom of the capture screen offers three bundled people spanning the skin-tone range. On real hardware the camera path works normally.
+
+**`expo prebuild` wipes `android/local.properties`,** so the next Gradle run fails with "SDK location not found". Export `ANDROID_HOME` (or rewrite that file) before building.
+
+**If the emulator will not boot, run it headless.** The windowed emulator crashes on this machine with `Failed to find ColorBuffer: NNN` — a renderer bug, not an app problem — and then blocks on a crash-consent dialog, so it looks like a slow boot rather than a dead one. Headless skips that path entirely and boots in about 30 seconds:
+
+```bash
+emulator -avd <name> -no-window -no-audio -no-boot-anim -no-snapshot-load -no-metrics \
+  -gpu swiftshader_indirect &
+adb wait-for-device
+```
+
+`adb exec-out screencap -p > shot.png` and `adb shell input tap X Y` both work headless, which is enough to drive and inspect the UI.
+
+**One Metro only.** Two bundlers contending for port 8081 leaves the dev client unable to reach either, and the symptom is an app that renders correctly but ignores every touch — which reads exactly like broken event handling. `lsof -ti:8081` before blaming a component.
 
 ---
 
