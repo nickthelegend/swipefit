@@ -32,6 +32,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@types/node": "^26.1.1",
     "@types/react": "~19.2.2",
     "tsx": "^4.23.1",
     "typescript": "~6.0.3"
@@ -43,7 +44,10 @@
     "web": "expo start --web",
     "tsc": "tsc --noEmit",
     "db:sql": "node scripts/db_sql.mjs",
-    "db:verify": "node scripts/verify_db.mjs"
+    "db:verify": "node scripts/verify_db.mjs",
+    "test": "node --import ./scripts/test-register.mjs --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"src/logic/__tests__/*.test.ts\"",
+    "check:links": "node scripts/check_links.mjs",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json"
   },
   "private": true
 }
