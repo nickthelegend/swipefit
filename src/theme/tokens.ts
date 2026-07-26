@@ -11,8 +11,21 @@
  */
 
 export const color = {
-  ground: '#EEEEEC',
-  groundSunk: '#E1E1D9',
+  /**
+   * The ground is byooooob's bubblegum, used at page scale.
+   *
+   * On the source site this pink is a block colour, not the page ground — their
+   * ground is a warm off-white. Promoting it to the ground is the user's call
+   * and it is a real one: the whole product now sits inside the pink instead of
+   * next to it, and the try-on renders (which are mostly skin, denim and
+   * neutral studio backdrops) gain a lot of separation from it.
+   *
+   * The consequence is that bubblegum can no longer be an accent — a brand
+   * assigned it would vanish into the page — so the accent rotation drops to
+   * four and `blush` takes over as the recessed surface.
+   */
+  ground: '#FA9DCD',
+  groundSunk: '#F285BE',
   paper: '#FFFFFF',
   ink: '#000000',
   inkSoft: '#333333',
@@ -20,25 +33,25 @@ export const color = {
   violet: '#4D17F5',
   tomato: '#E9492D',
   acid: '#EBD22F',
-  bubblegum: '#FA9DCD',
   forest: '#1F8D42',
+  /** Retained for surfaces that want a lighter pink than the ground. */
+  blush: '#FDC7E2',
 } as const;
 
-export type AccentName = 'violet' | 'tomato' | 'acid' | 'bubblegum' | 'forest';
+export type AccentName = 'violet' | 'tomato' | 'acid' | 'forest';
 
-export const ACCENTS: readonly AccentName[] = ['violet', 'tomato', 'acid', 'bubblegum', 'forest'];
+export const ACCENTS: readonly AccentName[] = ['violet', 'tomato', 'acid', 'forest'];
 
 /**
  * Fixed foreground pairings. DESIGN.md forbids any combination not listed here,
  * so contrast is a property of the token set rather than a per-screen judgement.
- * Measured against #000: acid 11.8:1, bubblegum 10.3:1. Against #FFF:
- * violet 8.9:1, tomato 4.6:1, forest 4.6:1. All clear 4.5:1 for body text.
+ * Measured against #000: acid 11.8:1. Against #FFF: violet 8.9:1, tomato
+ * 4.6:1, forest 4.6:1. Ink on the pink ground is 10.3:1. All clear 4.5:1.
  */
 const ON_ACCENT: Record<AccentName, string> = {
   violet: color.paper,
   tomato: color.paper,
   acid: color.ink,
-  bubblegum: color.ink,
   forest: color.paper,
 };
 

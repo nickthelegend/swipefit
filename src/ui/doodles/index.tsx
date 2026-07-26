@@ -39,7 +39,7 @@ export function Starburst({ size = 64, stroke = color.ink, fill = 'none', rotate
 }
 
 /** The reference's signature: a rounded plate with two googly eyes. */
-export function Eyes({ size = 72, stroke = color.ink, fill = color.bubblegum, rotate = 0, opacity = 1 }: DoodleProps) {
+export function Eyes({ size = 72, stroke = color.ink, fill = color.acid, rotate = 0, opacity = 1 }: DoodleProps) {
   return (
     <Svg width={size} height={size * 0.66} viewBox="0 0 100 66" style={{ transform: [{ rotate: `${rotate}deg` }], opacity }}>
       <Path d="M8 4 H92 A6 6 0 0 1 98 10 V56 A6 6 0 0 1 92 62 H8 A6 6 0 0 1 2 56 V10 A6 6 0 0 1 8 4 Z" fill={fill} stroke={stroke} strokeWidth={4} />

@@ -62,6 +62,8 @@ export function SwipeDeck({
 
   const x = useSharedValue(0);
   const y = useSharedValue(0);
+  /** 0 while the incoming card settles, 1 once it has landed. */
+  const entry = useSharedValue(1);
   /** Latches so the threshold tick fires once per crossing, not every frame. */
   const armed = useSharedValue(false);
 
@@ -88,6 +90,12 @@ export function SwipeDeck({
       x.value = 0;
       y.value = 0;
       armed.value = false;
+
+      // The next card arrives slightly small and off-axis, then springs square.
+      // DESIGN.md calls for this: without it the replacement simply blinks into
+      // existence and the stack stops reading as physical.
+      entry.value = 0;
+      entry.value = withSpring(1, motion.spring);
     },
     [onSwipe, x, y, armed],
   );
@@ -180,6 +188,7 @@ export function SwipeDeck({
     transform: [
       { translateX: x.value },
       { translateY: y.value },
+      { scale: 0.92 + entry.value * 0.08 },
       // Rotating about a pivot below the card makes it swing like something held
       // at the bottom edge, instead of pinwheeling around its own middle.
       {
@@ -190,6 +199,9 @@ export function SwipeDeck({
           Extrapolation.CLAMP,
         )}deg`,
       },
+      // Entry tilt is folded in after the drag rotation so the two compose
+      // rather than fight when a card is thrown before it has finished landing.
+      { rotate: `${(1 - entry.value) * -3}deg` },
     ],
   }));
 

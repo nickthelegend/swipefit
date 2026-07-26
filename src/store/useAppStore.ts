@@ -8,6 +8,7 @@ import { contrastLevel, undertoneFromSkinHex, type Undertone } from '@/logic/col
 import { buildDeck, deriveSeason } from '@/logic/matching';
 import { assessRegret } from '@/logic/reasoning';
 import { cacheRender, clearRenderCache, readCachedRender } from '@/services/renderCache';
+import * as telemetry from '@/services/telemetry';
 import * as youcam from '@/services/youcam';
 import type {
   CartItem,
@@ -87,6 +88,9 @@ type State = {
 
   /** Stacked looks built from bagged items. */
   outfits: Outfit[];
+
+  /** Supabase session id, once telemetry has opened one. Null when sync is off. */
+  telemetrySessionId: string | null;
 };
 
 type Actions = {
@@ -139,6 +143,7 @@ export const useAppStore = create<State & Actions>()(
       cardHesitated: false,
       cardConfirmed: false,
       outfits: [],
+      telemetrySessionId: null,
 
       setPerson: (person) => set({ person, lastError: null }),
 
@@ -217,6 +222,15 @@ export const useAppStore = create<State & Actions>()(
       applyProfile: (profile) => {
         set({ profile, onboarded: true });
         get().rebuildDeck();
+
+        // Fire-and-forget. A telemetry failure must never stop onboarding, so
+        // this is deliberately not awaited and never rejects into the caller.
+        void telemetry.openSession(profile).then((id) => {
+          if (id) {
+            set({ telemetrySessionId: id });
+            scheduleSync(get);
+          }
+        });
       },
 
       /**
@@ -372,6 +386,7 @@ export const useAppStore = create<State & Actions>()(
           cardConfirmed: false,
         });
         get().ensureRendersAhead();
+        scheduleSync(get);
       },
 
       undoSwipe: () => {
@@ -480,12 +495,14 @@ export const useAppStore = create<State & Actions>()(
       removeFromCart: (productId) =>
         set({ cart: get().cart.filter((i) => i.product.id !== productId) }),
 
-      markSentToBrand: (productIds) =>
+      markSentToBrand: (productIds) => {
         set({
           cart: get().cart.map((i) =>
             productIds.includes(i.product.id) ? { ...i, sentToBrand: true } : i,
           ),
-        }),
+        });
+        scheduleSync(get);
+      },
 
       clearCart: () => set({ cart: [] }),
 
@@ -502,6 +519,7 @@ export const useAppStore = create<State & Actions>()(
           swipes: [],
           cart: [],
           outfits: [],
+          telemetrySessionId: null,
           prepareProgress: { done: 0, total: 0 },
           lastError: null,
         });
@@ -526,6 +544,7 @@ export const useAppStore = create<State & Actions>()(
         cursor: state.cursor,
         swipes: state.swipes,
         cart: state.cart,
+        telemetrySessionId: state.telemetrySessionId,
         // Only finished looks persist; an interrupted render would rehydrate
         // stuck in `rendering` with nothing driving it.
         outfits: state.outfits.filter((o) => o.status === 'ready'),
@@ -536,6 +555,40 @@ export const useAppStore = create<State & Actions>()(
     },
   ),
 );
+
+/* -------------------------------------------------------------------------
+ * Telemetry flush
+ * ---------------------------------------------------------------------- */
+
+let syncTimer: ReturnType<typeof setTimeout> | null = null;
+
+/**
+ * Coalesces telemetry writes.
+ *
+ * A fast swiper produces an event every second or so; syncing per swipe would
+ * put the network on the critical path of the one interaction that has to stay
+ * smooth. Batching on a short trailing debounce keeps writes off the gesture
+ * entirely, and the unique `client_key` on each row means a duplicate flush is
+ * harmless.
+ */
+function scheduleSync(get: () => State & Actions) {
+  if (syncTimer) clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => {
+    syncTimer = null;
+    const { telemetrySessionId, swipes, cart } = get();
+    if (!telemetrySessionId) return;
+
+    const brandOf = (productId: string) =>
+      ALL_PRODUCTS.find((p) => p.id === productId)?.brand ?? 'unknown';
+
+    void telemetry.syncSwipes(telemetrySessionId, swipes, brandOf);
+    void telemetry.syncHandoffs(
+      telemetrySessionId,
+      cart.filter((i) => i.sentToBrand),
+      brandOf,
+    );
+  }, 2500);
+}
 
 /* -------------------------------------------------------------------------
  * Render pipeline

@@ -1,3 +1,7 @@
+// Must precede the Supabase client: its fetch layer relies on a complete URL
+// implementation, which React Native does not ship by default.
+import 'react-native-url-polyfill/auto';
+
 import {
   Archivo_400Regular,
   Archivo_600SemiBold,
@@ -11,6 +15,7 @@ import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { ErrorBoundary } from '@/ui/ErrorBoundary';
 import { color } from '@/theme/tokens';
 
 export default function RootLayout() {
@@ -31,7 +36,8 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <StatusBar style="dark" />
-        <Stack
+        <ErrorBoundary>
+          <Stack
           screenOptions={{
             headerShown: false,
             contentStyle: { backgroundColor: color.ground },
@@ -43,7 +49,8 @@ export default function RootLayout() {
           <Stack.Screen name="(app)" />
           <Stack.Screen name="checkout" options={{ presentation: 'modal' }} />
           <Stack.Screen name="outfit" options={{ presentation: 'modal' }} />
-        </Stack>
+          </Stack>
+        </ErrorBoundary>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

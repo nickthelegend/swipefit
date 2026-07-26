@@ -92,7 +92,7 @@ export default function BrandDashboard() {
 
         <View style={{ flexDirection: 'row', gap: space.sm }}>
           <Stat label="Hesitated" value={`${totals.hesitationRate.toFixed(0)}%`} tone="acid" />
-          <Stat label="Bag → handoff" value={`${totals.handoffRate.toFixed(0)}%`} tone="bubblegum" />
+          <Stat label="Bag → handoff" value={`${totals.handoffRate.toFixed(0)}%`} tone="forest" />
         </View>
 
         {/* The measurement only this product can produce. */}

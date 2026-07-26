@@ -57,6 +57,22 @@ Also worth checking before assuming a grant is spent: the 1,000 hackathon units 
 
 The app handles this rather than breaking. Each bundled demo model ships with the `skin_color` hex a **real** `skin-tone-analysis` run returned for that exact file, and the scan falls back to it when the live call fails. The reveal screen then says `RECORDED` instead of `MEASURED` and explains why. Redeem a fresh code at Account → Redeem Code to restore live scanning; nothing in the code needs to change.
 
+## Supabase — cross-session telemetry
+
+On-device the brand console is honest but tiny: one person, one session. Supabase makes the same measurements aggregate across every session and device, which is the difference between "here is what I did" and "here is what shoppers do".
+
+**One-time setup:** open the Supabase dashboard → **SQL Editor** → paste [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) → Run. Until you do, the app runs exactly as before — every telemetry call is fire-and-forget and returns null on failure.
+
+**Security posture, deliberate:**
+
+- The app ships the **publishable (anon)** key only. The service-role key bypasses Row Level Security entirely; putting it in a mobile bundle would hand full read/write on the database to anyone who unzips the APK. It is not in `.env` and must never be.
+- Anon may `INSERT` telemetry and may `SELECT` only the aggregate views (`sku_signal`, `undertone_signal`, `reach`). There is no SELECT policy on the base tables, so one shopper's individual behaviour cannot be pulled out of the app.
+- **No photograph is ever uploaded.** Images go to the render API and the device cache, nowhere else.
+- The skin reading is stored as **L\* plus the undertone bucket** — not the measured hex. Enough to segment a cohort, not enough to reconstruct a face.
+- Sessions are keyed by a random locally-generated device id. No account, no email, no name.
+
+Writes are debounced 2.5s and carry a unique `client_key`, so a retry after a dropped connection cannot double-count a decision.
+
 ## Setup
 
 ```bash

@@ -43,7 +43,7 @@ function slugify(brand: string, name: string, colorName: string): string {
     .replace(/^-|-$/g, '');
 }
 
-const ACCENT_CYCLE: AccentName[] = ['violet', 'tomato', 'forest', 'bubblegum', 'acid'];
+const ACCENT_CYCLE: AccentName[] = ['violet', 'tomato', 'forest', 'acid'];
 
 function buildBrands(products: RawProduct[]): Map<string, Brand> {
   const brands = new Map<string, Brand>();

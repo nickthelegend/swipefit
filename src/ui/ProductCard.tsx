@@ -194,7 +194,7 @@ function CardMedia({
     return (
       <Image
         source={{ uri: render.uri }}
-        style={{ flex: 1, backgroundColor: color.groundSunk }}
+        style={{ flex: 1, backgroundColor: color.paper }}
         contentFit="cover"
         transition={180}
       />
@@ -203,7 +203,7 @@ function CardMedia({
 
   if (render.status === 'failed') {
     return (
-      <View style={{ flex: 1, backgroundColor: color.groundSunk }}>
+      <View style={{ flex: 1, backgroundColor: color.paper }}>
         <Image
           source={{ uri: product.productImageUrl }}
           style={{ flex: 1 }}
@@ -241,10 +241,10 @@ function RenderingMedia({ product }: { product: DeckCard['product'] }) {
   const barStyle = useAnimatedStyle(() => ({ opacity: pulse.value }));
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.groundSunk }}>
+    <View style={{ flex: 1, backgroundColor: color.paper }}>
       <Image
         source={{ uri: product.productImageUrl }}
-        style={{ flex: 1, opacity: 0.55 }}
+        style={{ flex: 1, opacity: 0.82 }}
         contentFit="contain"
         transition={180}
       />
@@ -281,7 +281,7 @@ function BeautyMedia({
 }) {
   if (product.beautyKind === 'skincare') {
     return (
-      <View style={{ flex: 1, backgroundColor: color.groundSunk, alignItems: 'center', justifyContent: 'center', padding: space.lg }}>
+      <View style={{ flex: 1, backgroundColor: color.paper, alignItems: 'center', justifyContent: 'center', padding: space.lg }}>
         <Blob size={130} fill={color.forest} rotate={-8} />
         <Type role="display" align="center" style={{ marginTop: space.lg }}>
           {product.colorName}
@@ -294,7 +294,7 @@ function BeautyMedia({
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.groundSunk }}>
+    <View style={{ flex: 1, backgroundColor: color.paper }}>
       {facePhotoUri ? (
         <Image source={{ uri: facePhotoUri }} style={{ flex: 1 }} contentFit="cover" transition={180} />
       ) : (

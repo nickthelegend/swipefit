@@ -101,7 +101,7 @@ export default function OutfitBuilder() {
         <Shadowed radius={radius.lg}>
           <View
             style={{
-              backgroundColor: color.groundSunk,
+              backgroundColor: color.paper,
               borderWidth: border.bold,
               borderColor: color.ink,
               borderRadius: radius.lg,
@@ -198,7 +198,7 @@ export default function OutfitBuilder() {
                           borderColor: color.ink,
                           borderRadius: radius.md,
                           overflow: 'hidden',
-                          backgroundColor: color.groundSunk,
+                          backgroundColor: color.paper,
                         }}
                       >
                         <Image source={{ uri: o.uri! }} style={{ flex: 1 }} contentFit="cover" />
@@ -254,7 +254,7 @@ function Picker({
               >
                 <Image
                   source={{ uri: item.renderUri ?? item.product.productImageUrl }}
-                  style={{ width: '100%', height: 128, backgroundColor: color.groundSunk }}
+                  style={{ width: '100%', height: 128, backgroundColor: color.paper }}
                   contentFit="cover"
                 />
                 <View

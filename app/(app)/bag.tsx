@@ -39,7 +39,7 @@ export default function Bag() {
     return (
       <Screen edges={{ top: true, bottom: false }}>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: space.md }}>
-          <Globe size={96} fill={color.bubblegum} rotate={-8} />
+          <Globe size={96} fill={color.violet} rotate={-8} />
           <Type role="display" align="center">
             Bag's empty
           </Type>
@@ -123,7 +123,7 @@ export default function Bag() {
                           borderWidth: border.hair,
                           borderColor: color.ink,
                           overflow: 'hidden',
-                          backgroundColor: color.groundSunk,
+                          backgroundColor: color.paper,
                         }}
                       >
                         <Image

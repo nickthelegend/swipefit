@@ -63,7 +63,7 @@ export default function Welcome() {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.sm }}>
             <Type role="mega">Face</Type>
             <Animated.View entering={FadeIn.delay(420).duration(320)}>
-              <Eyes size={124} fill={color.bubblegum} rotate={-4} />
+              <Eyes size={124} fill={color.paper} rotate={-4} />
             </Animated.View>
           </View>
 
