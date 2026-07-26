@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="fitcheck-mark-title">
+  <title id="fitcheck-mark-title">FITCHECK</title>
+
+  <!--
+    FITCHECK — the mark.
+
+    A garment swing tag carrying a face. The tag is the retail half, the eyes are
+    the skin scan, and the product's whole thesis is that the second one decides
+    the first: the face decides what you wear.
+
+    Drawn in the system's own grammar rather than as a generic app glyph — one
+    hard offset shadow with zero blur, a black outline of constant weight, flat
+    saturated fill, no gradient anywhere. The tag is rotated off-axis for the
+    same reason every sticker in the product is: nothing here sits square.
+
+    It survives 16px because the silhouette does the work. The grommet and the
+    pupils drop out at that size and the shape still reads as a tag with a face;
+    favicon.svg is the version tuned for it.
+  -->
+
+  <defs>
+    <!-- One path, reused for the shadow, the fill and the monochrome build. -->
+    <path id="tag"
+      d="M 208 64
+         L 368 64
+         A 34 34 0 0 1 402 98
+         L 402 414
+         A 34 34 0 0 1 368 448
+         L 144 448
+         A 34 34 0 0 1 110 414
+         L 110 178
+         Z" />
+  </defs>
+
+  <g transform="rotate(-8 256 256)">
+    <!-- Hard shadow: offset, zero blur, full opacity. Never a drop-shadow filter. -->
+    <use href="#tag" x="34" y="40" fill="#000000" />
+
+    <use href="#tag" fill="#EBD22F" stroke="#000000" stroke-width="22" stroke-linejoin="round" />
+
+    <!-- Punched grommet, sitting in the cut corner where a tag's string goes. -->
+    <circle cx="168" cy="136" r="25" fill="#FFFFFF" stroke="#000000" stroke-width="18" />
+
+    <!-- The face. Pupils sit down-and-right of centre, as in the system doodle. -->
+    <g stroke="#000000" stroke-width="19">
+      <circle cx="212" cy="272" r="47" fill="#FFFFFF" />
+      <circle cx="330" cy="272" r="47" fill="#FFFFFF" />
+    </g>
+    <circle cx="221" cy="287" r="21" fill="#000000" />
+    <circle cx="339" cy="287" r="21" fill="#000000" />
+  </g>
+</svg>

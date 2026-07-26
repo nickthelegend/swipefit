@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -27,8 +28,9 @@ export default function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b-2 border-black bg-[#FA9DCD]">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-        <Link href="/" className="display text-[22px] tracking-[-0.02em]">
-          Fitcheck
+        <Link href="/" className="flex items-center gap-2.5" aria-label="FITCHECK home">
+          <Image src="/favicon.svg" alt="" width={28} height={28} priority />
+          <span className="display text-[22px] tracking-[-0.02em]">Fitcheck</span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main">

@@ -23,11 +23,29 @@ export const metadata: Metadata = {
   title: 'FITCHECK — the face decides what you wear',
   description:
     'A swipe-to-shop app where every card is the garment rendered on your own body. One skin scan decides what you see. Built on YouCam Skin AI and Apparel VTO.',
+  // The SVG is listed first so browsers that support it get the vector; the
+  // 32/16 PNGs are redrawn for those sizes rather than downscaled, because the
+  // full mark turns to mush below ~32px.
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+  },
+  manifest: '/manifest.webmanifest',
   openGraph: {
     title: 'FITCHECK — the face decides what you wear',
     description:
       'Every card is the garment rendered on your own body, not a stock photo. One skin scan decides what you see.',
     type: 'website',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'FITCHECK' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'FITCHECK — the face decides what you wear',
+    images: ['/og.png'],
   },
 };
 

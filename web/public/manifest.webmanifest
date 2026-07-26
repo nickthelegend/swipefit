@@ -1,0 +1,14 @@
+{
+  "name": "FITCHECK",
+  "short_name": "FITCHECK",
+  "description": "The face decides what you wear.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FA9DCD",
+  "theme_color": "#FA9DCD",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

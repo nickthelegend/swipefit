@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="fitcheck-mono-title">
+  <title id="fitcheck-mono-title">FITCHECK</title>
+
+  <!--
+    FITCHECK — single-tone mark, for Android's monochrome (themed icon) slot.
+
+    That layer is re-tinted by the OS: every opaque pixel becomes one flat colour
+    and all internal detail is discarded. Flattening logo-mark.svg there produces
+    a featureless tag — the face, which is the whole idea, disappears.
+
+    So the eyes are punched out as real holes. Transparency survives the tint,
+    which means the silhouette still reads as a tag with a face whatever colour
+    the system picks.
+
+    The holes are subpaths under fill-rule="evenodd", not an SVG <mask>. A mask
+    is the obvious tool and it silently failed to cut through in the rasteriser
+    used to build the PNGs — the eyes came out filled. evenodd is geometry rather
+    than compositing, so it survives any renderer.
+
+    Shadow and grommet are dropped for the same reason they are in favicon.svg:
+    at a single tone they only muddy the outline.
+  -->
+
+  <g transform="rotate(-8 256 256)">
+    <path fill="#000000" fill-rule="evenodd"
+      d="M 208 64
+         L 368 64
+         A 34 34 0 0 1 402 98
+         L 402 414
+         A 34 34 0 0 1 368 448
+         L 144 448
+         A 34 34 0 0 1 110 414
+         L 110 178
+         Z
+         M 160 272 a 52 52 0 1 0 104 0 a 52 52 0 1 0 -104 0 Z
+         M 278 272 a 52 52 0 1 0 104 0 a 52 52 0 1 0 -104 0 Z" />
+  </g>
+</svg>

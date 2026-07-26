@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="fitcheck-favicon-title">
+  <title id="fitcheck-favicon-title">FITCHECK</title>
+
+  <!--
+    FITCHECK — the small mark.
+
+    NOT a scaled-down logo-mark.svg. That version turns to mush below about 32px:
+    the ringed eyes merge into one grey smudge, the grommet disappears, and the
+    hard shadow eats pixels the silhouette needs.
+
+    So this is redrawn for the size. The shadow and the grommet are gone, the
+    eyes are solid dots instead of rings, the outline is proportionally much
+    heavier, and the rotation drops from -8° to -4° because a steeper angle just
+    buys aliasing on a 16px grid.
+  -->
+
+  <g transform="rotate(-4 32 32)">
+    <path
+      d="M 26 6
+         L 47 6
+         A 5 5 0 0 1 52 11
+         L 52 53
+         A 5 5 0 0 1 47 58
+         L 17 58
+         A 5 5 0 0 1 12 53
+         L 12 20
+         Z"
+      fill="#EBD22F" stroke="#000000" stroke-width="6" stroke-linejoin="round" />
+
+    <circle cx="25" cy="34" r="6" fill="#000000" />
+    <circle cx="41" cy="34" r="6" fill="#000000" />
+  </g>
+</svg>
