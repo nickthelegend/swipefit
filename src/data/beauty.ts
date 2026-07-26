@@ -31,6 +31,9 @@ const foundation = (
   name,
   category: 'upper_body',
   mode: 'beauty',
+  // Shade matching is driven entirely by measured skin colour, which has no
+  // bearing on who the product is for. The apparel filter must never hide these.
+  gender: 'unisex',
   beautyKind: 'foundation',
   price,
   currency: 'USD',
@@ -55,6 +58,7 @@ const treatment = (
   name,
   category: 'upper_body',
   mode: 'beauty',
+  gender: 'unisex',
   beautyKind: 'skincare',
   targetsConcern: concern,
   price,

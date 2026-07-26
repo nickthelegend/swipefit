@@ -1,5 +1,5 @@
 import { colorFamily, hexToLch, type Lch } from './color';
-import type { MatchVerdict, Product, Season, SkinProfile } from '@/types';
+import type { MatchVerdict, Product, Season, ShopFor, SkinProfile } from '@/types';
 
 /**
  * The skin-informed apparel sort — the feature the whole product turns on.
@@ -251,18 +251,31 @@ function explain(
  * ---------------------------------------------------------------------- */
 
 /**
- * Sorts strictly by match score. The deck is deliberately *not* filtered — a
- * shopper who only ever sees flattering colours cannot tell the sort is doing
- * anything, and hiding two thirds of a 24-item catalogue would leave nothing
- * to swipe. Poor matches sink to the bottom and arrive labelled.
+ * Sorts strictly by match score. Colour is never filtered on — a shopper who
+ * only ever sees flattering colours cannot tell the sort is doing anything, and
+ * hiding two thirds of the catalogue would leave nothing to swipe. Poor matches
+ * sink to the bottom and arrive labelled.
+ *
+ * Gender IS filtered on, and the difference is worth being precise about,
+ * because the two look like the same decision and are not. A cool-toned garment
+ * shown to a warm-toned shopper is a weak recommendation — a judgement, and one
+ * they are entitled to overrule. A dress shown to someone shopping menswear is
+ * not a weak recommendation, it is the wrong catalogue; no amount of swiping
+ * makes it right, and ranking it last still wastes a render on it. Sorting is
+ * for opinions, filtering is for facts.
+ *
+ * `unisex` items appear for everyone, so the filter narrows the deck rather than
+ * splitting it.
  */
 export function buildDeck(
   products: Product[],
   profile: SkinProfile,
   mode: Product['mode'] = 'apparel',
+  shopFor: ShopFor = 'everything',
 ): { product: Product; match: MatchVerdict }[] {
   return products
     .filter((p) => p.mode === mode)
+    .filter((p) => shopFor === 'everything' || p.gender === shopFor || p.gender === 'unisex')
     .map((product) => ({ product, match: scoreProduct(product, profile) }))
     .sort((a, b) => b.match.score - a.match.score || a.product.id.localeCompare(b.product.id));
 }

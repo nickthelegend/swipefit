@@ -41,7 +41,9 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "db:sql": "node scripts/db_sql.mjs",
+    "db:verify": "node scripts/verify_db.mjs"
   },
   "private": true
 }

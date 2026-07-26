@@ -17,6 +17,7 @@ import type {
   Outfit,
   Product,
   RenderState,
+  ShopFor,
   SkinConcern,
   SkinProfile,
   SwipeDirection,
@@ -66,6 +67,14 @@ type State = {
   simulatedUndertone: Undertone | null;
 
   mode: Mode;
+  /**
+   * Which cut of the catalogue to show. Asked once at onboarding and persisted.
+   *
+   * Not derived from the skin scan, and not derivable from it — the scan reads
+   * colour, which says nothing about what someone wants to wear. Inferring one
+   * from the other would be both wrong and offensive.
+   */
+  shopFor: ShopFor;
   deck: DeckCard[];
   cursor: number;
   swipes: SwipeEvent[];
@@ -109,6 +118,7 @@ type Actions = {
   setSimulatedUndertone: (undertone: Undertone | null) => void;
 
   setMode: (mode: Mode) => void;
+  setShopFor: (shopFor: ShopFor) => void;
   rebuildDeck: () => void;
   prefetchDeck: () => Promise<void>;
   ensureRendersAhead: () => void;
@@ -142,6 +152,7 @@ export const useAppStore = create<State & Actions>()(
       profile: null,
       simulatedUndertone: null,
       mode: 'apparel',
+      shopFor: 'everything',
       deck: [],
       cursor: 0,
       swipes: [],
@@ -285,13 +296,23 @@ export const useAppStore = create<State & Actions>()(
       },
 
       /**
+       * Resets the cursor along with the preference. Narrowing the deck while
+       * keeping the old position would land the shopper somewhere arbitrary in
+       * a list that no longer has the same length.
+       */
+      setShopFor: (shopFor) => {
+        set({ shopFor, cursor: 0 });
+        get().rebuildDeck();
+      },
+
+      /**
        * Rebuilds and re-sorts the deck, preserving any render already paid for.
        *
        * Renders are keyed on (person, product) rather than on deck position, so
        * re-sorting after an undertone change costs nothing.
        */
       rebuildDeck: () => {
-        const { profile, mode, person, deck: previous } = get();
+        const { profile, mode, shopFor, person, deck: previous } = get();
         if (!profile) return;
 
         const previousRenders = new Map(previous.map((c) => [c.product.id, c.render]));
@@ -305,7 +326,7 @@ export const useAppStore = create<State & Actions>()(
             .map((s) => s.productId),
         );
 
-        const ordered = buildDeck(ALL_PRODUCTS, profile, mode);
+        const ordered = buildDeck(ALL_PRODUCTS, profile, mode, shopFor);
 
         const deck: DeckCard[] = ordered.map(({ product, match }) => {
           const cached = person ? readCachedRender(person.key, product.id) : null;
@@ -561,6 +582,7 @@ export const useAppStore = create<State & Actions>()(
         simulatedUndertone: state.simulatedUndertone,
         mode: state.mode,
         revealBrand: state.revealBrand,
+        shopFor: state.shopFor,
         cursor: state.cursor,
         swipes: state.swipes,
         cart: state.cart,

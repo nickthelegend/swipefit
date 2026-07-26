@@ -70,7 +70,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             this the whole proof section and the brand grid would be invisible,
             not merely un-animated, to anyone with scripting off. */}
         <noscript>
-          {/* eslint-disable-next-line react/no-danger */}
           <style dangerouslySetInnerHTML={{ __html: '.reveal{opacity:1;transform:none}' }} />
         </noscript>
       </head>

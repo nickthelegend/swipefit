@@ -8,12 +8,25 @@ export type GarmentCategory = 'upper_body' | 'lower_body' | 'full_body' | 'shoes
 
 export type Mode = 'apparel' | 'beauty';
 
+/**
+ * Who a garment is cut for.
+ *
+ * `unisex` is a real answer here, not a shrug — a plain crew tee or a cashmere
+ * crew genuinely is listed for everyone by these retailers, and forcing it into
+ * one bucket would be less accurate than leaving it in both.
+ */
+export type Fit = 'men' | 'women' | 'unisex';
+
+/** What the shopper asked to be shown. `everything` opts out of the filter. */
+export type ShopFor = 'men' | 'women' | 'everything';
+
 export type Product = {
   id: string;
   brand: string;
   name: string;
   category: GarmentCategory;
   mode: Mode;
+  gender: Fit;
   price: number;
   currency: string;
   /** Public CDN URL, passed straight to the VTO API as `ref_file_url`. */

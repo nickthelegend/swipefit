@@ -11,11 +11,14 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { useAppStore } from '@/store/useAppStore';
 import { Chevrons, Cursor, Eyes, Squiggle, Starburst } from '@/ui/doodles';
 import { PillButton, PillTag } from '@/ui/PillButton';
 import { Screen } from '@/ui/Screen';
+import { Tap } from '@/ui/Tap';
 import { Type } from '@/ui/Type';
-import { color, motion, space } from '@/theme/tokens';
+import { border, color, motion, radius, space } from '@/theme/tokens';
+import type { ShopFor } from '@/types';
 
 /**
  * The thesis viewport.
@@ -97,6 +100,8 @@ export default function Welcome() {
             </Animated.View>
           </View>
 
+          <FitPicker />
+
           <PillButton
             label="Start the scan"
             onPress={() => router.push('/onboarding/capture')}
@@ -106,5 +111,63 @@ export default function Welcome() {
         </View>
       </View>
     </Screen>
+  );
+}
+
+const SHOP_FOR: { key: ShopFor; label: string }[] = [
+  { key: 'women', label: "Women's" },
+  { key: 'men', label: "Men's" },
+  { key: 'everything', label: 'Both' },
+];
+
+/**
+ * The one question the scan cannot answer.
+ *
+ * It sits here, before the camera, because it costs a tap and asking later would
+ * mean re-rendering a deck the shopper has already paid API units for. It is
+ * three options rather than a free-text field because it drives a catalogue
+ * filter, not a profile — nothing is stored about the person, only about which
+ * rail they want to look at.
+ *
+ * `Both` is genuinely the default. The alternative is pre-selecting one, and
+ * there is no basis on which to choose which.
+ */
+function FitPicker() {
+  const shopFor = useAppStore((s) => s.shopFor);
+  const setShopFor = useAppStore((s) => s.setShopFor);
+
+  return (
+    <Animated.View entering={FadeIn.delay(780).duration(320)} style={{ gap: space.xs }}>
+      <Type role="label" color={color.inkSoft}>
+        Show me
+      </Type>
+      <View style={{ flexDirection: 'row', gap: space.xs }}>
+        {SHOP_FOR.map((option) => {
+          const active = shopFor === option.key;
+          return (
+            <Tap
+              key={option.key}
+              onPress={() => setShopFor(option.key)}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: active }}
+              accessibilityLabel={`Show ${option.label} clothing`}
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                paddingVertical: space.sm,
+                borderWidth: border.hair,
+                borderColor: color.ink,
+                borderRadius: radius.pill,
+                backgroundColor: active ? color.ink : 'transparent',
+              }}
+            >
+              <Type role="label" color={active ? color.ground : color.ink}>
+                {option.label}
+              </Type>
+            </Tap>
+          );
+        })}
+      </View>
+    </Animated.View>
   );
 }

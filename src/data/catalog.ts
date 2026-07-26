@@ -1,5 +1,5 @@
 import type { AccentName } from '@/theme/tokens';
-import type { Brand, GarmentCategory, Mode, Product } from '@/types';
+import type { Brand, Fit, GarmentCategory, Mode, Product } from '@/types';
 import rawCatalog from './catalog.json';
 import { BEAUTY_PRODUCTS } from './beauty';
 
@@ -24,9 +24,23 @@ type RawProduct = {
   colorHex: string;
   sizeInfo?: string;
   fitNote?: string;
+  gender?: string;
 };
 
 const VALID_CATEGORIES: GarmentCategory[] = ['upper_body', 'lower_body', 'full_body', 'shoes'];
+
+/**
+ * Unknown or absent reads as unisex, which shows the garment to everyone.
+ *
+ * That direction is deliberate. Guessing wrong toward `men` or `women` hides a
+ * real product from the person it was made for and there is no way for them to
+ * discover the mistake; guessing wrong toward `unisex` only shows one extra
+ * item, which they swipe past. The failure that is recoverable by the user is
+ * the one to prefer.
+ */
+function normaliseGender(value: string | undefined): Fit {
+  return value === 'men' || value === 'women' ? value : 'unisex';
+}
 
 function normaliseCategory(value: string): GarmentCategory {
   const found = VALID_CATEGORIES.find((c) => c === value);
@@ -73,6 +87,7 @@ export const APPAREL_PRODUCTS: Product[] = rawList.map((raw) => ({
   name: raw.name,
   category: normaliseCategory(raw.category),
   mode: 'apparel' as Mode,
+  gender: normaliseGender(raw.gender),
   price: raw.price,
   currency: raw.currency ?? 'USD',
   productImageUrl: raw.productImageUrl,
