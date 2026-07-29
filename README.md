@@ -80,12 +80,49 @@ npm install
 cp .env.example .env      # then add your YouCam key
 npx expo run:android      # or run:ios
 
-npm test                  # 45 tests, no network, ~150ms
-npm run typecheck         # app and tests, separate configs
+npm run verify            # lint + both typechecks + tests — what CI runs
+npm test                  # tests only, no network, ~150ms
 npm run db:sql | pbcopy   # schema, as one paste — see Telemetry below
 npm run db:verify         # confirm the schema landed, using only the anon key
 npm run check:links       # 120 catalogue URLs against the live web (slow)
 ```
+
+## Releasing an APK
+
+```bash
+npm run apk:build         # ./gradlew assembleRelease
+npm run apk:publish       # verify the signature, copy to the site, record SHA-256
+```
+
+Release builds are signed by `plugins/withReleaseSigning.js`, a config plugin
+rather than a hand edit — `expo prebuild` regenerates `android/` from scratch, so
+anything written directly into `build.gradle` survives only until the next
+prebuild. Expo's default signs release with the **debug** keystore, which ships
+in every React Native project with the password `android`; an APK signed with it
+can be updated by anyone and Play will not accept it.
+
+The keystore is gitignored. A private signing key in a repository is one that
+anyone with read access can publish a convincing update with. To create one:
+
+```bash
+mkdir -p credentials
+keytool -genkeypair -v \
+  -keystore credentials/fitcheck-release.keystore \
+  -alias fitcheck -keyalg RSA -keysize 2048 -validity 10000
+```
+
+Then set `FITCHECK_KEYSTORE_PASSWORD`, `FITCHECK_KEY_ALIAS` and
+`FITCHECK_KEY_PASSWORD`, or accept the development defaults in the plugin.
+
+**Back the keystore up.** Android identifies an app by its signing key, so losing
+it means never being able to update this package name again — the only route is
+a new listing.
+
+`apk:publish` refuses to publish anything it cannot prove is release-signed, and
+fails rather than skipping the check when `apksigner` is missing. It writes the
+SHA-256 onto the download page: a sideloaded APK passes no store review and the
+user had to dismiss a warning to install it, so the hash is the only way they can
+confirm the file they got is the file that was built.
 
 `.env`:
 

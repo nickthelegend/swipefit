@@ -55,5 +55,8 @@
     "apk:build": "cd android && ./gradlew assembleRelease -x lint",
     "apk:publish": "node scripts/publish_apk.mjs"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  }
 }
