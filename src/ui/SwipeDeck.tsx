@@ -7,6 +7,7 @@ import Animated, {
   interpolate,
   runOnJS,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withSpring,
   withTiming,
@@ -62,6 +63,18 @@ export function SwipeDeck({
 }: Props) {
   const [flipped, setFlipped] = useState(false);
 
+  /**
+   * Reduced motion changes what the deck does, not whether it works.
+   *
+   * The gesture, the thresholds and the fly-off are all untouched — they are the
+   * interaction, not decoration, and removing them would leave no way to swipe.
+   * What goes is the incoming card's scale-and-settle, which is the one purely
+   * expressive movement here: a card that springs up from 92% is exactly the
+   * kind of unrequested motion that causes trouble for people who ask for less
+   * of it, and the deck reads perfectly well without it.
+   */
+  const reducedMotion = useReducedMotion();
+
   const x = useSharedValue(0);
   const y = useSharedValue(0);
   /** 0 while the incoming card settles, 1 once it has landed. */
@@ -96,10 +109,14 @@ export function SwipeDeck({
       // The next card arrives slightly small and off-axis, then springs square.
       // DESIGN.md calls for this: without it the replacement simply blinks into
       // existence and the stack stops reading as physical.
-      entry.value = 0;
-      entry.value = withSpring(1, motion.spring);
+      if (reducedMotion) {
+        entry.value = 1;
+      } else {
+        entry.value = 0;
+        entry.value = withSpring(1, motion.spring);
+      }
     },
-    [onSwipe, x, y, armed, entry],
+    [onSwipe, x, y, armed, entry, reducedMotion],
   );
 
   /**

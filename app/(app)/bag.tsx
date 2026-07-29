@@ -1,13 +1,13 @@
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, Share, View } from 'react-native';
 import Animated, { FadeIn, LinearTransition } from 'react-native-reanimated';
 
 import { brandAccent, formatPrice } from '@/data/catalog';
 import { groupCartByBrand, useAppStore } from '@/store/useAppStore';
 import { border, color, onAccent, radius, space } from '@/theme/tokens';
-import { Globe, IconX } from '@/ui/doodles';
+import { Globe, IconShare, IconX } from '@/ui/doodles';
 import { PillButton, PillTag } from '@/ui/PillButton';
 import { Screen } from '@/ui/Screen';
 import { Shadowed } from '@/ui/Shadowed';
@@ -29,6 +29,40 @@ export default function Bag() {
   const removeFromCart = useAppStore((s) => s.removeFromCart);
 
   const total = cart.reduce((sum, item) => sum + item.product.price, 0);
+
+  /**
+   * Hands the bag to whatever the OS can hand it to.
+   *
+   * Plain text with real product URLs rather than a deep link into this app,
+   * because the recipient almost certainly does not have it installed — a link
+   * that only opens for people who already have the app is a link that mostly
+   * fails. Grouped by brand so the message reads like a list someone wrote.
+   *
+   * Share.share resolves on dismissal as well as on send, so there is nothing
+   * useful to report back and no error state to design.
+   */
+  const shareBag = async () => {
+    const lines = groups.flatMap(({ brand, items }) => [
+      `${brand}`,
+      ...items.map((i) => `  ${i.product.name} — ${formatPrice(i.product)}`),
+      ...items.map((i) => `  ${i.product.brandProductUrl}`),
+      '',
+    ]);
+
+    try {
+      await Share.share({
+        title: 'My FITCHECK bag',
+        message: [
+          `${cart.length} piece${cart.length === 1 ? '' : 's'} · $${total.toFixed(0)}`,
+          '',
+          ...lines,
+          'Picked with FITCHECK — every card rendered on my own body.',
+        ].join('\n'),
+      });
+    } catch {
+      // The sheet failing to open is not worth interrupting anyone over.
+    }
+  };
 
   // A full look needs both halves; offering the builder without them would lead
   // straight to a dead end.
@@ -61,7 +95,26 @@ export default function Bag() {
           <Type role="mega">{cart.length}</Type>
         </View>
         <View style={{ alignItems: 'flex-end', gap: space.xxs, paddingBottom: space.xs }}>
-          <PillTag label={`${groups.length} brand${groups.length === 1 ? '' : 's'}`} tone={color.acid} />
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.xs }}>
+            <Tap
+              onPress={() => void shareBag()}
+              accessibilityRole="button"
+              accessibilityLabel={`Share your bag of ${cart.length} item${cart.length === 1 ? '' : 's'}`}
+              hitSlop={10}
+              style={{
+                width: 36,
+                height: 36,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderWidth: border.hair,
+                borderColor: color.ink,
+                borderRadius: radius.pill,
+              }}
+            >
+              <IconShare size={16} />
+            </Tap>
+            <PillTag label={`${groups.length} brand${groups.length === 1 ? '' : 's'}`} tone={color.acid} />
+          </View>
           <Type role="title">${total.toFixed(0)}</Type>
         </View>
       </View>

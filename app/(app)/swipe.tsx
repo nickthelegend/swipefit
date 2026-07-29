@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { AccessibilityInfo, View } from 'react-native';
 import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 
 import type { Undertone } from '@/logic/color';
@@ -9,6 +9,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { border, color, radius, space } from '@/theme/tokens';
 import { BrandReveal } from '@/ui/BrandReveal';
 import { CoachOverlay } from '@/ui/CoachOverlay';
+import { DeckProgress } from '@/ui/DeckProgress';
 import { IconEye, IconUndo, Starburst } from '@/ui/doodles';
 import { PillButton, PillTag } from '@/ui/PillButton';
 import { Screen } from '@/ui/Screen';
@@ -135,6 +136,12 @@ export default function SwipeScreen() {
         )}
       </View>
 
+      {deck.length > 0 && (
+        <View style={{ marginTop: space.xs }}>
+          <DeckProgress decided={cursor} total={deck.length} />
+        </View>
+      )}
+
       <View style={{ flex: 1, marginTop: space.sm, marginBottom: space.sm }}>
         {remaining.length > 0 ? (
           <SwipeDeck
@@ -145,6 +152,19 @@ export default function SwipeScreen() {
             onSwipe={(direction) => {
               const card = remaining[0];
               if (direction === 'right' && !revealBrand && card) setRevealing(card);
+
+              // A swipe deck is silent to a screen reader: the card leaves, the
+              // next one mounts, and nothing announces that the gesture landed
+              // or what it did. The brand is named only when it is already
+              // visible — speaking it during a blind swipe would leak exactly
+              // the thing blind mode exists to withhold.
+              if (card) {
+                const label = revealBrand ? `${card.product.brand} ${card.product.name}` : card.product.name;
+                AccessibilityInfo.announceForAccessibility(
+                  direction === 'right' ? `Kept ${label}` : `Skipped ${label}`,
+                );
+              }
+
               swipe(direction);
             }}
             onConfirmNeeded={(card) => {
@@ -241,6 +261,7 @@ function ModeToggle({ mode, onChange }: { mode: 'apparel' | 'beauty'; onChange: 
           key={m}
           onPress={() => onChange(m)}
           accessibilityRole="tab"
+          accessibilityLabel={m === 'apparel' ? 'Show clothing' : 'Show beauty'}
           accessibilityState={{ selected: mode === m }}
           style={{
             paddingHorizontal: space.sm,
@@ -305,7 +326,9 @@ function UndertoneSimulator({
                 key={o.label}
                 onPress={() => onChange(o.key)}
                 accessibilityRole="button"
+                accessibilityLabel={`Re-sort the deck as ${o.label}`}
                 accessibilityState={{ selected: active }}
+                hitSlop={{ top: 6, bottom: 6 }}
                 style={{
                   flex: 1,
                   minHeight: 40,

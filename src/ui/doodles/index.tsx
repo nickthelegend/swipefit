@@ -175,6 +175,25 @@ export function IconUndo({ size = 24, color: c = color.ink }: IconProps) {
   );
 }
 
+/**
+ * Share.
+ *
+ * The three-nodes-and-two-edges glyph rather than the iOS box-and-up-arrow,
+ * because that one is a platform convention rather than a symbol and reads as
+ * "upload" on Android. Nodes are drawn as filled discs so the mark still holds
+ * at 16px, where three hollow rings would close up into dots anyway.
+ */
+export function IconShare({ size = 24, color: c = color.ink }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 100 100">
+      <Path d="M36 42 L68 26 M36 58 L68 74" fill="none" stroke={c} strokeWidth={8} strokeLinecap="round" />
+      <Circle cx={24} cy={50} r={12} fill={c} />
+      <Circle cx={74} cy={22} r={12} fill={c} />
+      <Circle cx={74} cy={78} r={12} fill={c} />
+    </Svg>
+  );
+}
+
 export function IconArrow({ size = 24, color: c = color.ink, rotate = 0 }: IconProps & { rotate?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100" style={{ transform: [{ rotate: `${rotate}deg` }] }}>
