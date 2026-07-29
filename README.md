@@ -118,6 +118,15 @@ Then set `FITCHECK_KEYSTORE_PASSWORD`, `FITCHECK_KEY_ALIAS` and
 it means never being able to update this package name again — the only route is
 a new listing.
 
+The APK is **not** committed — `web/public/builds/` is gitignored. A 54 MB binary
+does not belong in git, and GitHub rejects files over 100 MB anyway. To serve it
+from a deployment, either run `apk:build && apk:publish` as part of the deploy,
+or attach the APK to a GitHub Release and point the download button at that.
+
+Builds are restricted to `arm64-v8a`. A universal APK carrying every ABI came to
+131 MB against 54 MB for arm64 alone, and the download page has always claimed
+arm64 — this makes the claim true rather than changing it.
+
 `apk:publish` refuses to publish anything it cannot prove is release-signed, and
 fails rather than skipping the check when `apksigner` is missing. It writes the
 SHA-256 onto the download page: a sideloaded APK passes no store review and the
