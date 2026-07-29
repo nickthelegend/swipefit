@@ -46,3 +46,8 @@ yarn-error.*
 
 scripts/__pycache__/
 __pycache__/
+
+# Signing key. A private key must never be committed — anyone holding it can
+# publish an update that Android accepts as authentic. Regenerate with the
+# keytool command in README.md if it is lost.
+/credentials/

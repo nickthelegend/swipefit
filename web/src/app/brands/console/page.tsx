@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { Chevrons, Starburst } from '@/components/doodles';
 import { ACCENT_BG, ON_ACCENT, Panel, PillButton, PillLink, Tag, type Accent } from '@/components/ui/kit';
-import { createClient, supabaseConfigured, type Brand, type BrandOverview, type SkuSignal } from '@/lib/supabase';
+import { createClient, supabaseConfigured, type BlindSignal, type Brand, type BrandOverview, type SkuSignal } from '@/lib/supabase';
 
 /**
  * Brand console — the app's Signal screen, on the web.
@@ -44,6 +44,7 @@ export default function BrandConsole() {
   const [brand, setBrand] = useState<Brand | null>(null);
   const [overview, setOverview] = useState<BrandOverview | null>(null);
   const [skus, setSkus] = useState<SkuSignal[]>([]);
+  const [blind, setBlind] = useState<BlindSignal | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -77,11 +78,16 @@ export default function BrandConsole() {
         return;
       }
 
-      const [overviewRes, skuRes] = await Promise.all([
+      const [overviewRes, skuRes, blindRes] = await Promise.all([
         supabase.from('brand_overview').select('*').eq('brand', mine.name).single(),
         supabase.from('sku_signal').select('*').eq('brand', mine.name),
+        // maybeSingle, not single: a brand with no swipes yet returns zero rows,
+        // and single() treats that as an error that would take down the whole
+        // console for the brands who need onboarding most.
+        supabase.from('blind_signal').select('*').eq('brand', mine.name).maybeSingle(),
       ]);
 
+      setBlind((blindRes.data ?? null) as BlindSignal | null);
       setOverview((overviewRes.data ?? null) as BrandOverview | null);
       setSkus(((skuRes.data ?? []) as SkuSignal[]).sort((a, b) => friction(b) - friction(a)));
     } catch {
@@ -241,6 +247,8 @@ export default function BrandConsole() {
               </>
             )}
 
+            <BlindPanel blind={blind} />
+
             <Panel tone={accent} className="mt-8 p-7">
               <h2 className="display text-[24px]">What you are buying</h2>
               <p className="mt-3 max-w-2xl text-[15px] leading-relaxed">
@@ -254,6 +262,90 @@ export default function BrandConsole() {
         )}
       </div>
     </section>
+  );
+}
+
+/**
+ * The measurement no retailer can run on their own shop.
+ *
+ * In any ordinary store the shopper can always see whose product they are
+ * holding, so brand pull and garment appeal arrive fused and cannot be
+ * separated afterwards. FITCHECK can hide the label before the decision, which
+ * makes the two separable — and the gap between the two keep rates is the price
+ * of the name, stated as a number.
+ *
+ * MIN_SAMPLE mirrors the app's analytics rather than being chosen here: a brand
+ * comparing 2 blind swipes against 3 revealed ones would be reading noise, and
+ * a dashboard that presents noise confidently is worse than one that admits it
+ * is still counting.
+ */
+const MIN_SAMPLE = 3;
+
+function BlindPanel({ blind }: { blind: BlindSignal | null }) {
+  if (!blind) return null;
+
+  const ready =
+    blind.blind_seen >= MIN_SAMPLE &&
+    blind.revealed_seen >= MIN_SAMPLE &&
+    blind.blind_keep_rate !== null &&
+    blind.revealed_keep_rate !== null;
+
+  if (!ready) {
+    return (
+      <Panel className="mt-8 p-7">
+        <Tag accent="acid">Not obtainable elsewhere</Tag>
+        <h2 className="display mt-4 text-[24px]">Brand blindness</h2>
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed">
+          Shoppers can switch your label off before deciding. Once{' '}
+          {MIN_SAMPLE} decisions have landed on each side, this will show what
+          your name is worth — the gap between the keep rate with it hidden and
+          with it shown.
+        </p>
+        <p className="mt-3 text-[13px] opacity-70">
+          So far: {blind.blind_seen} blind, {blind.revealed_seen} revealed.
+        </p>
+      </Panel>
+    );
+  }
+
+  const gap = (blind.revealed_keep_rate ?? 0) - (blind.blind_keep_rate ?? 0);
+  const premium = gap >= 0;
+
+  return (
+    <Panel className="mt-8 p-7">
+      <Tag accent="acid">Not obtainable elsewhere</Tag>
+      <h2 className="display mt-4 text-[24px]">Brand blindness</h2>
+
+      <p className="mt-3 max-w-2xl text-[15px] leading-relaxed">
+        With your label hidden, shoppers kept the garment{' '}
+        <strong>{blind.blind_keep_rate?.toFixed(0)}%</strong> of the time. With it shown,{' '}
+        <strong>{blind.revealed_keep_rate?.toFixed(0)}%</strong>.
+      </p>
+
+      <div
+        className={`mt-5 inline-block rounded-[13px] border-2 border-black px-5 py-3 shadow-hard-sm ${
+          premium ? 'bg-[#1F8D42] text-white' : 'bg-[#E9492D] text-white'
+        }`}
+      >
+        <div className="text-[11px] font-semibold uppercase tracking-[0.08em] opacity-85">
+          {premium ? 'Brand premium' : 'Brand penalty'}
+        </div>
+        <div className="display mt-1 text-[36px] leading-none">
+          {premium ? '+' : '−'}
+          {Math.abs(gap).toFixed(0)} pts
+        </div>
+      </div>
+
+      <p className="mt-5 max-w-2xl text-[15px] leading-relaxed">
+        {premium
+          ? 'Your name is doing work the garment alone would not. That is real equity, and it is what a discount erodes first.'
+          : 'The garment outperforms its own label here. Something about how the name is landing is costing you decisions the product had already won.'}
+      </p>
+
+      <p className="mt-3 text-[13px] opacity-70">
+        {blind.blind_seen} blind · {blind.revealed_seen} revealed
+      </p>
+    </Panel>
   );
 }
 

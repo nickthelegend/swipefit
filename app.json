@@ -46,7 +46,8 @@
           "photosPermission": "FITCHECK uses your photo library so you can pick a photo for the skin scan and the virtual try-on."
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      "./plugins/withReleaseSigning"
     ],
     "experiments": {
       "typedRoutes": true

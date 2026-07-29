@@ -46,6 +46,22 @@ export type BrandOverview = {
   handoffs: number;
 };
 
+/**
+ * One row per brand from the `blind_signal` view.
+ *
+ * Keep rate with the label hidden against keep rate with it shown. Rates are
+ * null until that side has been seen at all — a brand that has only ever been
+ * swiped blind has no revealed rate to compare against, and 0 would read as
+ * "nobody wants it" rather than "not measured yet".
+ */
+export type BlindSignal = {
+  brand: string;
+  blind_seen: number;
+  revealed_seen: number;
+  blind_keep_rate: number | null;
+  revealed_keep_rate: number | null;
+};
+
 export type SkuSignal = {
   product_id: string;
   brand: string;

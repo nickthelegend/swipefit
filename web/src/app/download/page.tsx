@@ -1,3 +1,4 @@
+import build from '@/data/build-info.json';
 import type { Metadata } from 'next';
 
 import { Blob, Cursor, IconAndroid, IconApple, IconDownload, Starburst } from '@/components/doodles';
@@ -42,15 +43,53 @@ export default function Download() {
                 Direct APK. Android 8.0 or newer, arm64. You will need to allow installs from
                 unknown sources — it is not on Play yet.
               </p>
-              <div className="mt-6">
-                <PillAnchor href="/builds/fitcheck-latest.apk" accent="violet" download>
-                  <IconDownload size={18} color="#fff" />
-                  Download APK
-                </PillAnchor>
-              </div>
-              <p className="mt-4 text-[12px] uppercase tracking-[0.06em] opacity-55">
-                arm64-v8a · debug build
-              </p>
+
+              {/*
+                The button appears only once an APK has actually been published.
+                A download link that 404s is worse than an honest instruction,
+                and this page is reached by people who have already decided to
+                trust a sideload.
+              */}
+              {build.published ? (
+                <>
+                  <div className="mt-6">
+                    <PillAnchor href="/builds/fitcheck-latest.apk" accent="violet" download>
+                      <IconDownload size={18} color="#fff" />
+                      Download APK
+                    </PillAnchor>
+                  </div>
+                  <p className="mt-4 text-[12px] uppercase tracking-[0.06em] opacity-55">
+                    v{build.version} · {build.sizeLabel} · arm64-v8a · built {build.builtAt}
+                  </p>
+
+                  {/*
+                    Nothing stands between this file and the device — no store
+                    review, no signature check the user sees, and they had to
+                    turn off a warning to get here. The hash is the only way to
+                    confirm the file received is the file that was built.
+                  */}
+                  <details className="mt-4">
+                    <summary className="cursor-pointer text-[12px] uppercase tracking-[0.06em] opacity-55">
+                      Verify this download
+                    </summary>
+                    <p className="mt-3 text-[13px] leading-relaxed opacity-80">
+                      SHA-256, signed as <code className="font-mono">{build.signer}</code>:
+                    </p>
+                    <code className="mt-2 block overflow-x-auto rounded-[9px] border-2 border-black bg-white p-3 font-mono text-[11px] leading-relaxed">
+                      {build.sha256}
+                    </code>
+                    <code className="mt-2 block overflow-x-auto rounded-[9px] border-2 border-black bg-white p-3 font-mono text-[11px]">
+                      shasum -a 256 fitcheck-latest.apk
+                    </code>
+                  </details>
+                </>
+              ) : (
+                <p className="mt-6 text-[15px] leading-relaxed">
+                  No build is published right now. Clone the repo and run{' '}
+                  <code className="font-mono text-[13px]">npm run apk:build</code> — the APK lands
+                  in <code className="font-mono text-[13px]">android/app/build/outputs/apk/release</code>.
+                </p>
+              )}
             </Panel>
 
             {/* No Mac binary exists — this is a React Native mobile app. Saying
