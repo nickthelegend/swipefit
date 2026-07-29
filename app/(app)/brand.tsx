@@ -140,7 +140,7 @@ export default function BrandDashboard() {
           <Section title="Colour rejection" note="only visible here">
             {colour.significant ? (
               <Type role="body">
-                Pieces whose colour fights this shopper's undertone were kept{' '}
+                Pieces whose colour fights this shopper’s undertone were kept{' '}
                 <Type role="bodyStrong">{colour.foughtRightRate.toFixed(0)}%</Type> of the time.
                 Pieces that flatter it were kept{' '}
                 <Type role="bodyStrong">{colour.flatteredRightRate.toFixed(0)}%</Type>.
@@ -148,7 +148,7 @@ export default function BrandDashboard() {
             ) : (
               <Type role="body">
                 Seen so far: <Type role="bodyStrong">{colour.fought}</Type> fighting this
-                shopper's undertone, <Type role="bodyStrong">{colour.flattered}</Type> flattering
+                shopper’s undertone, <Type role="bodyStrong">{colour.flattered}</Type> flattering
                 it. Rates appear once there are at least three of each — a percentage off one
                 swipe would be noise dressed as a finding.
               </Type>

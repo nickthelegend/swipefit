@@ -141,7 +141,7 @@ export default function ScanResult() {
                   </View>
                 ))}
                 <Type role="micro" style={{ opacity: 0.7 }}>
-                  Higher is healthier. Raw scores, not the API's inflated display scores.
+                  Higher is healthier. Raw scores, not the API’s inflated display scores.
                 </Type>
               </View>
             </Shadowed>

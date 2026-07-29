@@ -13,7 +13,7 @@ import { brandAccent, formatPrice } from '@/data/catalog';
 import { useAppStore } from '@/store/useAppStore';
 import { border, color, motion, onAccent, radius, space } from '@/theme/tokens';
 import { Chevrons, IconX, Starburst } from '@/ui/doodles';
-import { PillButton, PillTag } from '@/ui/PillButton';
+import { PillButton } from '@/ui/PillButton';
 import { Screen } from '@/ui/Screen';
 import { Shadowed } from '@/ui/Shadowed';
 import { Tap } from '@/ui/Tap';
@@ -203,7 +203,7 @@ export default function OutfitBuilder() {
 
         {outfits.filter((o) => o.status === 'ready').length > 0 && (
           <View style={{ gap: space.xs, marginTop: space.sm }}>
-            <Type role="label">Looks you've built</Type>
+            <Type role="label">Looks you’ve built</Type>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: space.sm, paddingVertical: space.xs, paddingRight: space.md }}>
               {outfits
                 .filter((o) => o.status === 'ready' && o.uri)

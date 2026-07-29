@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Weekly. Retailers retire product pages without warning and a dead handoff
+    # link is a silently broken checkout — see the six Massimo Dutti URLs that
+    # 404'd while returning HTTP 200.
+    - cron: '0 7 * * 1'
+
+# A second push to the same branch makes the first run irrelevant. Without this
+# a busy branch queues runs that exist only to be ignored.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    name: App — lint, types, tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      # `npm run verify` is the same command used locally, deliberately: a CI
+      # job that runs a different set of checks is one people stop trusting.
+      - run: npm run verify
+
+      # Guards the version matrix. Expo SDK 57 pins react, react-native and
+      # reanimated to exact versions, and this repo has already lost a build to a
+      # mismatched worklets release — a patch bump that looks harmless is exactly
+      # how that happens again.
+      - name: Expo dependency matrix
+        run: npx expo install --check
+
+  web:
+    name: Web — types and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run lint
+
+      # Supabase is read at build time only through NEXT_PUBLIC_* vars, and the
+      # pages fall back to the bundled catalogue when they are absent — so the
+      # build must pass without secrets. If this job ever needs them, that is a
+      # regression in the fallback, not a missing secret.
+      - run: npm run build
+
+  # Deliberately not part of `verify`: it needs the network, it is slow, and it
+  # fails for reasons unrelated to the code. Scheduled instead so a link that
+  # rots after launch is still noticed, without blocking a merge on a retailer
+  # having a bad afternoon.
+  links:
+    name: Catalogue links
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check:links

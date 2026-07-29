@@ -81,8 +81,8 @@ export default function Checkout() {
             </Type>
           </View>
           <Type role="body">
-            We don't take payment. Tap a brand and we'll open their real product
-            pages so you can buy where you'd normally buy.
+            We don’t take payment. Tap a brand and we’ll open their real product
+            pages so you can buy where you’d normally buy.
           </Type>
         </View>
 

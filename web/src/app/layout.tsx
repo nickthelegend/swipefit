@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Archivo } from 'next/font/google';
 
 import Nav from '@/components/nav';
+import { siteUrl } from '@/lib/site';
 import Footer from '@/components/footer';
 import './globals.css';
 
@@ -18,18 +19,6 @@ const archivo = Archivo({
   variable: '--font-archivo',
   display: 'swap',
 });
-
-/**
- * Absolute base for OG/Twitter image URLs.
- *
- * Without it Next resolves /og.png against http://localhost:3000, which every
- * scraper then fails to fetch — the card silently falls back to a bare link.
- * No domain is hardcoded because none is owned yet: Vercel supplies its own at
- * build time, and NEXT_PUBLIC_SITE_URL overrides once there is a real one.
- */
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -74,9 +63,55 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </noscript>
       </head>
       <body className={`${archivo.className} min-h-screen antialiased`}>
+        {/*
+          Keyboard users otherwise tab through the entire header — including the
+          mobile menu button — on every page before reaching any content. Hidden
+          until focused, then drawn in the world's own vocabulary rather than as
+          a browser default.
+        */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:border-2 focus:border-black focus:bg-[#EBD22F] focus:px-5 focus:py-3 focus:text-[13px] focus:font-semibold focus:uppercase focus:tracking-[0.06em]"
+        >
+          Skip to content
+        </a>
+
         <Nav />
-        <main>{children}</main>
+        <main id="main">{children}</main>
         <Footer />
+
+        {/*
+          Structured data. Two entities because they answer different questions:
+          Organization is who publishes this, SoftwareApplication is what the
+          page is actually offering. Declared free with an explicit price of 0 —
+          omitting `offers` entirely makes search engines guess, and guessing
+          wrong here means the listing implies a paid app.
+        */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                '@context': 'https://schema.org',
+                '@type': 'Organization',
+                name: 'FITCHECK',
+                url: siteUrl,
+                logo: `${siteUrl}/icon-512.png`,
+              },
+              {
+                '@context': 'https://schema.org',
+                '@type': 'SoftwareApplication',
+                name: 'FITCHECK',
+                applicationCategory: 'ShoppingApplication',
+                operatingSystem: 'Android, iOS',
+                url: siteUrl,
+                description:
+                  'A swipe-to-shop app where every card is the garment rendered on your own body. One skin scan decides what you see.',
+                offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+              },
+            ]),
+          }}
+        />
       </body>
     </html>
   );

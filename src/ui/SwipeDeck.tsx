@@ -99,7 +99,7 @@ export function SwipeDeck({
       entry.value = 0;
       entry.value = withSpring(1, motion.spring);
     },
-    [onSwipe, x, y, armed],
+    [onSwipe, x, y, armed, entry],
   );
 
   /**

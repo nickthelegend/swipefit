@@ -5,7 +5,7 @@
   "dependencies": {
     "@expo-google-fonts/archivo": "^0.4.2",
     "@react-native-async-storage/async-storage": "2.2.0",
-    "@supabase/supabase-js": "^2.110.8",
+    "@supabase/supabase-js": "^2.111.0",
     "expo": "~57.0.8",
     "expo-asset": "~57.0.7",
     "expo-camera": "~57.0.3",
@@ -34,6 +34,8 @@
   "devDependencies": {
     "@types/node": "^26.1.1",
     "@types/react": "~19.2.2",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "^57.0.0",
     "tsx": "^4.23.1",
     "typescript": "~6.0.3"
   },
@@ -47,7 +49,9 @@
     "db:verify": "node scripts/verify_db.mjs",
     "test": "node --import ./scripts/test-register.mjs --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"src/logic/__tests__/*.test.ts\"",
     "check:links": "node scripts/check_links.mjs",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
+    "lint": "eslint .",
+    "verify": "npm run lint && npm run typecheck && npm test"
   },
   "private": true
 }

@@ -93,7 +93,7 @@ export default function Welcome() {
           <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: space.sm }}>
             <Type role="body" style={{ flex: 1 }}>
               One skin scan decides which clothes you see. Then every card is that
-              garment rendered on your actual body — not a model's.
+              garment rendered on your actual body — not a model’s.
             </Type>
             <Animated.View entering={FadeIn.delay(700).duration(320)} style={{ marginBottom: space.xxs }}>
               <Cursor size={44} fill={color.acid} rotate={155} />

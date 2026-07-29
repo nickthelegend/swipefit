@@ -421,10 +421,10 @@ function DeckEmpty({ onOpenBag }: { onOpenBag: () => void }) {
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: space.md }}>
       <Starburst size={92} fill={color.acid} rotate={-14} />
       <Type role="display" align="center">
-        That's the rail
+        That’s the rail
       </Type>
       <Type role="body" align="center" style={{ maxWidth: 280 }}>
-        You've seen everything matched to your reading. What you kept is in the bag.
+        You’ve seen everything matched to your reading. What you kept is in the bag.
       </Type>
       <PillButton label="Open the bag" onPress={onOpenBag} tone={color.tomato} />
     </View>

@@ -55,7 +55,7 @@ export default function Capture() {
     if (!result.canceled && result.assets[0]) commit(result.assets[0].uri);
   };
 
-  const useDemoModel = async (id: string) => {
+  const applyDemoModel = async (id: string) => {
     const person = await resolveDemoPerson(id);
     if (!person) return;
     setPerson(person);
@@ -145,7 +145,7 @@ export default function Capture() {
                   feel="travel"
                   accessibilityRole="button"
                   accessibilityLabel={`Use demo model ${model.label}`}
-                  onPress={() => void useDemoModel(model.id)}
+                  onPress={() => void applyDemoModel(model.id)}
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',

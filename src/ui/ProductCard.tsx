@@ -47,7 +47,7 @@ export function ProductCard({
   flipped = false,
   onFlip,
 }: Props) {
-  const { product, match, regret, render } = card;
+  const { product, match } = card;
   const accent = revealBrand ? color[brandAccent(product.brand)] : color.ink;
   const accentText = revealBrand ? onAccent(brandAccent(product.brand)) : color.ground;
 

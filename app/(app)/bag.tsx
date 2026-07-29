@@ -42,7 +42,7 @@ export default function Bag() {
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: space.md }}>
           <Globe size={96} fill={color.violet} rotate={-8} />
           <Type role="display" align="center">
-            Bag's empty
+            Bag’s empty
           </Type>
           <Type role="body" align="center" style={{ maxWidth: 280 }}>
             Swipe right on something and it lands here, sorted by brand.
@@ -198,7 +198,7 @@ export default function Bag() {
             fullWidth
           />
           <Type role="micro" color={color.inkSoft} align="center" style={{ opacity: 0.75 }}>
-            FITCHECK never takes payment. Each item opens on the brand's own site.
+            FITCHECK never takes payment. Each item opens on the brand’s own site.
           </Type>
         </View>
       </ScrollView>
