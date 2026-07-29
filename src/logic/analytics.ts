@@ -100,7 +100,13 @@ function frictionOf(row: Omit<SkuRow, 'friction' | 'frictionNote'>): number {
 }
 
 function frictionNote(row: Omit<SkuRow, 'friction' | 'frictionNote'>): string | null {
-  if (row.impressions === 0) return null;
+  // MIN_SAMPLE, not `> 0`. Every line below states a behavioural finding to a
+  // partner who may act on it, and a rate computed from one swipe is not a
+  // finding — a single hesitation produced "Started to add it, then pulled
+  // back" at a confident 100%, on a screen whose own header promises that every
+  // number on it is measured. Below the threshold there is nothing to say yet,
+  // and saying nothing is the honest output.
+  if (row.impressions < MIN_SAMPLE) return null;
   if (row.hesitationRate >= 50) return 'Started to add it, then pulled back';
   if (row.undoRate >= 50) return 'Added, then taken back out';
   if (row.inspectRate >= 50) return 'Had to open the detail before deciding';

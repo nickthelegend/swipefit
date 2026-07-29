@@ -131,23 +131,30 @@ describe('buildDashboard', () => {
     assert.equal(totals.medianDwellMs, 0);
   });
 
-  test('MIN_SAMPLE does NOT reach the per-SKU rows — one swipe is enough to be quoted', () => {
+  test('a single swipe produces no quotable note', () => {
     /**
-     * Pinning what the code does, not what the constant's own docstring says it
-     * is for ("Without this the screen happily prints 'kept 0%' off a single
-     * swipe"). MIN_SAMPLE is referenced only by colourVerdict and
-     * blindComparison; buildDashboard applies no threshold of any kind, and
-     * frictionNote guards on `impressions === 0` alone.
+     * frictionNote states a behavioural finding to a partner who may act on it,
+     * so it now requires MIN_SAMPLE impressions rather than merely more than
+     * zero. One hesitation used to yield a 100% hesitation rate and the note
+     * "Started to add it, then pulled back" — on a screen whose header promises
+     * every number on it is measured.
      *
-     * So a single hesitant swipe produces a 100% hesitation rate and a
-     * confident-sounding note on the brand console. If someone later extends the
-     * threshold to cover SkuRow — which the docstring arguably promises — this
-     * test is the one that should fail, deliberately.
+     * The rate itself is still computed and still says 100, because it is
+     * arithmetically true and the row shows the impression count beside it. The
+     * note is the part that makes a claim, so the note is the part that waits.
      */
     const row = soleRow([swipe('a', { hesitated: true })]);
 
     assert.equal(row.impressions, 1);
     assert.equal(row.hesitationRate, 100);
+    assert.equal(row.frictionNote, null);
+  });
+
+  test('the same note appears once the sample is large enough', () => {
+    // The guard must delay the finding, not delete it.
+    const row = soleRow(times(3, () => swipe('a', { hesitated: true })));
+
+    assert.equal(row.impressions, 3);
     assert.equal(row.frictionNote, 'Started to add it, then pulled back');
   });
 

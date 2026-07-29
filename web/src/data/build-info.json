@@ -1,8 +1,9 @@
 {
-  "published": false,
-  "version": null,
-  "sizeLabel": null,
-  "sha256": null,
-  "signer": null,
-  "builtAt": null
+  "published": true,
+  "version": "1.0.0",
+  "sizeBytes": 56402992,
+  "sizeLabel": "53.8 MB",
+  "sha256": "e76e16a123a63e6f0e86c5b382f3ec0dfd591e0761fbf179ef7bf576c940a23d",
+  "signer": "FITCHECK",
+  "builtAt": "2026-07-29"
 }
