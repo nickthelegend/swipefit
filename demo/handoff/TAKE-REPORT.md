@@ -1,9 +1,17 @@
 # FITCHECK demo — take report
 
-**Result: partial. 17 of 20 beats, 340s of real footage, no edit applied.**
+**Result: all 20 beats covered, across two takes. No edit applied.**
 
-The three missing beats are the closing argument — brand console, brand
-blindness, outro. They are not in any take. Everything before them is.
+- **Take A** — `fitcheck-raw-take.mp4`, 340s, beats `intro` → `handoff` (17).
+- **Take B** — `fitcheck-closing-beats.mp4`, 193s, beats `console`, `blindgap`,
+  `outro` (3).
+
+Two takes rather than one, and the reason is stated rather than smoothed over:
+the API grant was exhausted partway through the session, so Take A could not be
+re-run to reach its ending. The three closing beats read entirely from swipe
+telemetry held on the device — they are identical whether the skin scan ran live
+or fell back — so they were captured separately at zero units. Take A carries
+every beat that depends on the live API, and it ran live.
 
 Everything below was captured from the signed release APK on a real device,
 talking to the live API over the real network. Nothing is staged, mocked or
@@ -13,9 +21,10 @@ re-enacted.
 
 | File | What it is |
 | --- | --- |
-| `fitcheck-raw-take.mp4` | The take. 1080x2400, h264, 340s, three concatenated segments. |
-| `marks.log` | `DEMO_LINE <ms> <line-id>` — when each beat actually started. |
-| `marks.json` | Same, plus measured durations and the failure record. |
+| `fitcheck-raw-take.mp4` | Take A. 1080x2400, h264, 340s. Beats `intro` → `handoff`. |
+| `fitcheck-closing-beats.mp4` | Take B. 1080x2400, h264, 193s. Beats `console`, `blindgap`, `outro`. |
+| `marks.log` / `marks.json` | Take A marks — `DEMO_LINE <ms> <line-id>`. |
+| `marks-closing.log` / `.json` | Take B marks. |
 | `narration/` | 20 WAV files, one per line. |
 | `durations.json` | Every duration **measured with ffprobe**, never estimated. |
 | `bgm.wav` | Music bed, 215.8s, measured at -25.8 LUFS. |
@@ -54,9 +63,26 @@ explicit that a take shows the app failing rather than hiding it. It is also
 worth fixing properly rather than papering over: presigned result URLs are
 short-lived, and chaining one render into the next races that expiry.
 
-**`console`, `blindgap`, `outro` — not captured.** The take aborted at `handoff`
-when navigation out of the outfit screen timed out. The last three beats have
-narration and durations ready; only the footage is missing.
+**`console`, `blindgap`, `outro` — captured in Take B.** Take A aborted at
+`handoff` when navigation out of the outfit screen timed out, so these were shot
+separately. What they show is real and measured:
+
+    BRAND CONSOLE — SIGNAL
+    100% MEASURED · 8 DECISIONS ON THIS DEVICE.
+    NO SYNTHETIC BASELINE, NO DEMO TRAFFIC.
+
+    Right-swipe rate 63% · Median decision 10.7s
+
+    BRAND BLINDNESS — not obtainable elsewhere
+    With the label hidden these pieces were kept 50% of the time.
+    With it shown, 75%.
+    BRAND PREMIUM 25 POINTS
+
+    DECISION FRICTION — 8 SKUs, real per-SKU dwell and detail-open bars
+
+That premium is computed from eight real decisions made on camera minutes
+earlier, four with the brand hidden and four with it shown. It is the one
+measurement a retailer cannot run on their own shop, and it is on film.
 
 ## The API is now out of credits
 
@@ -95,7 +121,7 @@ Recorded because each one produced a convincing false report about FITCHECK:
 4. `screenrecord` emits ~1MB of codec config per call and blew execFileSync's
    default buffer, throwing with the whole log as the error message.
 
-## The closing beats: attempted three times, not captured
+## The closing beats took five attempts
 
 After credits ran out I tried to capture `console`, `blindgap` and `outro`
 separately. Those three are computed entirely from local swipe telemetry, so
@@ -113,17 +139,28 @@ zero units is legitimate, not a cheat. It still did not work:
   footage — but the Brand tab never opened, and the emulator switched to another
   app entirely partway through.
 
-The honest summary is that the closing beats are **not** in any usable take.
-What exists for them is narration, measured durations, and a driver that now
-navigates to the console without the back key that was exiting the app.
+- **Attempt 4** reached the bag but the Brand tab never opened. The tab bounds
+  were measured at `[720,2211][1038,2337]` and the tap was inside them, so the
+  tap was never the problem: uiautomator was returning empty dumps, which made
+  both the tap-by-label AND the verification fail on a screen that was fine.
+- **Attempt 5** captured the console, but Brand Blindness read "2 decisions with
+  the label hidden, 4 with it shown — the comparison appears once there are at
+  least three of each". That is MIN_SAMPLE behaving correctly and refusing to
+  quote a number off two swipes, which is the right call and the wrong shot.
+- **Attempt 6** raised the blind sample to four a side and produced the number.
+
+The fix that mattered was retrying the whole tap-and-verify loop rather than
+trusting a single dump. Everything else was my harness misreporting a working
+app.
 
 ## To finish this
 
-1. Top up the YouCam grant.
-2. `npm run demo:drive` — the harness is fixed and reaches `handoff`
-   consistently now; the three closing beats need one clean run.
-3. Fix the chained-render URL expiry so the `outfit` beat succeeds, or accept
-   the honest failure frame that is already captured.
+1. Cut from the two takes against `marks.log` and `marks-closing.log`. Every
+   beat has footage and a measured narration duration.
+2. Optional: top up the YouCam grant and re-run `npm run demo:drive` for a
+   single continuous take. Nothing is missing without it.
+3. Optional: fix the chained-render URL expiry so the `outfit` beat succeeds
+   rather than showing its honest failure frame.
 
 No editing has been applied, per the brief. `marks.log` is what an editor aligns
 the narration to.

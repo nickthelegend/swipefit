@@ -553,9 +553,13 @@ async function drive() {
   // ---- blind swipes (>= MIN_SAMPLE of 3) --------------------------------
   await beat('swiperight', async () => {
     await swipeRight();
+    await swipeRight();
   });
 
   await beat('swipeleft', async () => {
+    // Four blind decisions in total across this beat and the last. MIN_SAMPLE is
+    // three per side and a swipe occasionally fails to commit, so three exactly
+    // leaves the console showing "still counting" instead of the actual gap.
     await swipeLeft();
     await swipeLeft();
   });
@@ -624,6 +628,20 @@ async function drive() {
 
   // ---- brand console ----------------------------------------------------
   await softBeat('console', async () => {
+    // Tap, verify, tap again. The tab bounds are correct and a manual tap works
+    // every time, but uiautomator dumps intermittently return nothing on this
+    // emulator — which made the tap-by-label fall back AND made the verification
+    // see an empty screen, so a landed tap looked like a failed one. Retrying
+    // the whole tap-and-check is the only thing that survives an unreliable
+    // dump.
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      if (seen(dumpUi(), 'Brand console')) break;
+      tap(879, 2274);            // measured centre of the brand tab
+      await sleep(2500);
+    }
+  });
+
+  if (false) await softBeat('console-old', async () => {
     // No back key here. From the bag the tab bar is already on screen, and back
     // exits the app entirely — which is how a take ended up filming the Android
     // search screen while reporting success.

@@ -1,0 +1,34 @@
+{
+  "takeMs": 192914,
+  "takeSeconds": 192.91,
+  "success": true,
+  "failure": null,
+  "signingBeats": [],
+  "degraded": {
+    "scanlive": "recorded reading — API grant exhausted; closing beats do not depend on it"
+  },
+  "note": "No signing beats: this app has no blockchain component.",
+  "newRuntimeErrors": 0,
+  "videoSegments": 4,
+  "segmentSeams": 3,
+  "marks": [
+    {
+      "id": "console",
+      "ms": 146006,
+      "seconds": 7.404,
+      "signing": false
+    },
+    {
+      "id": "blindgap",
+      "ms": 160884,
+      "seconds": 17.806,
+      "signing": false
+    },
+    {
+      "id": "outro",
+      "ms": 181521,
+      "seconds": 10.938,
+      "signing": false
+    }
+  ]
+}
