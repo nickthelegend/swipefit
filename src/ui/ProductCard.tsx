@@ -234,8 +234,22 @@ function CardMedia({
           contentFit="contain"
           transition={180}
         />
-        <View style={{ position: 'absolute', left: 0, right: 0, bottom: space.lg, alignItems: 'center' }}>
+        {/*
+          Says WHY, not just that.
+
+          "Try-on unavailable" was the same mistake as the scan screen's "out of
+          credits": a fixed string standing in for a reason the code already had.
+          The render failure carries a message and it was being thrown away, so a
+          rate limit, a rejected photo and a dead network all looked identical —
+          to the shopper and to anyone trying to debug it.
+        */}
+        <View style={{ position: 'absolute', left: space.md, right: space.md, bottom: space.lg, alignItems: 'center', gap: space.xxs }}>
           <PillTag label="Try-on unavailable · showing the product" tone={color.ground} shadowed />
+          {render.reason && (
+            <Type role="micro" align="center" color={color.ink} numberOfLines={3}>
+              {render.reason}
+            </Type>
+          )}
         </View>
       </View>
     );

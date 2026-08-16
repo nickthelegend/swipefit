@@ -1,6 +1,6 @@
 {
   "voice": "Samantha",
-  "note": "One file per line. Durations are MEASURED with ffprobe after generation, never estimated — the driver reads durations.json and holds each beat for its real length plus a 0.45s breath. No line mentions a transaction or a signature: this app has no blockchain component.",
+  "note": "One file per line. Durations are MEASURED with ffprobe after generation, never estimated \u2014 the driver reads durations.json and holds each beat for its real length plus a 0.45s breath. No line mentions a transaction or a signature: this app has no blockchain component.",
   "lines": [
     {
       "id": "intro",
@@ -24,15 +24,15 @@
     },
     {
       "id": "scanlive",
-      "text": "This is a live call to YouCam Skin AI, happening now. Nothing here is pre-baked — the network request is genuinely in flight."
+      "text": "This is a live call to YouCam Skin AI, happening now. Nothing here is pre-baked \u2014 the network request is genuinely in flight."
     },
     {
       "id": "reading",
-      "text": "Warm, and deep. Deep Autumn. The API returns colour only — no undertone field exists. Every warm-cool judgement is derived here, in CIELAB, against a neutral axis that moves with lightness. That curve is exactly why this reads warm instead of cool."
+      "text": "Warm, and deep. Deep Autumn. The API returns colour only \u2014 no undertone field exists. Every warm-cool judgement is derived here, in CIELAB, against a neutral axis that moves with lightness. That curve is exactly why this reads warm instead of cool."
     },
     {
       "id": "deckopen",
-      "text": "Sixty pieces from nine real brands, re-sorted around that one reading. Not filtered — re-ordered. A shopper who only ever saw flattering colours could not tell the sort was doing anything."
+      "text": "Sixty pieces from nine real brands, re-sorted around that one reading. Not filtered \u2014 re-ordered. A shopper who only ever saw flattering colours could not tell the sort was doing anything."
     },
     {
       "id": "tryon",
@@ -55,12 +55,16 @@
       "text": "Swipe left on something that fights the reading, and it is gone. The sort is doing real work, not decorating a random order."
     },
     {
+      "id": "reveal",
+      "text": "Now I turn the label back on, and keep swiping. That gives the console the two halves it needs: decisions made blind, and decisions made knowing the brand."
+    },
+    {
       "id": "bag",
       "text": "The bag spans brands, because a shopper does not think in shops. Each brand keeps its own colour across the whole app."
     },
     {
       "id": "outfit",
-      "text": "Now the part the API cannot do on its own. It takes one garment per call — so FITCHECK chains it. The rendered top becomes the body the trousers go onto, and you get a complete outfit on yourself."
+      "text": "Now the part the API cannot do on its own. It takes one garment per call \u2014 so FITCHECK chains it. The rendered top becomes the body the trousers go onto, and you get a complete outfit on yourself."
     },
     {
       "id": "handoff",
@@ -68,15 +72,20 @@
     },
     {
       "id": "console",
-      "text": "Which brings us to what brands actually get. Every hesitation, every second of deliberation, every item added and taken back out — measured, never estimated."
+      "text": "Every figure on this screen is measured from the swipes I just made on this device. Nothing is simulated, and nothing is a placeholder."
     },
     {
       "id": "blindgap",
-      "text": "And this is the measurement no retailer can run on their own shop. Keep rate with the label hidden, against keep rate with it shown. In any ordinary store the shopper can always see whose product they are holding, so brand pull and garment appeal arrive fused. Hide the label and the gap between those two numbers is what the name is worth."
+      "text": "And this is the measurement no retailer can run on their own shop. Keep rate with the label hidden, against keep rate with it shown. In an ordinary store the shopper can always see whose product they are holding, so brand pull and garment appeal arrive fused. Hide the label, and the gap between those two numbers is what the name is worth."
     },
     {
       "id": "outro",
       "text": "FITCHECK. The face decides what you wear. Built on YouCam Skin AI and Apparel Virtual Try-On, with the colour science implemented rather than gestured at. Thanks very much for watching."
     }
-  ]
+  ],
+  "decisions": {
+    "supabase": "Not required. The in-app brand console computes from local swipe state; only the website console reads Supabase, and that is out of scope for this take.",
+    "voice": "macOS `say` voice Samantha. Kokoro is not installed and pulling in torch on a disk with 7.5GB free the night before submission is a bad trade.",
+    "length": "All 19 beats kept, narration trimmed for pace."
+  }
 }

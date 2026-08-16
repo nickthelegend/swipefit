@@ -1,0 +1,86 @@
+{
+  "breathSeconds": 0.45,
+  "totalSeconds": 192.78,
+  "lines": {
+    "intro": {
+      "file": "demo/audio/00-intro.wav",
+      "seconds": 8.926
+    },
+    "problem": {
+      "file": "demo/audio/01-problem.wav",
+      "seconds": 10.281
+    },
+    "shopfor": {
+      "file": "demo/audio/02-shopfor.wav",
+      "seconds": 9.104
+    },
+    "capture": {
+      "file": "demo/audio/03-capture.wav",
+      "seconds": 10.508
+    },
+    "pickmodel": {
+      "file": "demo/audio/04-pickmodel.wav",
+      "seconds": 7.833
+    },
+    "scanlive": {
+      "file": "demo/audio/05-scanlive.wav",
+      "seconds": 7.626
+    },
+    "reading": {
+      "file": "demo/audio/06-reading.wav",
+      "seconds": 15.409
+    },
+    "deckopen": {
+      "file": "demo/audio/07-deckopen.wav",
+      "seconds": 10.719
+    },
+    "tryon": {
+      "file": "demo/audio/08-tryon.wav",
+      "seconds": 8.286
+    },
+    "matchwhy": {
+      "file": "demo/audio/09-matchwhy.wav",
+      "seconds": 7.709
+    },
+    "blind": {
+      "file": "demo/audio/10-blind.wav",
+      "seconds": 10.235
+    },
+    "swiperight": {
+      "file": "demo/audio/11-swiperight.wav",
+      "seconds": 5.785
+    },
+    "swipeleft": {
+      "file": "demo/audio/12-swipeleft.wav",
+      "seconds": 7.05
+    },
+    "reveal": {
+      "file": "demo/audio/13-reveal.wav",
+      "seconds": 9.269
+    },
+    "bag": {
+      "file": "demo/audio/14-bag.wav",
+      "seconds": 6.827
+    },
+    "outfit": {
+      "file": "demo/audio/15-outfit.wav",
+      "seconds": 11.419
+    },
+    "handoff": {
+      "file": "demo/audio/16-handoff.wav",
+      "seconds": 9.646
+    },
+    "console": {
+      "file": "demo/audio/17-console.wav",
+      "seconds": 7.404
+    },
+    "blindgap": {
+      "file": "demo/audio/18-blindgap.wav",
+      "seconds": 17.806
+    },
+    "outro": {
+      "file": "demo/audio/19-outro.wav",
+      "seconds": 10.938
+    }
+  }
+}

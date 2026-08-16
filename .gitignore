@@ -51,3 +51,8 @@ __pycache__/
 # publish an update that Android accepts as authentic. Regenerate with the
 # keytool command in README.md if it is lost.
 /credentials/
+
+# Demo takes: raw capture is large and regenerable. The plan, script, narration
+# audio and durations are kept; the video and per-run marks are not.
+/demo/take*/
+/demo/audio/*.wav
