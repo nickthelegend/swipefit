@@ -1,9 +1,9 @@
 {
   "published": true,
   "version": "1.0.0",
-  "sizeBytes": 56402992,
+  "sizeBytes": 56427136,
   "sizeLabel": "53.8 MB",
-  "sha256": "e76e16a123a63e6f0e86c5b382f3ec0dfd591e0761fbf179ef7bf576c940a23d",
+  "sha256": "f367e3b5eb4e186ffcee98f5969aab86dd17077c8f2d649ee6621c844c7ded48",
   "signer": "FITCHECK",
-  "builtAt": "2026-07-29"
+  "builtAt": "2026-08-16"
 }
