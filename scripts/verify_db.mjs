@@ -46,6 +46,27 @@ async function get(path) {
 const checks = [];
 const add = (name, ok, detail) => checks.push({ name, ok, detail });
 
+// Reachability first. Every check below distinguishes states by HTTP status, and
+// a status of 0 means the request never completed — so without this the column
+// check read `status !== 400` as a pass and reported "ok" for a host that does
+// not resolve. A checker that passes when it reached nothing is worse than no
+// checker.
+const reachable = await get('');
+if (reachable.status === 0) {
+  console.error(`  Cannot reach ${url}`);
+  console.error(`  ${reachable.body}`);
+  console.error(
+    '\n  The project is unreachable, not misconfigured. Usually this means the\n' +
+      '  Supabase project was paused and removed — free-tier projects are deleted\n' +
+      '  after a period of inactivity, and the subdomain stops resolving.\n\n' +
+      '  Create a new project, put its URL and ANON key in .env and web/.env.local,\n' +
+      '  then: npm run db:sql | pbcopy  and paste into the SQL Editor.\n\n' +
+      '  The app and site both run without it — telemetry stops and /brands falls\n' +
+      '  back to the bundled catalogue.',
+  );
+  process.exit(1);
+}
+
 for (const view of ['sku_signal', 'undertone_signal', 'reach', 'brand_overview', 'blind_signal']) {
   const { status } = await get(`${view}?limit=1`);
   add(
