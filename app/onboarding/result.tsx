@@ -108,7 +108,7 @@ export default function ScanResult() {
               </View>
               <Type role="micro" color={color.inkSoft} style={{ opacity: 0.7 }}>
                 {profile.readingSource === 'recorded'
-                  ? 'A real YouCam reading of this exact photo, taken earlier and shipped with the app because the API key is out of credits. Undertone, depth and season are derived from it in CIELAB.'
+                  ? `A real YouCam reading of this exact photo, taken earlier and shipped with the app. The live call did not complete${profile.recordedReason ? ` — ${profile.recordedReason}` : ''}. Undertone, depth and season are derived from it in CIELAB.`
                   : 'The API returns colour only. Undertone, depth and season are derived from these in CIELAB.'}
               </Type>
             </View>

@@ -77,6 +77,14 @@ export type SkinProfile = {
    * live call cannot run. Surfaced in the UI; never silently substituted.
    */
   readingSource: 'live' | 'recorded';
+  /**
+   * Why the live call was not used, when readingSource is 'recorded'.
+   *
+   * Carried rather than inferred: the UI previously stated the key was out of
+   * credits for every fallback, which is one of several possible causes and was
+   * flatly untrue whenever the cause was anything else.
+   */
+  recordedReason?: string;
 };
 
 export type SkinConcern = {

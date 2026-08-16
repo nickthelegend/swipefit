@@ -185,6 +185,7 @@ export const useAppStore = create<State & Actions>()(
 
         let tone: youcam.SkinToneResult;
         let readingSource: SkinProfile['readingSource'] = 'live';
+        let recordedReason: string | undefined;
 
         try {
           tone = await youcam.analyseSkinTone(person.face);
@@ -208,6 +209,7 @@ export const useAppStore = create<State & Actions>()(
             hairColorName: null,
           };
           readingSource = 'recorded';
+          recordedReason = error instanceof Error ? error.message : String(error);
         }
 
         let concerns: SkinConcern[] = [];
@@ -238,6 +240,7 @@ export const useAppStore = create<State & Actions>()(
           scanTimestamp: Date.now(),
           simulated: false,
           readingSource,
+          recordedReason,
         });
       },
 

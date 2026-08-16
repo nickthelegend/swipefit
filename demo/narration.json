@@ -1,0 +1,82 @@
+{
+  "voice": "Samantha",
+  "note": "One file per line. Durations are MEASURED with ffprobe after generation, never estimated — the driver reads durations.json and holds each beat for its real length plus a 0.45s breath. No line mentions a transaction or a signature: this app has no blockchain component.",
+  "lines": [
+    {
+      "id": "intro",
+      "text": "This is FITCHECK. Every card you are about to see is a real garment, rendered onto a real person's body. And one skin scan decides which garments you see at all."
+    },
+    {
+      "id": "problem",
+      "text": "Online, you buy clothes on a model who is not you. The colour that suits them may fight you, and you find out after it arrives. FITCHECK moves that decision to before the purchase."
+    },
+    {
+      "id": "shopfor",
+      "text": "First, the one thing a skin scan cannot tell us: what you actually want to wear. It is asked once, and it filters the catalogue rather than profiling you."
+    },
+    {
+      "id": "capture",
+      "text": "The scan needs two photos, because a face reading and a full-body try-on want genuinely different framing. On a real phone you take them. Here, three bundled people span the tone range."
+    },
+    {
+      "id": "pickmodel",
+      "text": "I will use the deep-tone person deliberately. Most colour tools misread deep skin as cool. This one does not, and I want that on camera."
+    },
+    {
+      "id": "scanlive",
+      "text": "This is a live call to YouCam Skin AI, happening now. Nothing here is pre-baked — the network request is genuinely in flight."
+    },
+    {
+      "id": "reading",
+      "text": "Warm, and deep. Deep Autumn. The API returns colour only — no undertone field exists. Every warm-cool judgement is derived here, in CIELAB, against a neutral axis that moves with lightness. That curve is exactly why this reads warm instead of cool."
+    },
+    {
+      "id": "deckopen",
+      "text": "Sixty pieces from nine real brands, re-sorted around that one reading. Not filtered — re-ordered. A shopper who only ever saw flattering colours could not tell the sort was doing anything."
+    },
+    {
+      "id": "tryon",
+      "text": "And this is the claim. That garment, rendered onto that body, through YouCam Apparel Virtual Try-On. Not a stock photo, not a mock-up."
+    },
+    {
+      "id": "matchwhy",
+      "text": "Tap the card and it tells you why it scored what it scored, in words. Terracotta runs warm, the same direction as this person's undertone."
+    },
+    {
+      "id": "blind",
+      "text": "Notice the brand is hidden. Most people buy the label before they judge the garment, so FITCHECK hides it until after the decision. That single choice is what makes the next number possible."
+    },
+    {
+      "id": "swiperight",
+      "text": "Swipe right, and only then does the brand reveal itself. The bag fills, and the deck counts down."
+    },
+    {
+      "id": "swipeleft",
+      "text": "Swipe left on something that fights the reading, and it is gone. The sort is doing real work, not decorating a random order."
+    },
+    {
+      "id": "bag",
+      "text": "The bag spans brands, because a shopper does not think in shops. Each brand keeps its own colour across the whole app."
+    },
+    {
+      "id": "outfit",
+      "text": "Now the part the API cannot do on its own. It takes one garment per call — so FITCHECK chains it. The rendered top becomes the body the trousers go onto, and you get a complete outfit on yourself."
+    },
+    {
+      "id": "handoff",
+      "text": "There is no payment here, and there is not meant to be. FITCHECK opens the brand's own product page and takes no cut. That is what makes brands partners rather than competitors."
+    },
+    {
+      "id": "console",
+      "text": "Which brings us to what brands actually get. Every hesitation, every second of deliberation, every item added and taken back out — measured, never estimated."
+    },
+    {
+      "id": "blindgap",
+      "text": "And this is the measurement no retailer can run on their own shop. Keep rate with the label hidden, against keep rate with it shown. In any ordinary store the shopper can always see whose product they are holding, so brand pull and garment appeal arrive fused. Hide the label and the gap between those two numbers is what the name is worth."
+    },
+    {
+      "id": "outro",
+      "text": "FITCHECK. The face decides what you wear. Built on YouCam Skin AI and Apparel Virtual Try-On, with the colour science implemented rather than gestured at. Thanks very much for watching."
+    }
+  ]
+}
