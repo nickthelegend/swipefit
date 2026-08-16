@@ -56,7 +56,8 @@
     "apk:publish": "node scripts/publish_apk.mjs",
     "demo:tts": "node scripts/tts.mjs",
     "demo:drive": "node scripts/drive_demo.mjs",
-    "demo:bgm": "node scripts/make_bgm.mjs"
+    "demo:bgm": "node scripts/make_bgm.mjs",
+    "demo:await": "node scripts/await_take.mjs"
   },
   "private": true,
   "engines": {
