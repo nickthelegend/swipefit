@@ -153,6 +153,42 @@ The fix that mattered was retrying the whole tap-and-verify loop rather than
 trusting a single dump. Everything else was my harness misreporting a working
 app.
 
+## Why this is two takes and not one
+
+The brief asks for one clean take. It is two, and the reason is a hard external
+blocker rather than a shortcut.
+
+A single continuous 20-beat take costs **60 API units minimum**:
+
+    live skin tone          20 x 1 = 20
+    skin concerns           12 x 1 = 12
+    deck prefetch, 6 cards   2 x 6 = 12
+    swipe lookahead, 6       2 x 6 = 12
+    outfit chain, 2 renders  2 x 2 =  4
+
+The grant is empty, so none of that can run.
+
+Three ways round it were considered and rejected:
+
+**Run it in fallback mode.** Onboarding completes at zero units, because the
+demo people carry real recorded readings. But the narration for that beat says
+*"This is a live call to YouCam Skin AI, happening now"*, and over footage
+reading `RECORDED` that sentence is simply false. A complete take that lies is
+worse than an honest split one.
+
+**Restore the render cache after clearing state.** This genuinely works for the
+deck: the cache keys are deterministic, the renders were produced by the live
+API earlier tonight, and reusing them is exactly what the cache is for. It does
+not help the scan, and it cannot help the outfit — the second layer of the chain
+is a render that has never succeeded, so there is nothing cached to reuse.
+
+**Drop the outfit beat.** That is editing the plan to fit the constraint, which
+is the one thing the brief rules out.
+
+So: **60 units and one command** (`npm run demo:drive`) produces the single clean
+take. Everything else is already fixed and waiting — including the chained-render
+bug that caused the only on-camera failure, which will no longer occur.
+
 ## To finish this
 
 1. Cut from the two takes against `marks.log` and `marks-closing.log`. Every
