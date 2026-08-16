@@ -514,7 +514,30 @@ export const useAppStore = create<State & Actions>()(
               { kind: 'url', url: top.productImageUrl },
               'upper_body',
             );
-            personLayer = { kind: 'url', url: topUrl };
+
+            // Download it, then pass it as a FILE — never hand the API its own
+            // result URL back as an input.
+            //
+            // Those URLs are presigned and short-lived, and the second call
+            // failed fetching them with `error_download_image`: the chain was
+            // racing the expiry of the very thing it had just produced. It
+            // failed on camera during a take for exactly this reason.
+            //
+            // The branch above already does this correctly for a render the deck
+            // had cached; only the freshly-rendered path passed a URL, so the
+            // bug appeared only when the top had not been seen in the deck yet.
+            const stagedTop = await cacheRender(person.key, `${topId}-layer`, topUrl);
+
+            // cacheRender returns the REMOTE url when the download fails, which
+            // is a sensible fallback for a deck card and precisely the wrong one
+            // here — it would hand the presigned URL straight back to the API
+            // and reintroduce the bug this staging exists to prevent. Better to
+            // say what happened than to retry the known-broken path.
+            if (!stagedTop.startsWith('file://')) {
+              throw new Error('Could not stage the first layer locally, so the second render would have to reuse an expiring URL.');
+            }
+
+            personLayer = { kind: 'file', uri: stagedTop };
           }
 
           // Layer two: the bottom, worn over the result of layer one.
