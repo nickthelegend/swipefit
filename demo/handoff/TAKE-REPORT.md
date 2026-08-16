@@ -1,6 +1,9 @@
 # FITCHECK demo — take report
 
-**Result: partial success. 17 of 20 beats, 340s of real footage, no edit applied.**
+**Result: partial. 17 of 20 beats, 340s of real footage, no edit applied.**
+
+The three missing beats are the closing argument — brand console, brand
+blindness, outro. They are not in any take. Everything before them is.
 
 Everything below was captured from the signed release APK on a real device,
 talking to the live API over the real network. Nothing is staged, mocked or
@@ -91,6 +94,28 @@ Recorded because each one produced a convincing false report about FITCHECK:
    frame, exactly like it was being swiped.
 4. `screenrecord` emits ~1MB of codec config per call and blew execFileSync's
    default buffer, throwing with the whole log as the error message.
+
+## The closing beats: attempted three times, not captured
+
+After credits ran out I tried to capture `console`, `blindgap` and `outro`
+separately. Those three are computed entirely from local swipe telemetry, so
+they are identical whether the scan ran live or fell back — capturing them at
+zero units is legitimate, not a cheat. It still did not work:
+
+- **Attempt 1** filmed the Android search screen. The app had been exited by a
+  stray fallback tap minutes earlier and the harness reported SUCCESS anyway,
+  because it only checked that beats were *marked*. Fixed: `line()` now refuses
+  to mark a beat unless FITCHECK is genuinely the focused app.
+- **Attempt 2** truncated. `screenrecord` writes its moov atom only on a clean
+  exit, so killing the in-flight segment produced a 110KB fragment. Fixed:
+  segments are now 60s and the last one is allowed to finish.
+- **Attempt 3** reached the bag — four items across four brands, $294, good
+  footage — but the Brand tab never opened, and the emulator switched to another
+  app entirely partway through.
+
+The honest summary is that the closing beats are **not** in any usable take.
+What exists for them is narration, measured durations, and a driver that now
+navigates to the console without the back key that was exiting the app.
 
 ## To finish this
 

@@ -39,6 +39,19 @@ const RUN_ID = process.env.DEMO_RUN_ID ?? String(process.hrtime.bigint()).slice(
 const OUT = `${root}demo/take-${RUN_ID}`;
 const PKG = 'com.fitcheck.app';
 
+/**
+ * TAIL mode records only the closing beats.
+ *
+ * The console, blind comparison and outro are computed entirely from swipe
+ * telemetry held on the device — they look and read identically whether the
+ * skin scan ran live or fell back to a recorded reading. So when the API grant
+ * is exhausted they can still be captured honestly, at zero units, by
+ * navigating through onboarding without marking those beats.
+ *
+ *   DEMO_TAIL=1 npm run demo:drive
+ */
+const TAIL = process.env.DEMO_TAIL === '1';
+
 const durations = JSON.parse(readFileSync(`${root}demo/durations.json`, 'utf8'));
 const marks = [];
 const degraded = {};
@@ -60,7 +73,36 @@ const log = (m) => console.log(`  ${m}`);
  * Emitted as `DEMO_LINE <ms> <line-id>` so the mark log can be diffed against
  * the video without trusting anything's memory of the order.
  */
+const TAIL_BEATS = new Set(['console', 'blindgap', 'outro']);
+
+/**
+ * Is FITCHECK actually the focused app right now?
+ *
+ * Added after a take reported SUCCESS while filming the Android search screen
+ * with the keyboard up. Every beat had been marked, the run was declared clean,
+ * and the footage contained no FITCHECK at all — the app had been exited by a
+ * stray fallback tap several minutes earlier. Marking a beat is not evidence
+ * that anything was recorded; this is.
+ */
+function appInForeground() {
+  try {
+    const focus = sh(['shell', 'dumpsys', 'window'], { stdio: 'pipe' });
+    return /mCurrentFocus=.*com\.fitcheck\.app/.test(focus)
+      || /mFocusedApp=.*com\.fitcheck\.app/.test(focus);
+  } catch {
+    return false;
+  }
+}
+
 function line(id) {
+  // In tail mode the earlier beats are navigation, not footage: marking them
+  // would claim coverage this run does not have.
+  if (TAIL && !TAIL_BEATS.has(id)) return durations.lines[id]?.seconds ?? 0;
+
+  if (!appInForeground()) {
+    throw new Error(`APP NOT IN FOREGROUND at beat "${id}" — refusing to mark footage that does not show the app`);
+  }
+
   const ms = Date.now() - t0;
   const seconds = durations.lines[id]?.seconds;
   if (seconds === undefined) throw new Error(`No measured duration for beat "${id}"`);
@@ -71,6 +113,7 @@ function line(id) {
 
 /** Holds for this beat's real audio length plus a breath. */
 async function hold(id) {
+  if (TAIL && !TAIL_BEATS.has(id)) return;
   const seconds = durations.lines[id].seconds;
   await sleep((seconds + durations.breathSeconds) * 1000);
 }
@@ -317,7 +360,12 @@ async function preflight() {
  * No crop: the device is the frame at exactly 1080x2400 and nothing else is on
  * screen, so there is no rectangle to cut.
  */
-const SEGMENT_SECONDS = 170;
+// 60s, not the 170s maximum. screenrecord only finalises an MP4 when it ends on
+// its own, so whatever is in flight when the take stops is lost — a 170s segment
+// meant losing up to 170s of footage, and it truncated the closing beats to a
+// 110KB fragment. Short segments bound that loss and make the stop wait short
+// enough to simply let the current one finish.
+const SEGMENT_SECONDS = 60;
 let recording = false;
 let segments = 0;
 
@@ -449,9 +497,12 @@ async function drive() {
   // thing this video exists to show, so it stops the take rather than narrating
   // over it.
   if (seen(afterScan, 'Recorded from YouCam')) {
-    throw new Error('FELL BACK TO RECORDED READING — live scan did not run');
+    if (!TAIL) throw new Error('FELL BACK TO RECORDED READING — live scan did not run');
+    degraded.scanlive = 'recorded reading — API grant exhausted; closing beats do not depend on it';
+    log('  ! recorded reading (tail mode: closing beats are unaffected)');
+  } else {
+    log('  live reading confirmed (Measured by YouCam)');
   }
-  log('  live reading confirmed (Measured by YouCam)');
 
   await beat('reading');
 
@@ -533,7 +584,7 @@ async function drive() {
   // nothing about the rest of the product, so it is allowed to come up short
   // rather than ending a take that still has the business case left to film.
   // A degraded outfit beat is recorded as degraded in the mark log, not hidden.
-  await softBeat('outfit', async () => {
+  if (!TAIL) await softBeat('outfit', async () => {
     try {
       await scrollTo('Build the fit');
       tapLabelOrAt('Build the fit', 540, 1560);
@@ -555,7 +606,7 @@ async function drive() {
   });
 
   // ---- handoff ----------------------------------------------------------
-  await softBeat('handoff', async () => {
+  if (!TAIL) await softBeat('handoff', async () => {
     // The outfit screen is a modal route that covers the tab bar, so there is no
     // "Bag" tab to tap until we leave it by its own button.
     // The screen's own Close control. Not the hardware back key — the outfit
@@ -573,10 +624,18 @@ async function drive() {
 
   // ---- brand console ----------------------------------------------------
   await softBeat('console', async () => {
-    sh(['shell', 'input', 'keyevent', 'KEYCODE_BACK']);
-    await sleep(1200);
+    // No back key here. From the bag the tab bar is already on screen, and back
+    // exits the app entirely — which is how a take ended up filming the Android
+    // search screen while reporting success.
+    if (!TAIL) {
+      sh(['shell', 'input', 'keyevent', 'KEYCODE_BACK']);
+      await sleep(1200);
+    }
     tapLabelOrAt('Brand', 885, 2235);
-    await until('brand console', (x) => seen(x, 'friction') || seen(x, 'Brand'), 30_000);
+
+    // "Signal" is the console's own heading. Matching on "Brand" would match the
+    // tab label itself and pass on any screen at all.
+    await until('brand console', (x) => seen(x, 'Signal') || seen(x, 'Decision friction'), 30_000);
   });
 
   await softBeat('blindgap', async () => {
@@ -608,10 +667,13 @@ try {
 
 const takeMs = Date.now() - t0;
 await sleep(1500);
+// Let the in-flight segment finish rather than killing it. screenrecord writes
+// the moov atom on clean exit only; interrupting produces a file ffmpeg cannot
+// open. Bounded by SEGMENT_SECONDS.
 recording = false;
-sh(['shell', 'pkill', '-INT', 'screenrecord'], { stdio: 'pipe' });
+log('  letting the final segment finalise…');
 await recorderLoop;
-await sleep(2500);
+await sleep(2000);
 const assembled = assembleVideo();
 
 const errorsAfter = sh(['logcat', '-d']).split('\n').filter((l) => /FATAL EXCEPTION|E ReactNativeJS/.test(l));
