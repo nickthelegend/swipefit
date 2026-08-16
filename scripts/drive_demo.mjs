@@ -41,6 +41,7 @@ const PKG = 'com.fitcheck.app';
 
 const durations = JSON.parse(readFileSync(`${root}demo/durations.json`, 'utf8'));
 const marks = [];
+const degraded = {};
 let t0 = 0;
 
 // maxBuffer is raised well past the 1MB default: `screenrecord` emits about a
@@ -72,6 +73,25 @@ function line(id) {
 async function hold(id) {
   const seconds = durations.lines[id].seconds;
   await sleep((seconds + durations.breathSeconds) * 1000);
+}
+
+/**
+ * A beat allowed to fall short.
+ *
+ * Used for everything after the bag. Those beats depend on slow chained renders
+ * and modal navigation, and losing the closing argument — the brand console,
+ * the blind comparison, the outro — because one render ran long is the wrong
+ * trade. What degraded is recorded per beat in the mark log, never hidden.
+ */
+async function softBeat(id, action) {
+  line(id);
+  try {
+    if (action) await action();
+  } catch (error) {
+    degraded[id] = error instanceof Error ? error.message : String(error);
+    log(`  ! ${id} degraded: ${degraded[id]}`);
+  }
+  await hold(id);
 }
 
 /** Marks a beat and holds it. The common case. */
@@ -508,26 +528,42 @@ async function drive() {
   });
 
   // ---- outfit -----------------------------------------------------------
-  await beat('outfit', async () => {
-    await scrollTo('Build the fit');
-    tapLabelOrAt('Build the fit', 540, 1560);
-    const opened = dumpUi();
-    if (seen(opened, 'Need both halves')) {
-      log('  ! bag lacks a top or a bottom — outfit beat degraded, continuing');
-      return;
+  // The outfit is two chained renders and genuinely slow — it has taken over
+  // four minutes on this emulator. It is also the only beat whose failure says
+  // nothing about the rest of the product, so it is allowed to come up short
+  // rather than ending a take that still has the business case left to film.
+  // A degraded outfit beat is recorded as degraded in the mark log, not hidden.
+  await softBeat('outfit', async () => {
+    try {
+      await scrollTo('Build the fit');
+      tapLabelOrAt('Build the fit', 540, 1560);
+
+      const opened = dumpUi();
+      if (seen(opened, 'Need both halves')) {
+        degraded.outfit = 'bag lacked a top or a bottom';
+        return;
+      }
+
+      await scrollTo('Render the look');
+      tapLabelOrAt('Render the look', 540, 2000);
+      await until('outfit render to start', (x) => seen(x, 'Layering it on') || seen(x, 'Could not build'), 90_000);
+      await until('outfit result', (x) => seen(x, 'Build another') || seen(x, 'Could not build'), 150_000);
+    } catch (error) {
+      degraded.outfit = error instanceof Error ? error.message : String(error);
+      log(`  ! outfit beat degraded: ${degraded.outfit}`);
     }
-    await scrollTo('Render the look');
-    tapLabelOrAt('Render the look', 540, 2000);
-    await until('outfit render to start', (x) => seen(x, 'Layering it on') || seen(x, 'Could not build'), 90_000);
-    await until('outfit result', (x) => seen(x, 'Build another') || seen(x, 'Could not build'), 240_000);
   });
 
   // ---- handoff ----------------------------------------------------------
-  await beat('handoff', async () => {
+  await softBeat('handoff', async () => {
     // The outfit screen is a modal route that covers the tab bar, so there is no
     // "Bag" tab to tap until we leave it by its own button.
-    await scrollTo('Back to the bag');
-    tapLabelOrAt('Back to the bag', 540, 2100);
+    // The screen's own Close control. Not the hardware back key — the outfit
+    // route is the root of its modal stack, so back exits the app entirely and
+    // the take ended up on the Android home screen. Not "Back to the bag"
+    // either: that button only renders once a look has finished, so it is
+    // missing exactly while the render is still running.
+    tapLabelOrAt('Close', 1000, 200);
     await until('bag screen again', (x) => seen(x, 'Your bag') || seen(x, 'empty'), 30_000);
 
     await scrollTo('Hand off to brands');
@@ -536,14 +572,14 @@ async function drive() {
   });
 
   // ---- brand console ----------------------------------------------------
-  await beat('console', async () => {
+  await softBeat('console', async () => {
     sh(['shell', 'input', 'keyevent', 'KEYCODE_BACK']);
     await sleep(1200);
     tapLabelOrAt('Brand', 885, 2235);
     await until('brand console', (x) => seen(x, 'friction') || seen(x, 'Brand'), 30_000);
   });
 
-  await beat('blindgap', async () => {
+  await softBeat('blindgap', async () => {
     swipe(540, 1800, 540, 700, 600);
     await sleep(1200);
   });
@@ -589,6 +625,7 @@ writeFileSync(
       success: failure === null,
       failure,
       signingBeats: [],
+      degraded,
       note: 'No signing beats: this app has no blockchain component.',
       newRuntimeErrors: errorsAfter.length,
       videoSegments: assembled.segments,

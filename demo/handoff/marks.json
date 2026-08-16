@@ -1,0 +1,115 @@
+{
+  "takeMs": 358722,
+  "takeSeconds": 358.72,
+  "success": false,
+  "failure": "TIMEOUT waiting for \"bag screen again\" after 30000ms",
+  "signingBeats": [],
+  "note": "No signing beats: this app has no blockchain component.",
+  "newRuntimeErrors": 0,
+  "videoSegments": 3,
+  "segmentSeams": 2,
+  "marks": [
+    {
+      "id": "intro",
+      "ms": 7476,
+      "seconds": 8.926,
+      "signing": false
+    },
+    {
+      "id": "problem",
+      "ms": 16853,
+      "seconds": 10.281,
+      "signing": false
+    },
+    {
+      "id": "shopfor",
+      "ms": 27586,
+      "seconds": 9.104,
+      "signing": false
+    },
+    {
+      "id": "capture",
+      "ms": 43167,
+      "seconds": 10.508,
+      "signing": false
+    },
+    {
+      "id": "pickmodel",
+      "ms": 62514,
+      "seconds": 7.833,
+      "signing": false
+    },
+    {
+      "id": "scanlive",
+      "ms": 74069,
+      "seconds": 7.626,
+      "signing": false
+    },
+    {
+      "id": "reading",
+      "ms": 91767,
+      "seconds": 15.409,
+      "signing": false
+    },
+    {
+      "id": "deckopen",
+      "ms": 107629,
+      "seconds": 10.719,
+      "signing": false
+    },
+    {
+      "id": "tryon",
+      "ms": 160583,
+      "seconds": 8.286,
+      "signing": false
+    },
+    {
+      "id": "matchwhy",
+      "ms": 169320,
+      "seconds": 7.709,
+      "signing": false
+    },
+    {
+      "id": "blind",
+      "ms": 179257,
+      "seconds": 10.235,
+      "signing": false
+    },
+    {
+      "id": "swiperight",
+      "ms": 189944,
+      "seconds": 5.785,
+      "signing": false
+    },
+    {
+      "id": "swipeleft",
+      "ms": 208709,
+      "seconds": 7.05,
+      "signing": false
+    },
+    {
+      "id": "reveal",
+      "ms": 226070,
+      "seconds": 9.269,
+      "signing": false
+    },
+    {
+      "id": "bag",
+      "ms": 275116,
+      "seconds": 6.827,
+      "signing": false
+    },
+    {
+      "id": "outfit",
+      "ms": 288331,
+      "seconds": 11.419,
+      "signing": false
+    },
+    {
+      "id": "handoff",
+      "ms": 328516,
+      "seconds": 9.646,
+      "signing": false
+    }
+  ]
+}
