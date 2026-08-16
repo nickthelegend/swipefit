@@ -12,15 +12,22 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const outDir = `${root}demo/audio`;
 const script = JSON.parse(readFileSync(`${root}demo/narration.json`, 'utf8'));
 
-rmSync(outDir, { recursive: true, force: true });
+// Remove only the narration files, not the directory.
+//
+// Wiping the whole directory also deleted bgm.wav, which lives here too — so
+// regenerating a narration line silently removed the music bed, and the next
+// render produced a video with no music and no error to explain it.
 mkdirSync(outDir, { recursive: true });
+for (const f of readdirSync(outDir)) {
+  if (/^\d\d-.*\.(wav|aiff)$/.test(f)) rmSync(`${outDir}/${f}`, { force: true });
+}
 
 const durations = {};
 let total = 0;

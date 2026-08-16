@@ -56,3 +56,8 @@ __pycache__/
 # audio and durations are kept; the video and per-run marks are not.
 /demo/take*/
 /demo/audio/*.wav
+
+# Rendered video artefacts — large and regenerable from the take + scripts.
+/demo/cut/
+/demo/final/_*
+/demo/final/*.mp4

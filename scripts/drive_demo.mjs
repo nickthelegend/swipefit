@@ -366,6 +366,18 @@ async function preflight() {
 // 110KB fragment. Short segments bound that loss and make the stop wait short
 // enough to simply let the current one finish.
 const SEGMENT_SECONDS = 60;
+
+/**
+ * When each segment started, on the same wall clock as the beat marks.
+ *
+ * screenrecord restarts between segments and the gap — about five seconds each —
+ * is simply absent from the concatenated file. Marks taken on the wall clock
+ * therefore drift ahead of the picture by the accumulated gap: on a ten-segment
+ * take the final mark landed 40 seconds past the end of the video, so the last
+ * two beats had no footage under them at all. The edit must cut on VIDEO time,
+ * which means knowing where each segment began.
+ */
+const segmentStarts = [];
 let recording = false;
 let segments = 0;
 
@@ -373,6 +385,7 @@ async function recordSegments() {
   while (recording) {
     const name = `/sdcard/seg_${String(segments).padStart(2, '0')}.mp4`;
     segments += 1;
+    segmentStarts.push(Date.now());
 
     // spawn, not execFileSync. A synchronous call here would block Node's event
     // loop for the whole 170s segment, so the driver would never get to run a
@@ -443,7 +456,13 @@ function assembleVideo() {
   const out = `${OUT}/raw-take.mp4`;
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0',
     '-i', manifest, '-c', 'copy', out]);
-  return { file: out, segments: list.length };
+
+  const durations = list.map((f) => Number(execFileSync('ffprobe', [
+    '-v', 'error', '-show_entries', 'format=duration',
+    '-of', 'default=noprint_wrappers=1:nokey=1', f,
+  ], { encoding: 'utf8' }).trim()));
+
+  return { file: out, segments: list.length, durations };
 }
 
 /* -------------------------------------------------------------- the drive */
@@ -539,6 +558,28 @@ async function drive() {
     if (seen(deckXml, 'Got it')) {
       tapLabel('Got it', deckXml);
       await sleep(1800);
+    }
+
+    // Dismissing the coach lands a tap on the card underneath, which flips it.
+    // The whole tryon beat then played over the detail side while its narration
+    // said "that garment, rendered onto that body" — the render was never on
+    // screen for the one line that exists to point at it. Flip it back to the
+    // render before the beat that describes the render.
+    // Retry, do not test once. A single dump returned nothing here and the flip
+    // silently never happened, so the whole tryon beat played over the detail
+    // side while its narration pointed at a render that was not on screen.
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+      const xml = dumpUi();
+      if (!seen(xml, 'Tap to flip back')) break;
+      log('  (card flipped by the coach dismissal — flipping back)');
+      tap(540, 1100);
+      await sleep(1800);
+    }
+
+    // Assert it, rather than hope. This beat is the product's central claim and
+    // the one frame that must not be the wrong side of the card.
+    if (seen(dumpUi(), 'Tap to flip back')) {
+      throw new Error('CARD_STUCK_FLIPPED: the try-on render is not on screen for the tryon beat');
     }
   });
 
@@ -696,6 +737,30 @@ const assembled = assembleVideo();
 
 const errorsAfter = sh(['logcat', '-d']).split('\n').filter((l) => /FATAL EXCEPTION|E ReactNativeJS/.test(l));
 
+/**
+ * Wall-clock mark -> position in the concatenated video.
+ *
+ * Walks the segments, subtracting the gap before each one. A mark that lands in
+ * a gap (the instant between screenrecord exiting and the next starting) is
+ * clamped to the end of the previous segment — that footage genuinely does not
+ * exist, and pretending otherwise is what put marks past the end of the file.
+ */
+function toVideoMs(wallMs) {
+  const absolute = t0 + wallMs;
+  let consumed = 0;
+  for (let i = 0; i < assembled.durations.length; i += 1) {
+    const start = segmentStarts[i];
+    const lengthMs = assembled.durations[i] * 1000;
+    if (start === undefined) break;
+    if (absolute < start) return consumed;            // fell in the preceding gap
+    if (absolute <= start + lengthMs) return consumed + (absolute - start);
+    consumed += lengthMs;
+  }
+  return consumed;
+}
+
+for (const m of marks) m.videoMs = Math.round(toVideoMs(m.ms));
+
 writeFileSync(
   `${OUT}/marks.json`,
   JSON.stringify(
@@ -717,7 +782,9 @@ writeFileSync(
   ) + '\n',
 );
 
-writeFileSync(`${OUT}/marks.log`, marks.map((m) => `DEMO_LINE ${m.ms} ${m.id}`).join('\n') + '\n');
+// The log carries VIDEO time. That is what an edit cuts on; wall-clock time is
+// kept in marks.json for diagnostics only.
+writeFileSync(`${OUT}/marks.log`, marks.map((m) => `DEMO_LINE ${m.videoMs} ${m.id}`).join('\n') + '\n');
 
 console.log(`\n  take        ${(takeMs / 1000).toFixed(1)}s`);
 console.log(`  beats       ${marks.length}/${Object.keys(durations.lines).length}`);

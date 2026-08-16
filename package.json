@@ -57,7 +57,9 @@
     "demo:tts": "node scripts/tts.mjs",
     "demo:drive": "node scripts/drive_demo.mjs",
     "demo:bgm": "node scripts/make_bgm.mjs",
-    "demo:await": "node scripts/await_take.mjs"
+    "demo:await": "node scripts/await_take.mjs",
+    "demo:cut": "node scripts/cut_video.mjs",
+    "demo:finish": "node scripts/finish_video.mjs"
   },
   "private": true,
   "engines": {

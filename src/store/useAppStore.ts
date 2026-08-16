@@ -689,11 +689,26 @@ async function renderCard(product: Product, set: Setter, get: Getter): Promise<v
   patchRender(get, set, product.id, { status: 'rendering' });
 
   try {
-    const remoteUrl = await youcam.tryOnGarment(
-      person.body,
-      { kind: 'url', url: product.productImageUrl },
-      product.category,
-    );
+    // One retry on a transient failure. A retailer CDN refusing a single
+    // server-side fetch used to retire the card permanently — and because the
+    // fallback is a labelled product photo rather than an error, the deck went
+    // on looking like it was working. Attempting twice costs nothing when the
+    // first attempt failed, because units bill on success only.
+    let remoteUrl;
+    for (let attempt = 0; ; attempt += 1) {
+      try {
+        remoteUrl = await youcam.tryOnGarment(
+          person.body,
+          { kind: 'url', url: product.productImageUrl },
+          product.category,
+        );
+        break;
+      } catch (error) {
+        const retryable = error instanceof youcam.YouCamError && error.retryable;
+        if (!retryable || attempt >= 1) throw error;
+        await new Promise((r) => setTimeout(r, 1500));
+      }
+    }
     const localUri = await cacheRender(person.key, product.id, remoteUrl);
     patchRender(get, set, product.id, { status: 'ready', uri: localUri, cached: false });
   } catch (error) {

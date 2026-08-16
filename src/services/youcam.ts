@@ -306,7 +306,19 @@ async function runTask<R>(
       return results;
     }
     if (status === 'error') {
-      throw new YouCamError(humanise(error), error ?? 'task_error', false);
+      // Some task errors are about the request and some are about the moment.
+      // `error_download_image` means the API could not fetch a garment or person
+      // image it was handed — a retailer CDN rate-limiting or briefly refusing a
+      // server-side fetch — and it clears on its own. It was marked permanent,
+      // so one transient blip retired a card for the whole session, and a demo
+      // take caught exactly that on its most important beat while the same image
+      // fetched perfectly a minute later.
+      //
+      // Marking it retryable does not retry anything here; it tells the caller
+      // this is worth another attempt, which is a decision runTask has no
+      // business making on its own.
+      const transient = error === 'error_download_image' || error === 'error_timeout';
+      throw new YouCamError(humanise(error), error ?? 'task_error', transient);
     }
   }
 

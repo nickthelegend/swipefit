@@ -1,0 +1,255 @@
+1
+00:00:03,600 --> 00:00:04,555
+This is FITCHECK.
+
+2
+00:00:04,555 --> 00:00:09,387
+Every card you are about to see is a real garment, rendered onto a real person's body.
+
+3
+00:00:09,387 --> 00:00:12,533
+And one skin scan decides which garments you see at all.
+
+4
+00:00:12,533 --> 00:00:15,421
+Online, you buy clothes on a model who is not you.
+
+5
+00:00:15,421 --> 00:00:19,811
+The colour that suits them may fight you, and you find out after it arrives.
+
+6
+00:00:19,811 --> 00:00:22,814
+FITCHECK moves that decision to before the purchase.
+
+7
+00:00:22,814 --> 00:00:27,590
+First, the one thing a skin scan cannot tell us: what you actually want to wear.
+
+8
+00:00:27,590 --> 00:00:31,948
+It is asked once, and it filters the catalogue rather than profiling you.
+
+9
+00:00:31,948 --> 00:00:33,452
+The scan needs two photos,
+
+10
+00:00:33,452 --> 00:00:38,025
+because a face reading and a full-body try-on want genuinely different framing.
+
+11
+00:00:38,025 --> 00:00:39,761
+On a real phone you take them.
+
+12
+00:00:39,761 --> 00:00:42,481
+Here, three bundled people span the tone range.
+
+13
+00:00:42,481 --> 00:00:45,112
+I will use the deep-tone person deliberately.
+
+14
+00:00:45,112 --> 00:00:47,684
+Most colour tools misread deep skin as cool.
+
+15
+00:00:47,684 --> 00:00:50,314
+This one does not, and I want that on camera.
+
+16
+00:00:50,314 --> 00:00:53,577
+This is a live call to YouCam Skin AI, happening now.
+
+17
+00:00:53,577 --> 00:00:57,948
+Nothing here is pre-baked — the network request is genuinely in flight.
+
+18
+00:00:57,948 --> 00:00:58,900
+Warm, and deep.
+
+19
+00:00:58,900 --> 00:00:59,662
+Deep Autumn.
+
+20
+00:00:59,662 --> 00:01:03,219
+The API returns colour only — no undertone field exists.
+
+21
+00:01:03,219 --> 00:01:06,585
+Every warm-cool judgement is derived here, in CIELAB,
+
+22
+00:01:06,585 --> 00:01:09,697
+against a neutral axis that moves with lightness.
+
+23
+00:01:09,697 --> 00:01:13,381
+That curve is exactly why this reads warm instead of cool.
+
+24
+00:01:13,381 --> 00:01:17,442
+Sixty pieces from nine real brands, re-sorted around that one reading.
+
+25
+00:01:17,442 --> 00:01:18,951
+Not filtered — re-ordered.
+
+26
+00:01:18,951 --> 00:01:23,592
+A shopper who only ever saw flattering colours could not tell the sort was doing
+
+27
+00:01:23,592 --> 00:01:24,114
+anything.
+
+28
+00:01:24,114 --> 00:01:28,009
+Tap the card and it tells you why it scored what it scored, in words.
+
+29
+00:01:28,009 --> 00:01:31,848
+Terracotta runs warm, the same direction as this person's undertone.
+
+30
+00:01:31,848 --> 00:01:33,231
+And this is the claim.
+
+31
+00:01:33,231 --> 00:01:38,073
+That garment, rendered onto that body, through YouCam Apparel Virtual Try-On.
+
+32
+00:01:38,073 --> 00:01:40,148
+Not a stock photo, not a mock-up.
+
+33
+00:01:40,148 --> 00:01:41,630
+Notice the brand is hidden.
+
+34
+00:01:41,630 --> 00:01:44,705
+Most people buy the label before they judge the garment,
+
+35
+00:01:44,705 --> 00:01:47,230
+so FITCHECK hides it until after the decision.
+
+36
+00:01:47,230 --> 00:01:50,414
+That single choice is what makes the next number possible.
+
+37
+00:01:50,414 --> 00:01:53,798
+Swipe right, and only then does the brand reveal itself.
+
+38
+00:01:53,798 --> 00:01:56,214
+The bag fills, and the deck counts down.
+
+39
+00:01:56,214 --> 00:01:59,891
+Swipe left on something that fights the reading, and it is gone.
+
+40
+00:01:59,891 --> 00:02:03,281
+The sort is doing real work, not decorating a random order.
+
+41
+00:02:03,281 --> 00:02:06,138
+Now I turn the label back on, and keep swiping.
+
+42
+00:02:06,138 --> 00:02:10,332
+That gives the console the two halves it needs: decisions made blind,
+
+43
+00:02:10,332 --> 00:02:12,581
+and decisions made knowing the brand.
+
+44
+00:02:12,581 --> 00:02:16,319
+The bag spans brands, because a shopper does not think in shops.
+
+45
+00:02:16,319 --> 00:02:19,414
+Each brand keeps its own colour across the whole app.
+
+46
+00:02:19,414 --> 00:02:21,902
+Now the part the API cannot do on its own.
+
+47
+00:02:21,902 --> 00:02:25,101
+It takes one garment per call — so FITCHECK chains it.
+
+48
+00:02:25,101 --> 00:02:28,360
+The rendered top becomes the body the trousers go onto,
+
+49
+00:02:28,360 --> 00:02:30,848
+and you get a complete outfit on yourself.
+
+50
+00:02:30,848 --> 00:02:33,886
+There is no payment here, and there is not meant to be.
+
+51
+00:02:33,886 --> 00:02:37,255
+FITCHECK opens the brand's own product page and takes no cut.
+
+52
+00:02:37,255 --> 00:02:40,514
+That is what makes brands partners rather than competitors.
+
+53
+00:02:40,514 --> 00:02:45,119
+Every figure on this screen is measured from the swipes I just made on this device.
+
+54
+00:02:45,119 --> 00:02:47,948
+Nothing is simulated, and nothing is a placeholder.
+
+55
+00:02:47,948 --> 00:02:51,451
+And this is the measurement no retailer can run on their own shop.
+
+56
+00:02:51,451 --> 00:02:54,901
+Keep rate with the label hidden, against keep rate with it shown.
+
+57
+00:02:54,901 --> 00:02:59,093
+In an ordinary store the shopper can always see whose product they are holding,
+
+58
+00:02:59,093 --> 00:03:01,535
+so brand pull and garment appeal arrive fused.
+
+59
+00:03:01,535 --> 00:03:05,781
+Hide the label, and the gap between those two numbers is what the name is worth.
+
+60
+00:03:05,781 --> 00:03:06,326
+FITCHECK.
+
+61
+00:03:06,326 --> 00:03:08,205
+The face decides what you wear.
+
+62
+00:03:08,205 --> 00:03:11,295
+Built on YouCam Skin AI and Apparel Virtual Try-On,
+
+63
+00:03:11,295 --> 00:03:14,930
+with the colour science implemented rather than gestured at.
+
+64
+00:03:14,930 --> 00:03:16,748
+Thanks very much for watching.

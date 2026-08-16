@@ -1,0 +1,16 @@
+  [17:06:57] waiting for credits — retrying every 8 min for up to 600 min
+  [17:06:57] a failed run costs 0 units, because units bill on success only
+  [17:06:57] attempt 1
+    DEMO_LINE 3580 intro
+    DEMO_LINE 13036 problem
+    DEMO_LINE 23852 shopfor
+    DEMO_LINE 39238 capture
+    DEMO_LINE 57741 pickmodel
+    DEMO_LINE 68236 scanlive
+  [17:09:09] still no credits (6 beats reached) — nothing was spent
+  [17:09:09] sleeping 8 min
+  [17:17:09] attempt 2
+    DEMO_LINE 4329 intro
+    DEMO_LINE 13823 problem
+    DEMO_LINE 24660 shopfor
+    DEMO_LINE 40508 capture
