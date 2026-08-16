@@ -1,6 +1,6 @@
 {
   "voice": "Samantha",
-  "note": "One file per line. Durations are MEASURED with ffprobe after generation, never estimated \u2014 the driver reads durations.json and holds each beat for its real length plus a 0.45s breath. No line mentions a transaction or a signature: this app has no blockchain component.",
+  "note": "One file per line. Durations are MEASURED with ffprobe after generation, never estimated \u2014 the driver reads durations.json and holds each beat for its real length plus a 0.45s breath. No line mentions a transaction or a signature: this app has no blockchain component. tryon/matchwhy line texts are swapped relative to the original plan: the card sits on its detail side for the tryon span and shows the render for the matchwhy span, so each line now describes the screen it plays over.",
   "lines": [
     {
       "id": "intro",
@@ -36,11 +36,11 @@
     },
     {
       "id": "tryon",
-      "text": "And this is the claim. That garment, rendered onto that body, through YouCam Apparel Virtual Try-On. Not a stock photo, not a mock-up."
+      "text": "Tap the card and it tells you why it scored what it scored, in words. Terracotta runs warm, the same direction as this person's undertone."
     },
     {
       "id": "matchwhy",
-      "text": "Tap the card and it tells you why it scored what it scored, in words. Terracotta runs warm, the same direction as this person's undertone."
+      "text": "And this is the claim. That garment, rendered onto that body, through YouCam Apparel Virtual Try-On. Not a stock photo, not a mock-up."
     },
     {
       "id": "blind",

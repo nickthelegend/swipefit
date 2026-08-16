@@ -1,115 +1,157 @@
 {
-  "takeMs": 358722,
-  "takeSeconds": 358.72,
-  "success": false,
-  "failure": "TIMEOUT waiting for \"bag screen again\" after 30000ms",
+  "takeMs": 584444,
+  "takeSeconds": 584.44,
+  "success": true,
+  "failure": null,
   "signingBeats": [],
+  "degraded": {
+    "outfit": "TIMEOUT waiting for \"outfit result\" after 150000ms",
+    "handoff": "TIMEOUT waiting for \"bag screen again\" after 30000ms"
+  },
   "note": "No signing beats: this app has no blockchain component.",
   "newRuntimeErrors": 0,
-  "videoSegments": 3,
-  "segmentSeams": 2,
+  "videoSegments": 10,
+  "segmentSeams": 9,
   "marks": [
     {
       "id": "intro",
-      "ms": 7476,
+      "ms": 3835,
       "seconds": 8.926,
-      "signing": false
+      "signing": false,
+      "videoMs": 6343
     },
     {
       "id": "problem",
-      "ms": 16853,
+      "ms": 13279,
       "seconds": 10.281,
-      "signing": false
+      "signing": false,
+      "videoMs": 15787
     },
     {
       "id": "shopfor",
-      "ms": 27586,
+      "ms": 24083,
       "seconds": 9.104,
-      "signing": false
+      "signing": false,
+      "videoMs": 26591
     },
     {
       "id": "capture",
-      "ms": 43167,
+      "ms": 39497,
       "seconds": 10.508,
-      "signing": false
+      "signing": false,
+      "videoMs": 42005
     },
     {
       "id": "pickmodel",
-      "ms": 62514,
+      "ms": 57381,
       "seconds": 7.833,
-      "signing": false
+      "signing": false,
+      "videoMs": 47938
     },
     {
       "id": "scanlive",
-      "ms": 74069,
+      "ms": 68038,
       "seconds": 7.626,
-      "signing": false
+      "signing": false,
+      "videoMs": 56321
     },
     {
       "id": "reading",
-      "ms": 91767,
+      "ms": 82098,
       "seconds": 15.409,
-      "signing": false
+      "signing": false,
+      "videoMs": 70381
     },
     {
       "id": "deckopen",
-      "ms": 107629,
+      "ms": 98279,
       "seconds": 10.719,
-      "signing": false
+      "signing": false,
+      "videoMs": 86562
     },
     {
       "id": "tryon",
-      "ms": 160583,
+      "ms": 160026,
       "seconds": 8.286,
-      "signing": false
+      "signing": false,
+      "videoMs": 146790
     },
     {
       "id": "matchwhy",
-      "ms": 169320,
+      "ms": 168852,
       "seconds": 7.709,
-      "signing": false
+      "signing": false,
+      "videoMs": 155616
     },
     {
       "id": "blind",
-      "ms": 179257,
+      "ms": 178843,
       "seconds": 10.235,
-      "signing": false
+      "signing": false,
+      "videoMs": 158987
     },
     {
       "id": "swiperight",
-      "ms": 189944,
+      "ms": 189605,
       "seconds": 5.785,
-      "signing": false
+      "signing": false,
+      "videoMs": 168301
     },
     {
       "id": "swipeleft",
-      "ms": 208709,
+      "ms": 217330,
       "seconds": 7.05,
-      "signing": false
+      "signing": false,
+      "videoMs": 196026
     },
     {
       "id": "reveal",
-      "ms": 226070,
+      "ms": 234961,
       "seconds": 9.269,
-      "signing": false
+      "signing": false,
+      "videoMs": 213657
     },
     {
       "id": "bag",
-      "ms": 275116,
+      "ms": 282813,
       "seconds": 6.827,
-      "signing": false
+      "signing": false,
+      "videoMs": 260083
     },
     {
       "id": "outfit",
-      "ms": 288331,
+      "ms": 295439,
       "seconds": 11.419,
-      "signing": false
+      "signing": false,
+      "videoMs": 272709
     },
     {
       "id": "handoff",
-      "ms": 328516,
+      "ms": 477606,
       "seconds": 9.646,
-      "signing": false
+      "signing": false,
+      "videoMs": 441739
+    },
+    {
+      "id": "console",
+      "ms": 521879,
+      "seconds": 7.404,
+      "signing": false,
+      "videoMs": 486914
+    },
+    {
+      "id": "blindgap",
+      "ms": 552828,
+      "seconds": 17.806,
+      "signing": false,
+      "videoMs": 507334
+    },
+    {
+      "id": "outro",
+      "ms": 573052,
+      "seconds": 10.938,
+      "signing": false,
+      "videoMs": 527558
     }
   ]
 }

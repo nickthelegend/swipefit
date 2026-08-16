@@ -36,11 +36,11 @@
     },
     "tryon": {
       "file": "demo/audio/08-tryon.wav",
-      "seconds": 8.286
+      "seconds": 7.709
     },
     "matchwhy": {
       "file": "demo/audio/09-matchwhy.wav",
-      "seconds": 7.709
+      "seconds": 8.286
     },
     "blind": {
       "file": "demo/audio/10-blind.wav",
