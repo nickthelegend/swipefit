@@ -1,6 +1,6 @@
 {
-  "takeMs": 584444,
-  "takeSeconds": 584.44,
+  "takeMs": 613095,
+  "takeSeconds": 613.1,
   "success": true,
   "failure": null,
   "signingBeats": [],
@@ -10,148 +10,174 @@
   },
   "note": "No signing beats: this app has no blockchain component.",
   "newRuntimeErrors": 0,
-  "videoSegments": 10,
-  "segmentSeams": 9,
+  "videoSegments": 11,
+  "segmentStarts": [
+    1786957218475,
+    1786957280637,
+    1786957341327,
+    1786957401504,
+    1786957461712,
+    1786957521893,
+    1786957582352,
+    1786957643799,
+    1786957705988,
+    1786957766377,
+    1786957826646
+  ],
+  "segmentDurations": [
+    48.65534272826087,
+    60.45912281914894,
+    55.02084410204081,
+    56.110227532258065,
+    56.55608584615385,
+    59.4911915503876,
+    60.24893207407408,
+    58.85797455714286,
+    53.80756029090909,
+    37.79832244897959,
+    66.92085866666666
+  ],
+  "segmentSeams": 10,
   "marks": [
     {
       "id": "intro",
-      "ms": 3835,
-      "seconds": 8.926,
+      "ms": 3254,
+      "seconds": 9.054,
       "signing": false,
-      "videoMs": 6343
+      "videoMs": 5758
     },
     {
       "id": "problem",
-      "ms": 13279,
-      "seconds": 10.281,
+      "ms": 12809,
+      "seconds": 10.397,
       "signing": false,
-      "videoMs": 15787
+      "videoMs": 15313
     },
     {
       "id": "shopfor",
-      "ms": 24083,
+      "ms": 23711,
       "seconds": 9.104,
       "signing": false,
-      "videoMs": 26591
+      "videoMs": 26215
     },
     {
       "id": "capture",
-      "ms": 39497,
+      "ms": 38951,
       "seconds": 10.508,
       "signing": false,
-      "videoMs": 42005
+      "videoMs": 41455
     },
     {
       "id": "pickmodel",
-      "ms": 57381,
+      "ms": 57525,
       "seconds": 7.833,
       "signing": false,
-      "videoMs": 47938
+      "videoMs": 48655
     },
     {
       "id": "scanlive",
-      "ms": 68038,
+      "ms": 68001,
       "seconds": 7.626,
       "signing": false,
-      "videoMs": 56321
+      "videoMs": 56998
     },
     {
       "id": "reading",
-      "ms": 82098,
+      "ms": 83500,
       "seconds": 15.409,
       "signing": false,
-      "videoMs": 70381
+      "videoMs": 72497
     },
     {
       "id": "deckopen",
-      "ms": 98279,
+      "ms": 99442,
       "seconds": 10.719,
       "signing": false,
-      "videoMs": 86562
+      "videoMs": 88439
     },
     {
       "id": "tryon",
-      "ms": 160026,
-      "seconds": 8.286,
+      "ms": 186924,
+      "seconds": 7.709,
       "signing": false,
-      "videoMs": 146790
+      "videoMs": 170534
     },
     {
       "id": "matchwhy",
-      "ms": 168852,
-      "seconds": 7.709,
+      "ms": 195151,
+      "seconds": 8.286,
       "signing": false,
-      "videoMs": 155616
+      "videoMs": 178761
     },
     {
       "id": "blind",
-      "ms": 178843,
-      "seconds": 10.235,
+      "ms": 205636,
+      "seconds": 10.363,
       "signing": false,
-      "videoMs": 158987
+      "videoMs": 189246
     },
     {
       "id": "swiperight",
-      "ms": 189605,
+      "ms": 216507,
       "seconds": 5.785,
       "signing": false,
-      "videoMs": 168301
+      "videoMs": 200117
     },
     {
       "id": "swipeleft",
-      "ms": 217330,
+      "ms": 242510,
       "seconds": 7.05,
       "signing": false,
-      "videoMs": 196026
+      "videoMs": 222023
     },
     {
       "id": "reveal",
-      "ms": 234961,
+      "ms": 259525,
       "seconds": 9.269,
       "signing": false,
-      "videoMs": 213657
+      "videoMs": 239038
     },
     {
       "id": "bag",
-      "ms": 282813,
+      "ms": 307567,
       "seconds": 6.827,
       "signing": false,
-      "videoMs": 260083
+      "videoMs": 283455
     },
     {
       "id": "outfit",
-      "ms": 295439,
-      "seconds": 11.419,
+      "ms": 320492,
+      "seconds": 11.582,
       "signing": false,
-      "videoMs": 272709
+      "videoMs": 296380
     },
     {
       "id": "handoff",
-      "ms": 477606,
-      "seconds": 9.646,
+      "ms": 504842,
+      "seconds": 9.762,
       "signing": false,
-      "videoMs": 441739
+      "videoMs": 475233
     },
     {
       "id": "console",
-      "ms": 521879,
+      "ms": 550264,
       "seconds": 7.404,
       "signing": false,
-      "videoMs": 486914
+      "videoMs": 514073
     },
     {
       "id": "blindgap",
-      "ms": 552828,
+      "ms": 581343,
       "seconds": 17.806,
       "signing": false,
-      "videoMs": 507334
+      "videoMs": 545152
     },
     {
       "id": "outro",
-      "ms": 573052,
-      "seconds": 10.938,
+      "ms": 601565,
+      "seconds": 11.079,
       "signing": false,
-      "videoMs": 527558
+      "videoMs": 547006
     }
   ]
 }

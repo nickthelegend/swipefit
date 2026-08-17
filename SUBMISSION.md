@@ -136,7 +136,7 @@ perfect-corp-api, cielab, postgres, android, ffmpeg, python
 
 ## "Try it out" links
 
-- **[YOU]** Repo URL — see the warning at the bottom of this file.
+- `https://github.com/nickthelegend/swipefit`
 - **[YOU]** APK download link, if you host the signed release.
 
 ## Video demo link
@@ -218,7 +218,7 @@ to the brand's own product page.
 ```
 
 ### Repository URL
-**[YOU]** — **see the warning below. This is the one blocking item.**
+`https://github.com/nickthelegend/swipefit`
 
 ---
 
@@ -316,17 +316,17 @@ cannot tell you it is wrong.
 
 ---
 
-# ⚠️ ONE BLOCKING ITEM
+# Repository — done
 
-**This repo has no git remote.** 33 commits, all local. The submission requires a
-repository URL, so before you submit:
+Pushed and private: **https://github.com/nickthelegend/swipefit**
+
+The hackathon requires the repo be public with licensing, or private and shared
+with `contact_event@PerfectCorp.com`. It is private and MIT-licensed, so either
+share it with that address, or make it public:
 
 ```bash
-gh repo create swipefit --private --source=. --remote=origin --push
+gh repo edit nickthelegend/swipefit --visibility public
 ```
-
-Then either make it public with a licence, or **share it with
-`contact_event@PerfectCorp.com`** as the rules require.
 
 **Secrets: checked, and clean.** The YouCam key is read from `process.env` in
 `src/services/youcam.ts:21` — never a literal. `.env` and `.env.local` are

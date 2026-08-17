@@ -37,6 +37,12 @@ const ff = (args) => {
   return r.stdout;
 };
 const probe = (args) => execFileSync('ffprobe', ['-v', 'error', ...args], { encoding: 'utf8' }).trim();
+/** True when the file actually carries a decodable video stream. */
+const hasVideo = (f) => spawnSync('ffprobe',
+  ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=codec_type',
+   '-of', 'default=noprint_wrappers=1:nokey=1', f],
+  { encoding: 'utf8' }).stdout.trim() === 'video';
+
 const seconds = (f) => Number(probe(['-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', f]));
 const log = (m) => console.log(`  ${m}`);
 
@@ -49,6 +55,7 @@ rmSync(OUT, { recursive: true, force: true });
 mkdirSync(WORK, { recursive: true });
 
 const source = `${takeDir}/raw-take.mp4`;
+const sourceS = seconds(source);
 const marks = JSON.parse(readFileSync(`${takeDir}/marks.json`, 'utf8')).marks;
 const durations = JSON.parse(readFileSync(`${root}demo/durations.json`, 'utf8'));
 
@@ -84,8 +91,31 @@ for (const [i, mark] of marks.entries()) {
   const narrationS = seconds(audio);
 
   const raw = `${WORK}/${String(i).padStart(2, '0')}-${mark.id}-raw.mp4`;
+
+  // Input seeking first — it is fast, and it is right for every beat but the
+  // last one.
+  //
+  // `-ss` before `-i` seeks to the nearest keyframe at or before the target. Near
+  // the end of a take there may be no keyframe left after it, so nothing decodes
+  // and ffmpeg writes a valid container holding no stream — which then failed two
+  // steps later as an unreadable input, pointing at the padding filter rather than
+  // at the extract that produced nothing. Output seeking decodes from the start
+  // and always lands, so it is the fallback rather than the default.
   ff(['-ss', String(startS), '-t', String(spanS), '-i', source, '-an', '-c:v', 'libx264',
       '-preset', 'veryfast', '-crf', '20', '-pix_fmt', 'yuv420p', raw]);
+
+  if (!hasVideo(raw)) {
+    ff(['-i', source, '-ss', String(startS), '-t', String(spanS), '-an', '-c:v', 'libx264',
+        '-preset', 'veryfast', '-crf', '20', '-pix_fmt', 'yuv420p', raw]);
+  }
+
+  // Never let an empty clip travel further down the pipeline.
+  if (!hasVideo(raw)) {
+    throw new Error(
+      `EMPTY_EXTRACT: ${mark.id} at ${startS.toFixed(2)}s for ${spanS.toFixed(2)}s ` +
+      `yielded no video from a ${sourceS.toFixed(2)}s source`,
+    );
+  }
 
   // Fit footage to narration: speed up a long span, hold the tail of a short one.
   const fitted = `${WORK}/${String(i).padStart(2, '0')}-${mark.id}-fit.mp4`;

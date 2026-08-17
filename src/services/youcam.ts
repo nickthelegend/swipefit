@@ -372,14 +372,43 @@ export async function tryOnGarment(
     resolveSource('cloth-v3', garment, 'ref'),
   ]);
 
-  const results = await runTask<{ url: string }>(
-    'cloth-v3',
-    { ...src, ...ref, garment_category: category },
-    signal,
-  );
+  // Retry the transient failures, because the source images are retailer CDNs we
+  // do not control and one refused server-side fetch is not a broken product.
+  //
+  // `runTask` already distinguishes a retryable failure from a permanent one; it
+  // just had nobody acting on the distinction, so a single `error_download_image`
+  // retired a garment for the entire session. Two retries with a widening gap
+  // clear it in practice — the same image that failed fetched perfectly moments
+  // later, twenty-four times out of twenty-four.
+  //
+  // Bounded deliberately: units are charged on success only, so a failed attempt
+  // is free, but an unbounded loop against a genuinely dead URL would hammer a
+  // retailer's CDN and hang the card forever. After three attempts the failure is
+  // real and the card says so rather than spinning.
+  const BACKOFF_MS = [1200, 3000];
+  let lastError: unknown;
 
-  if (!results.url) throw new YouCamError('Render returned no image.', 'no_output', true);
-  return results.url;
+  for (let attempt = 0; attempt <= BACKOFF_MS.length; attempt += 1) {
+    try {
+      const results = await runTask<{ url: string }>(
+        'cloth-v3',
+        { ...src, ...ref, garment_category: category },
+        signal,
+      );
+      if (!results.url) throw new YouCamError('Render returned no image.', 'no_output', true);
+      return results.url;
+    } catch (err) {
+      lastError = err;
+
+      const retryable = err instanceof YouCamError && err.retryable;
+      const aborted = signal?.aborted === true;
+      if (!retryable || aborted || attempt === BACKOFF_MS.length) throw err;
+
+      await new Promise((resolve) => setTimeout(resolve, BACKOFF_MS[attempt]));
+    }
+  }
+
+  throw lastError;
 }
 
 export type SkinToneResult = {

@@ -457,10 +457,34 @@ function assembleVideo() {
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0',
     '-i', manifest, '-c', 'copy', out]);
 
-  const durations = list.map((f) => Number(execFileSync('ffprobe', [
-    '-v', 'error', '-show_entries', 'format=duration',
-    '-of', 'default=noprint_wrappers=1:nokey=1', f,
-  ], { encoding: 'utf8' }).trim()));
+  // Measure each segment by its last decodable frame, not by its container.
+  //
+  // screenrecord writes a container duration that runs past the last frame it
+  // actually encoded — on one take by 3.3s across ten segments. Because marks are
+  // placed by accumulating these durations, every overstatement pushes every
+  // later mark further past the footage, and the final mark landed 0.8s beyond
+  // the last frame in the file. Extracting there yielded a valid container with
+  // no video stream, and the cut failed three steps downstream pointing at a
+  // padding filter.
+  //
+  // The container duration is a claim; the last frame's timestamp is the
+  // measurement. concat joins real frames, so the measurement is what marks must
+  // be built from.
+  const durations = list.map((f) => {
+    const frames = execFileSync('ffprobe', [
+      '-v', 'error', '-select_streams', 'v:0',
+      '-show_entries', 'frame=best_effort_timestamp_time',
+      '-of', 'csv=p=0', f,
+    ], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim().split('\n').filter(Boolean);
+
+    if (!frames.length) throw new Error(`SEGMENT_HAS_NO_FRAMES: ${f}`);
+
+    // Plus one frame, because the last frame's timestamp is its start.
+    const lastStart = Number(frames[frames.length - 1]);
+    const firstStart = Number(frames[0]);
+    const perFrame = frames.length > 1 ? (lastStart - firstStart) / (frames.length - 1) : 1 / 30;
+    return lastStart + perFrame;
+  });
 
   return { file: out, segments: list.length, durations };
 }
@@ -774,7 +798,14 @@ writeFileSync(
       note: 'No signing beats: this app has no blockchain component.',
       newRuntimeErrors: errorsAfter.length,
       videoSegments: assembled.segments,
-      segmentSeams: Math.max(0, assembled.segments - 1),
+      // Persisted so a take can be re-marked without re-recording. When the
+    // segment-duration measurement was found to be wrong, the fix could not be
+    // applied to the take already on disk because the wall-clock -> video
+    // mapping lived only in memory, and a ten-minute recording had to be redone
+    // to correct arithmetic.
+    segmentStarts,
+    segmentDurations: assembled.durations,
+    segmentSeams: Math.max(0, assembled.segments - 1),
       marks,
     },
     null,

@@ -1,0 +1,255 @@
+1
+00:00:03,600 --> 00:00:04,569
+This is SWIPEFIT.
+
+2
+00:00:04,569 --> 00:00:09,473
+Every card you are about to see is a real garment, rendered onto a real person's body.
+
+3
+00:00:09,473 --> 00:00:12,667
+And one skin scan decides which garments you see at all.
+
+4
+00:00:12,667 --> 00:00:15,587
+Online, you buy clothes on a model who is not you.
+
+5
+00:00:15,587 --> 00:00:20,026
+The colour that suits them may fight you, and you find out after it arrives.
+
+6
+00:00:20,026 --> 00:00:23,064
+SWIPEFIT moves that decision to before the purchase.
+
+7
+00:00:23,064 --> 00:00:27,839
+First, the one thing a skin scan cannot tell us: what you actually want to wear.
+
+8
+00:00:27,839 --> 00:00:32,197
+It is asked once, and it filters the catalogue rather than profiling you.
+
+9
+00:00:32,197 --> 00:00:33,701
+The scan needs two photos,
+
+10
+00:00:33,701 --> 00:00:38,274
+because a face reading and a full-body try-on want genuinely different framing.
+
+11
+00:00:38,274 --> 00:00:40,010
+On a real phone you take them.
+
+12
+00:00:40,010 --> 00:00:42,730
+Here, three bundled people span the tone range.
+
+13
+00:00:42,730 --> 00:00:45,361
+I will use the deep-tone person deliberately.
+
+14
+00:00:45,361 --> 00:00:47,933
+Most colour tools misread deep skin as cool.
+
+15
+00:00:47,933 --> 00:00:50,563
+This one does not, and I want that on camera.
+
+16
+00:00:50,563 --> 00:00:53,823
+This is a live call to YouCam Skin AI, happening now.
+
+17
+00:00:53,823 --> 00:00:58,189
+Nothing here is pre-baked — the network request is genuinely in flight.
+
+18
+00:00:58,189 --> 00:00:59,142
+Warm, and deep.
+
+19
+00:00:59,142 --> 00:00:59,904
+Deep Autumn.
+
+20
+00:00:59,904 --> 00:01:03,461
+The API returns colour only — no undertone field exists.
+
+21
+00:01:03,461 --> 00:01:06,827
+Every warm-cool judgement is derived here, in CIELAB,
+
+22
+00:01:06,827 --> 00:01:09,939
+against a neutral axis that moves with lightness.
+
+23
+00:01:09,939 --> 00:01:13,623
+That curve is exactly why this reads warm instead of cool.
+
+24
+00:01:13,623 --> 00:01:17,679
+Sixty pieces from nine real brands, re-sorted around that one reading.
+
+25
+00:01:17,679 --> 00:01:19,185
+Not filtered — re-ordered.
+
+26
+00:01:19,185 --> 00:01:23,820
+A shopper who only ever saw flattering colours could not tell the sort was doing
+
+27
+00:01:23,820 --> 00:01:24,342
+anything.
+
+28
+00:01:24,342 --> 00:01:28,237
+Tap the card and it tells you why it scored what it scored, in words.
+
+29
+00:01:28,237 --> 00:01:32,075
+Terracotta runs warm, the same direction as this person's undertone.
+
+30
+00:01:32,075 --> 00:01:33,458
+And this is the claim.
+
+31
+00:01:33,458 --> 00:01:38,300
+That garment, rendered onto that body, through YouCam Apparel Virtual Try-On.
+
+32
+00:01:38,300 --> 00:01:40,375
+Not a stock photo, not a mock-up.
+
+33
+00:01:40,375 --> 00:01:41,872
+Notice the brand is hidden.
+
+34
+00:01:41,872 --> 00:01:44,976
+Most people buy the label before they judge the garment,
+
+35
+00:01:44,976 --> 00:01:47,526
+so SWIPEFIT hides it until after the decision.
+
+36
+00:01:47,526 --> 00:01:50,742
+That single choice is what makes the next number possible.
+
+37
+00:01:50,742 --> 00:01:54,125
+Swipe right, and only then does the brand reveal itself.
+
+38
+00:01:54,125 --> 00:01:56,542
+The bag fills, and the deck counts down.
+
+39
+00:01:56,542 --> 00:02:00,219
+Swipe left on something that fights the reading, and it is gone.
+
+40
+00:02:00,219 --> 00:02:03,608
+The sort is doing real work, not decorating a random order.
+
+41
+00:02:03,608 --> 00:02:06,465
+Now I turn the label back on, and keep swiping.
+
+42
+00:02:06,465 --> 00:02:10,659
+That gives the console the two halves it needs: decisions made blind,
+
+43
+00:02:10,659 --> 00:02:12,908
+and decisions made knowing the brand.
+
+44
+00:02:12,908 --> 00:02:16,646
+The bag spans brands, because a shopper does not think in shops.
+
+45
+00:02:16,646 --> 00:02:19,742
+Each brand keeps its own colour across the whole app.
+
+46
+00:02:19,742 --> 00:02:22,266
+Now the part the API cannot do on its own.
+
+47
+00:02:22,266 --> 00:02:25,512
+It takes one garment per call — so SWIPEFIT chains it.
+
+48
+00:02:25,512 --> 00:02:28,817
+The rendered top becomes the body the trousers go onto,
+
+49
+00:02:28,817 --> 00:02:31,342
+and you get a complete outfit on yourself.
+
+50
+00:02:31,342 --> 00:02:34,411
+There is no payment here, and there is not meant to be.
+
+51
+00:02:34,411 --> 00:02:37,816
+SWIPEFIT opens the brand's own product page and takes no cut.
+
+52
+00:02:37,816 --> 00:02:41,108
+That is what makes brands partners rather than competitors.
+
+53
+00:02:41,108 --> 00:02:45,713
+Every figure on this screen is measured from the swipes I just made on this device.
+
+54
+00:02:45,713 --> 00:02:48,542
+Nothing is simulated, and nothing is a placeholder.
+
+55
+00:02:48,542 --> 00:02:52,045
+And this is the measurement no retailer can run on their own shop.
+
+56
+00:02:52,045 --> 00:02:55,495
+Keep rate with the label hidden, against keep rate with it shown.
+
+57
+00:02:55,495 --> 00:02:59,688
+In an ordinary store the shopper can always see whose product they are holding,
+
+58
+00:02:59,688 --> 00:03:02,129
+so brand pull and garment appeal arrive fused.
+
+59
+00:03:02,129 --> 00:03:06,375
+Hide the label, and the gap between those two numbers is what the name is worth.
+
+60
+00:03:06,375 --> 00:03:06,927
+SWIPEFIT.
+
+61
+00:03:06,927 --> 00:03:08,828
+The face decides what you wear.
+
+62
+00:03:08,828 --> 00:03:11,956
+Built on YouCam Skin AI and Apparel Virtual Try-On,
+
+63
+00:03:11,956 --> 00:03:15,635
+with the colour science implemented rather than gestured at.
+
+64
+00:03:15,635 --> 00:03:17,475
+Thanks very much for watching.

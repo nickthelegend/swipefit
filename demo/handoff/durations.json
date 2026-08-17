@@ -1,14 +1,14 @@
 {
   "breathSeconds": 0.45,
-  "totalSeconds": 192.78,
+  "totalSeconds": 193.571,
   "lines": {
     "intro": {
       "file": "demo/audio/00-intro.wav",
-      "seconds": 8.926
+      "seconds": 9.054
     },
     "problem": {
       "file": "demo/audio/01-problem.wav",
-      "seconds": 10.281
+      "seconds": 10.397
     },
     "shopfor": {
       "file": "demo/audio/02-shopfor.wav",
@@ -44,7 +44,7 @@
     },
     "blind": {
       "file": "demo/audio/10-blind.wav",
-      "seconds": 10.235
+      "seconds": 10.363
     },
     "swiperight": {
       "file": "demo/audio/11-swiperight.wav",
@@ -64,11 +64,11 @@
     },
     "outfit": {
       "file": "demo/audio/15-outfit.wav",
-      "seconds": 11.419
+      "seconds": 11.582
     },
     "handoff": {
       "file": "demo/audio/16-handoff.wav",
-      "seconds": 9.646
+      "seconds": 9.762
     },
     "console": {
       "file": "demo/audio/17-console.wav",
@@ -80,7 +80,7 @@
     },
     "outro": {
       "file": "demo/audio/19-outro.wav",
-      "seconds": 10.938
+      "seconds": 11.079
     }
   }
 }
