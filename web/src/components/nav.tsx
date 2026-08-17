@@ -28,9 +28,9 @@ export default function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b-2 border-black bg-[#FA9DCD]">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-        <Link href="/" className="flex items-center gap-2.5" aria-label="FITCHECK home">
+        <Link href="/" className="flex items-center gap-2.5" aria-label="SWIPEFIT home">
           <Image src="/favicon.svg" alt="" width={28} height={28} priority />
-          <span className="display text-[22px] tracking-[-0.02em]">Fitcheck</span>
+          <span className="display text-[22px] tracking-[-0.02em]">SwipeFit</span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main">

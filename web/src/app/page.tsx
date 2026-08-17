@@ -76,7 +76,7 @@ export default function Home() {
             <div className="overflow-hidden rounded-[30px] border-2 border-black bg-white shadow-hard-lg">
               <Image
                 src="/shots/deck.png"
-                alt="A FITCHECK card showing a garment rendered onto the shopper's own photograph"
+                alt="A SWIPEFIT card showing a garment rendered onto the shopper's own photograph"
                 width={1080}
                 height={2400}
                 priority
@@ -216,7 +216,7 @@ export default function Home() {
             <h2 className="display mt-5 text-[clamp(32px,4.5vw,52px)]">Build the fit</h2>
             <p className="mt-5 max-w-lg text-[17px] leading-relaxed">
               The try-on API takes one garment per call, so every card renders a top over whatever
-              trousers you happened to be photographed in. FITCHECK chains it: the rendered top
+              trousers you happened to be photographed in. SWIPEFIT chains it: the rendered top
               becomes the input body for the bottom.
             </p>
             <p className="mt-4 max-w-lg text-[15px] leading-relaxed opacity-75">
@@ -231,7 +231,7 @@ export default function Home() {
             <div className="overflow-hidden rounded-[23px] border-2 border-black bg-white shadow-hard-lg">
               <Image
                 src="/shots/bag.png"
-                alt="The FITCHECK bag, grouped by brand, each item showing its rendered try-on"
+                alt="The SwipeFit bag, grouped by brand, each item showing its rendered try-on"
                 width={1080}
                 height={2400}
                 className="h-auto w-full"
@@ -248,7 +248,7 @@ export default function Home() {
             <div className="overflow-hidden rounded-[23px] border-2 border-[#FA9DCD] bg-white">
               <Image
                 src="/shots/console.png"
-                alt="The FITCHECK brand console showing measured decision friction per SKU"
+                alt="The SWIPEFIT brand console showing measured decision friction per SKU"
                 width={1080}
                 height={2400}
                 className="h-auto w-full"

@@ -4,11 +4,11 @@
   "lines": [
     {
       "id": "intro",
-      "text": "This is FITCHECK. Every card you are about to see is a real garment, rendered onto a real person's body. And one skin scan decides which garments you see at all."
+      "text": "This is SWIPEFIT. Every card you are about to see is a real garment, rendered onto a real person's body. And one skin scan decides which garments you see at all."
     },
     {
       "id": "problem",
-      "text": "Online, you buy clothes on a model who is not you. The colour that suits them may fight you, and you find out after it arrives. FITCHECK moves that decision to before the purchase."
+      "text": "Online, you buy clothes on a model who is not you. The colour that suits them may fight you, and you find out after it arrives. SWIPEFIT moves that decision to before the purchase."
     },
     {
       "id": "shopfor",
@@ -44,7 +44,7 @@
     },
     {
       "id": "blind",
-      "text": "Notice the brand is hidden. Most people buy the label before they judge the garment, so FITCHECK hides it until after the decision. That single choice is what makes the next number possible."
+      "text": "Notice the brand is hidden. Most people buy the label before they judge the garment, so SWIPEFIT hides it until after the decision. That single choice is what makes the next number possible."
     },
     {
       "id": "swiperight",
@@ -64,11 +64,11 @@
     },
     {
       "id": "outfit",
-      "text": "Now the part the API cannot do on its own. It takes one garment per call \u2014 so FITCHECK chains it. The rendered top becomes the body the trousers go onto, and you get a complete outfit on yourself."
+      "text": "Now the part the API cannot do on its own. It takes one garment per call \u2014 so SWIPEFIT chains it. The rendered top becomes the body the trousers go onto, and you get a complete outfit on yourself."
     },
     {
       "id": "handoff",
-      "text": "There is no payment here, and there is not meant to be. FITCHECK opens the brand's own product page and takes no cut. That is what makes brands partners rather than competitors."
+      "text": "There is no payment here, and there is not meant to be. SWIPEFIT opens the brand's own product page and takes no cut. That is what makes brands partners rather than competitors."
     },
     {
       "id": "console",
@@ -80,7 +80,7 @@
     },
     {
       "id": "outro",
-      "text": "FITCHECK. The face decides what you wear. Built on YouCam Skin AI and Apparel Virtual Try-On, with the colour science implemented rather than gestured at. Thanks very much for watching."
+      "text": "SWIPEFIT. The face decides what you wear. Built on YouCam Skin AI and Apparel Virtual Try-On, with the colour science implemented rather than gestured at. Thanks very much for watching."
     }
   ],
   "decisions": {

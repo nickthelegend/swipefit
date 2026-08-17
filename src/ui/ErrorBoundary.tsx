@@ -32,7 +32,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error) {
     // Keeps the stack reachable in a dev build without a debugger attached.
-    console.error('[fitcheck] unhandled render error', error);
+    console.error('[swipefit] unhandled render error', error);
   }
 
   render() {

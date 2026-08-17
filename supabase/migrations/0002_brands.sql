@@ -1,4 +1,4 @@
--- FITCHECK — brand partners
+-- SwipeFit — brand partners
 --
 -- A brand signs up, claims a catalogue slug, and gets a console scoped to its
 -- own SKUs. The telemetry tables from 0001 already hold the measurements; this
@@ -65,13 +65,13 @@ create policy brands_owner_update on public.brands
 insert into public.brands (name, slug, accent, blurb, website, approved)
 values
   ('COS', 'cos', 'violet',
-   'Modern, functional, considered design. Eight pieces in the FITCHECK catalogue.',
+   'Modern, functional, considered design. Eight pieces in the SWIPEFIT catalogue.',
    'https://www.cos.com', true),
   ('Uniqlo', 'uniqlo', 'tomato',
-   'LifeWear — everyday essentials engineered for fit. Eight pieces in the FITCHECK catalogue.',
+   'LifeWear — everyday essentials engineered for fit. Eight pieces in the SWIPEFIT catalogue.',
    'https://www.uniqlo.com', true),
   ('Levi''s', 'levis', 'forest',
-   'The original denim house. Eight pieces in the FITCHECK catalogue.',
+   'The original denim house. Eight pieces in the SWIPEFIT catalogue.',
    'https://www.levi.com', true)
 on conflict (name) do nothing;
 

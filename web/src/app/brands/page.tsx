@@ -24,63 +24,63 @@ const CATALOGUE_BRANDS: Pick<Brand, 'name' | 'slug' | 'accent' | 'blurb' | 'webs
     name: "COS",
     slug: 'cos',
     accent: 'violet',
-    blurb: "Modern, functional, considered design. 8 pieces in the FITCHECK catalogue.",
+    blurb: "Modern, functional, considered design. 8 pieces in the SWIPEFIT catalogue.",
     website: "https://www.cos.com",
   },
   {
     name: "Uniqlo",
     slug: 'uniqlo',
     accent: 'tomato',
-    blurb: "LifeWear \u2014 everyday essentials engineered for fit. 8 pieces in the FITCHECK catalogue.",
+    blurb: "LifeWear \u2014 everyday essentials engineered for fit. 8 pieces in the SWIPEFIT catalogue.",
     website: "https://www.uniqlo.com",
   },
   {
     name: "Levi's",
     slug: 'levis',
     accent: 'forest',
-    blurb: "The original denim house. 8 pieces in the FITCHECK catalogue.",
+    blurb: "The original denim house. 8 pieces in the SWIPEFIT catalogue.",
     website: "https://www.levi.com",
   },
   {
     name: "H&M",
     slug: 'hm',
     accent: 'acid',
-    blurb: "Wide colour range across every category. 6 pieces in the FITCHECK catalogue.",
+    blurb: "Wide colour range across every category. 6 pieces in the SWIPEFIT catalogue.",
     website: "https://www.hm.com",
   },
   {
     name: "Zara",
     slug: 'zara',
     accent: 'violet',
-    blurb: "Fast-moving fashion, broad silhouette range. 7 pieces in the FITCHECK catalogue.",
+    blurb: "Fast-moving fashion, broad silhouette range. 7 pieces in the SWIPEFIT catalogue.",
     website: "https://www.zara.com",
   },
   {
     name: "Massimo Dutti",
     slug: 'massimodutti',
     accent: 'tomato',
-    blurb: "Tailored, muted, quietly premium. 6 pieces in the FITCHECK catalogue.",
+    blurb: "Tailored, muted, quietly premium. 6 pieces in the SWIPEFIT catalogue.",
     website: "https://www.massimodutti.com",
   },
   {
     name: "A.P.C.",
     slug: 'apc',
     accent: 'forest',
-    blurb: "French minimalism and raw denim, unchanged since 1987. 6 pieces in the FITCHECK catalogue.",
+    blurb: "French minimalism and raw denim, unchanged since 1987. 6 pieces in the SWIPEFIT catalogue.",
     website: "https://www.apc.fr",
   },
   {
     name: "Sunspel",
     slug: 'sunspel',
     accent: 'acid',
-    blurb: "English cotton, made in Long Eaton since 1860. 6 pieces in the FITCHECK catalogue.",
+    blurb: "English cotton, made in Long Eaton since 1860. 6 pieces in the SWIPEFIT catalogue.",
     website: "https://www.sunspel.com",
   },
   {
     name: "Outerknown",
     slug: 'outerknown',
     accent: 'violet',
-    blurb: "Organic and recycled fibre, built to last. 5 pieces in the FITCHECK catalogue.",
+    blurb: "Organic and recycled fibre, built to last. 5 pieces in the SWIPEFIT catalogue.",
     website: "https://www.outerknown.com",
   },
 ];
@@ -141,7 +141,7 @@ export default function Brands() {
             Brands on the rail
           </h1>
           <p className="mt-6 max-w-xl text-[17px] leading-relaxed">
-            Every piece here is a real product with a real page. FITCHECK takes no cut — a swipe
+            Every piece here is a real product with a real page. SwipeFit takes no cut — a swipe
             right sends the shopper to the brand&apos;s own site.
           </p>
         </div>

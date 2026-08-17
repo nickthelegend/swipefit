@@ -51,12 +51,12 @@ export default function Bag() {
 
     try {
       await Share.share({
-        title: 'My FITCHECK bag',
+        title: 'My SwipeFit bag',
         message: [
           `${cart.length} piece${cart.length === 1 ? '' : 's'} · $${total.toFixed(0)}`,
           '',
           ...lines,
-          'Picked with FITCHECK — every card rendered on my own body.',
+          'Picked with SwipeFit — every card rendered on my own body.',
         ].join('\n'),
       });
     } catch {
@@ -251,7 +251,7 @@ export default function Bag() {
             fullWidth
           />
           <Type role="micro" color={color.inkSoft} align="center" style={{ opacity: 0.75 }}>
-            FITCHECK never takes payment. Each item opens on the brand’s own site.
+            SwipeFit never takes payment. Each item opens on the brand’s own site.
           </Type>
         </View>
       </ScrollView>

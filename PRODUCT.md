@@ -16,7 +16,7 @@ Judging audience (real, and a design constraint): a hackathon panel scoring Tech
 
 ## Product Purpose
 
-FITCHECK turns clothing discovery into a swipe deck where **every card is the garment rendered on the shopper's own body**, not a stock photo. A one-time skin scan at onboarding decides what enters the deck and in what order.
+SWIPEFIT turns clothing discovery into a swipe deck where **every card is the garment rendered on the shopper's own body**, not a stock photo. A one-time skin scan at onboarding decides what enters the deck and in what order.
 
 Success is a shopper reaching the end of a session with a small cart of items they can picture themselves in, and a lower rate of "I bought it and sent it back."
 
@@ -24,7 +24,7 @@ Success is a shopper reaching the end of a session with a small cart of items th
 
 Two AI capabilities that the market ships as separate features — skin analysis and apparel virtual try-on — are wired into a single causal chain here: **the face decides what you wear.** The skin scan is not a beauty side-quest; it is the sort key for the clothing deck.
 
-FITCHECK is a discovery and try-on layer that sits *in front of* existing retail. It never takes payment. Checkout is a handoff: each item deep-links to the brand's own product page. That makes brands partners rather than competitors, and makes swipe data the thing of value.
+SwipeFit is a discovery and try-on layer that sits *in front of* existing retail. It never takes payment. Checkout is a handoff: each item deep-links to the brand's own product page. That makes brands partners rather than competitors, and makes swipe data the thing of value.
 
 ## Operating Context
 
@@ -60,7 +60,7 @@ FITCHECK is a discovery and try-on layer that sits *in front of* existing retail
 
 ## Brand Commitments
 
-- Name: **FITCHECK**. Tagline: *the face decides what you wear.*
+- Name: **SWIPEFIT**. Tagline: *the face decides what you wear.*
 - The visual world is pinned by the user to **byooooob.com**, with tokens extracted from the live site rather than described from memory. The pin is binding; it is recorded in DESIGN.md.
 - Voice: blunt, confident, lowercase-body / SHOUTING-DISPLAY. Never twee, never corporate-cheerful.
 

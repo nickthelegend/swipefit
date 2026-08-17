@@ -185,7 +185,7 @@ export default function Checkout() {
           <Cursor size={24} rotate={128} />
           <Type role="micro" color={color.inkSoft} style={{ flex: 1, opacity: 0.8 }}>
             Every handoff is counted on the brand dashboard — that traffic is what
-            FITCHECK sells, instead of taking a cut of the sale.
+            SwipeFit sells, instead of taking a cut of the sale.
           </Type>
         </View>
 

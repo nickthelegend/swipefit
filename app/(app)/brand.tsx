@@ -212,7 +212,7 @@ export default function BrandDashboard() {
 
         <Section title="What a partner buys" note="the model">
           <Type role="body">
-            FITCHECK takes no cut of the sale. It sells the layer above it: which garment a shopper
+            SwipeFit takes no cut of the sale. It sells the layer above it: which garment a shopper
             pictured on themselves, which ones they hesitated over, and why they stopped — including
             the returns a brand never finds out about because the shopper simply never bought.
           </Type>

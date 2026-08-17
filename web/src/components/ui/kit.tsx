@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { ComponentProps, ReactNode } from 'react';
 
 /**
- * The web half of FITCHECK's component vocabulary.
+ * The web half of SWIPEFIT's component vocabulary.
  *
  * Deliberately the same three primitives the app has — a pill, a sticker and an
  * outlined panel on a hard shadow — so a visitor who downloads the app is not

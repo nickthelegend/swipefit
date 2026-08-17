@@ -75,7 +75,7 @@ log(`intro ${INTRO_S}s, outro ${OUTRO_S}s`);
 
 const spliced = `${OUT}/_body.mp4`;
 const manifest = `${OUT}/_all.txt`;
-writeFileSync(manifest, [introV, `${CUT}/fitcheck-master.mp4`, outroV].map((f) => `file '${f}'`).join('\n') + '\n');
+writeFileSync(manifest, [introV, `${CUT}/swipefit-master.mp4`, outroV].map((f) => `file '${f}'`).join('\n') + '\n');
 ff(['-f', 'concat', '-safe', '0', '-i', manifest, '-c:v', 'libx264', '-preset', 'veryfast',
     '-crf', '20', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-ar', '48000', spliced]);
 
@@ -145,14 +145,14 @@ for (const clip of timeline.clips) {
   cursor += dur;
 }
 
-writeFileSync(`${OUT}/fitcheck.srt`,
+writeFileSync(`${OUT}/swipefit.srt`,
   cues.map((c, i) => `${i + 1}\n${srt(c.start)} --> ${srt(c.end)}\n${c.text}\n`).join('\n'));
 log(`${cues.length} cues`);
 
-const clean = `${OUT}/fitcheck-clean.mp4`;
+const clean = `${OUT}/swipefit-clean.mp4`;
 ff(['-i', mixed, '-c', 'copy', clean]);
 
-const burned = `${OUT}/fitcheck.mp4`;
+const burned = `${OUT}/swipefit.mp4`;
 
 // Captions are composited from PNG plates, not burned with libass.
 //
@@ -208,20 +208,20 @@ for (const clip of timeline.clips) {
 
 const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
 const kit = [
-  '# FITCHECK — publish kit',
+  '# SwipeFit — publish kit',
   '',
   `**Runtime** ${Math.floor(finalS / 60)}m ${Math.round(finalS % 60)}s`,
   '',
   '## Title',
-  'FITCHECK — the skin scan that decides what you see',
+  'SwipeFit — the skin scan that decides what you see',
   '',
   '## Chapters',
   ...chapterList.map((c) => `${mmss(c.time)} ${c.label}`),
   '',
   '## Files',
-  `- burned-in: demo/final/fitcheck.mp4`,
-  `- clean master: demo/final/fitcheck-clean.mp4`,
-  `- subtitles: demo/final/fitcheck.srt`,
+  `- burned-in: demo/final/swipefit.mp4`,
+  `- clean master: demo/final/swipefit-clean.mp4`,
+  `- subtitles: demo/final/swipefit.srt`,
   '',
   '## Built on',
   '- YouCam Skin AI (skin-tone-analysis, skin-analysis)',
@@ -233,6 +233,6 @@ writeFileSync(`${OUT}/PUBLISH-KIT.md`, kit + '\n');
 
 log(`\n  final    ${burned}`);
 log(`  clean    ${clean}`);
-log(`  srt      ${OUT}/fitcheck.srt`);
+log(`  srt      ${OUT}/swipefit.srt`);
 log(`  runtime  ${Math.floor(finalS / 60)}m ${Math.round(finalS % 60)}s`);
 log(`  chapters ${chapterList.length}`);

@@ -1,4 +1,4 @@
--- FITCHECK — telemetry schema
+-- SwipeFit — telemetry schema
 --
 -- Purpose: the brand console's whole claim is that its numbers are measured.
 -- On-device that is true but tiny — one person, one session. This schema makes

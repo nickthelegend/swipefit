@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 300" width="1120" height="300" role="img" aria-labelledby="fitcheck-lockup-title">
-  <title id="fitcheck-lockup-title">FITCHECK — the face decides what you wear</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 300" width="1120" height="300" role="img" aria-labelledby="swipefit-lockup-title">
+  <title id="swipefit-lockup-title">SWIPEFIT — the face decides what you wear</title>
 
   <!--
-    FITCHECK — horizontal lockup, for README headers and social cards.
+    SWIPEFIT — horizontal lockup, for README headers and social cards.
 
     NOTE: the wordmark is live text, not outlines, so this file needs Archivo
     available to render as designed (the site loads it; GitHub and most
@@ -36,7 +36,7 @@
 
   <text x="316" y="176"
     font-family="Archivo, 'Archivo Black', 'Helvetica Neue', Helvetica, Arial, sans-serif"
-    font-weight="900" font-size="132" letter-spacing="-4" fill="#000000">FITCHECK</text>
+    font-weight="900" font-size="132" letter-spacing="-4" fill="#000000">SWIPEFIT</text>
 
   <text x="320" y="238"
     font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif"

@@ -1,6 +1,6 @@
 {
-  "name": "FITCHECK",
-  "short_name": "FITCHECK",
+  "name": "SWIPEFIT",
+  "short_name": "SWIPEFIT",
   "description": "The face decides what you wear.",
   "start_url": "/",
   "display": "standalone",

@@ -1,5 +1,5 @@
 /**
- * FITCHECK design tokens.
+ * SWIPEFIT design tokens.
  *
  * Every colour, radius and shadow value here was read off byooooob.com's computed
  * styles rather than recalled — see DESIGN.md for the extraction table. Two values

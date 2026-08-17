@@ -1,4 +1,4 @@
-# FITCHECK — demo recording plan
+# SwipeFit — demo recording plan
 
 Status: **PLAN ONLY. Nothing recorded yet, awaiting go-ahead.**
 
@@ -28,7 +28,7 @@ only beats that need it. See "Decision required" below.
 ## Platform reality — the driver cannot be a DOM driver
 
 The brief's driver spec (SVG cursor, `glide`, `typeInto`, click rings) assumes a
-browser. FITCHECK is a **React Native Android app**. There is no DOM to inject a
+browser. SwipeFit is a **React Native Android app**. There is no DOM to inject a
 cursor into and no way to render an SVG overlay above native views without
 shipping demo-only code into the app, which would make the take staged.
 
@@ -90,7 +90,7 @@ No beat is a signing beat — this app has none.
 
 ## Pre-flight (each of these has eaten a take)
 
-- `adb shell pm clear com.fitcheck.app` before driving — persisted onboarding,
+- `adb shell pm clear com.swipefit.app` before driving — persisted onboarding,
   cart and render cache all survive reinstalls otherwise.
 - Detect scan completion by the **result screen's own state**, not by a spinner
   disappearing — the spinner is a `withRepeat` animation that never stops.

@@ -1,9 +1,9 @@
-# FITCHECK — publish kit
+# SwipeFit — publish kit
 
 **Runtime** 3m 21s
 
 ## Title
-FITCHECK — the skin scan that decides what you see
+SwipeFit — the skin scan that decides what you see
 
 ## Chapters
 0:00 Intro
@@ -19,9 +19,9 @@ FITCHECK — the skin scan that decides what you see
 2:48 What a name is worth
 
 ## Files
-- burned-in: demo/final/fitcheck.mp4
-- clean master: demo/final/fitcheck-clean.mp4
-- subtitles: demo/final/fitcheck.srt
+- burned-in: demo/final/swipefit.mp4
+- clean master: demo/final/swipefit-clean.mp4
+- subtitles: demo/final/swipefit.srt
 
 ## Built on
 - YouCam Skin AI (skin-tone-analysis, skin-analysis)

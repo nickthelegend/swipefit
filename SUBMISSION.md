@@ -1,4 +1,4 @@
-# FITCHECK — Devpost submission
+# SwipeFit — Devpost submission
 
 Copy each block into the matching field. Anything marked **[YOU]** is yours to
 answer or supply — I have not invented it.
@@ -8,7 +8,7 @@ answer or supply — I have not invented it.
 ## Project name
 
 ```
-FITCHECK
+SWIPEFIT
 ```
 
 ## Elevator pitch (200 char limit)
@@ -30,7 +30,7 @@ you order three sizes, you send two back. The decision that actually matters —
 does this colour work against *my* skin, does this cut work on *my* body — is
 the one you are asked to make from a photo of a model who is not you.
 
-FITCHECK inverts it. One skin scan happens first, and it decides the entire
+SwipeFit inverts it. One skin scan happens first, and it decides the entire
 catalogue you are shown. Not a filter you apply afterwards. The sort order
 itself.
 
@@ -60,7 +60,7 @@ returned.
 **Outfits, not items.** Bag a top and a bottom and it renders the complete
 outfit on you in one pass, with a running total across brands.
 
-**Handoff, not checkout.** FITCHECK never takes payment. Every item opens the
+**Handoff, not checkout.** SwipeFit never takes payment. Every item opens the
 brand's own product page. It is a discovery layer, not a competing store.
 
 **A brand console.** Brands see aggregate demand by tone bucket — which
@@ -141,7 +141,7 @@ perfect-corp-api, cielab, postgres, android, ffmpeg, python
 
 ## Video demo link
 
-**[YOU]** Upload `demo/final/fitcheck.mp4` (3m21s) to YouTube as **unlisted or
+**[YOU]** Upload `demo/final/swipefit.mp4` (3m21s) to YouTube as **unlisted or
 public**, then paste the link. Devpost cannot embed a private video.
 
 Suggested title and chapters are in `demo/final/PUBLISH-KIT.md`.
@@ -182,7 +182,7 @@ chaining and brand console were built during the submission period.
 ### Text description — features, functionality, consumer and retail value
 
 ```
-FITCHECK is a mobile shopping app in which a single skin scan determines the
+SwipeFit is a mobile shopping app in which a single skin scan determines the
 entire catalogue a shopper sees.
 
 FEATURES
@@ -213,7 +213,7 @@ Returns are the dominant cost in online apparel. A shopper who has already seen
 the garment on themselves orders with far more confidence. Brands additionally
 receive demand signal segmented by skin tone — which garments genuinely appeal
 across the tone range — which is information no current analytics stack gives
-them. FITCHECK takes no payment and competes with no one: every item hands off
+them. SwipeFit takes no payment and competes with no one: every item hands off
 to the brand's own product page.
 ```
 
@@ -322,7 +322,7 @@ cannot tell you it is wrong.
 repository URL, so before you submit:
 
 ```bash
-gh repo create fitcheck --private --source=. --remote=origin --push
+gh repo create swipefit --private --source=. --remote=origin --push
 ```
 
 Then either make it public with a licence, or **share it with

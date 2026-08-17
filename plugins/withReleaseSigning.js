@@ -20,10 +20,10 @@ const { withAppBuildGradle } = require('expo/config-plugins');
  * a placeholder key, because the keystore file itself is gitignored — if it is
  * absent, Gradle fails loudly rather than quietly producing an unsignable APK.
  */
-const KEYSTORE = process.env.FITCHECK_KEYSTORE ?? '../../credentials/fitcheck-release.keystore';
-const STORE_PASSWORD = process.env.FITCHECK_KEYSTORE_PASSWORD ?? 'fitcheck-hackathon';
-const KEY_ALIAS = process.env.FITCHECK_KEY_ALIAS ?? 'fitcheck';
-const KEY_PASSWORD = process.env.FITCHECK_KEY_PASSWORD ?? 'fitcheck-hackathon';
+const KEYSTORE = process.env.SWIPEFIT_KEYSTORE ?? '../../credentials/swipefit-release.keystore';
+const STORE_PASSWORD = process.env.SWIPEFIT_KEYSTORE_PASSWORD ?? 'swipefit-hackathon';
+const KEY_ALIAS = process.env.SWIPEFIT_KEY_ALIAS ?? 'swipefit';
+const KEY_PASSWORD = process.env.SWIPEFIT_KEY_PASSWORD ?? 'swipefit-hackathon';
 
 module.exports = function withReleaseSigning(config) {
   return withAppBuildGradle(config, (mod) => {

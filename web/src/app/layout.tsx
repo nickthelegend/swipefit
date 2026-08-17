@@ -22,7 +22,7 @@ const archivo = Archivo({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: 'FITCHECK — the face decides what you wear',
+  title: 'SwipeFit — the face decides what you wear',
   description:
     'A swipe-to-shop app where every card is the garment rendered on your own body. One skin scan decides what you see. Built on YouCam Skin AI and Apparel VTO.',
   // The SVG is listed first so browsers that support it get the vector; the
@@ -38,15 +38,15 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.webmanifest',
   openGraph: {
-    title: 'FITCHECK — the face decides what you wear',
+    title: 'SwipeFit — the face decides what you wear',
     description:
       'Every card is the garment rendered on your own body, not a stock photo. One skin scan decides what you see.',
     type: 'website',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'FITCHECK' }],
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'SWIPEFIT' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FITCHECK — the face decides what you wear',
+    title: 'SwipeFit — the face decides what you wear',
     images: ['/og.png'],
   },
 };
@@ -94,14 +94,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               {
                 '@context': 'https://schema.org',
                 '@type': 'Organization',
-                name: 'FITCHECK',
+                name: 'SWIPEFIT',
                 url: siteUrl,
                 logo: `${siteUrl}/icon-512.png`,
               },
               {
                 '@context': 'https://schema.org',
                 '@type': 'SoftwareApplication',
-                name: 'FITCHECK',
+                name: 'SWIPEFIT',
                 applicationCategory: 'ShoppingApplication',
                 operatingSystem: 'Android, iOS',
                 url: siteUrl,

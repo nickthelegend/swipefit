@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "FITCHECK",
-    "slug": "fitcheck",
+    "name": "SwipeFit",
+    "slug": "swipefit",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "fitcheck",
+    "scheme": "swipefit",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.fitcheck.app"
+      "bundleIdentifier": "com.swipefit.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +23,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": true,
-      "package": "com.fitcheck.app"
+      "package": "com.swipefit.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -37,13 +37,13 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "FITCHECK uses your camera to photograph you for the skin scan and the virtual try-on."
+          "cameraPermission": "SWIPEFIT uses your camera to photograph you for the skin scan and the virtual try-on."
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "FITCHECK uses your photo library so you can pick a photo for the skin scan and the virtual try-on."
+          "photosPermission": "SWIPEFIT uses your photo library so you can pick a photo for the skin scan and the virtual try-on."
         }
       ],
       "expo-asset",

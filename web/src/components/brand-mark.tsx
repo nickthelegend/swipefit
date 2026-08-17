@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { ACCENT_BG, ON_ACCENT, type Accent } from '@/components/ui/kit';
 
 /**
- * A brand's mark inside the FITCHECK system.
+ * A brand's mark inside the SWIPEFIT system.
  *
  * Deliberately NOT a wall of pasted brand logos. Every retailer arrives with its
  * own typographic identity, and a grid of them would be the one un-designed

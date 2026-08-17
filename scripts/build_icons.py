@@ -1,5 +1,5 @@
 """
-Rasterises the FITCHECK mark into every icon slot the app and site need.
+Rasterises the SWIPEFIT mark into every icon slot the app and site need.
 
 One source of geometry (assets/brand/*.svg) so the app icon, the splash and the
 favicon cannot drift apart — which is exactly what happens when each size is
@@ -131,7 +131,7 @@ def main() -> None:
 
     draw = ImageDraw.Draw(og)
     if FONT_BLACK.exists() and FONT_SEMI.exists():
-        draw.text((432, 246), "FITCHECK", font=ImageFont.truetype(str(FONT_BLACK), 116), fill=INK)
+        draw.text((432, 246), "SWIPEFIT", font=ImageFont.truetype(str(FONT_BLACK), 116), fill=INK)
         draw.text((436, 372), "THE FACE DECIDES WHAT YOU WEAR",
                   font=ImageFont.truetype(str(FONT_SEMI), 30), fill=INK)
     else:

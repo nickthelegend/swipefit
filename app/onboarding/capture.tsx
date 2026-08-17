@@ -303,7 +303,7 @@ function CameraCapture({
         <View style={{ flex: 1, justifyContent: 'center', gap: space.md }}>
           <Type role="display">Camera off</Type>
           <Type role="body">
-            FITCHECK needs the camera to photograph you. Nothing is stored anywhere
+            SwipeFit needs the camera to photograph you. Nothing is stored anywhere
             but on this device and the render API.
           </Type>
           <PillButton label="Allow camera" onPress={() => void requestPermission()} tone={color.violet} fullWidth />

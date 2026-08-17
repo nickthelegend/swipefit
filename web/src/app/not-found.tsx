@@ -4,7 +4,7 @@ import { Blob, Squiggle } from '@/components/doodles';
 import { PillLink } from '@/components/ui/kit';
 
 export const metadata: Metadata = {
-  title: 'Not found — FITCHECK',
+  title: 'Not found — SWIPEFIT',
   // A 404 that gets indexed is worse than one that does not exist.
   robots: { index: false, follow: true },
 };

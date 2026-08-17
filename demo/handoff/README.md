@@ -1,4 +1,4 @@
-# FITCHECK demo — handoff
+# SWIPEFIT demo — handoff
 
 Two sets, because the brief was given in two parts: the raw take with its marks,
 and the finished cut made from it.
@@ -29,9 +29,9 @@ keeps both: `videoMs` is what an edit cuts on, `ms` is kept for diagnostics.
 
 ## Finished cut
 
-`../final/fitcheck.mp4` — 3m21s, burned-in captions.
-`../final/fitcheck-clean.mp4` — same cut, no captions.
-`../final/fitcheck.srt` — the cues.
+`../final/swipefit.mp4` — 3m21s, burned-in captions.
+`../final/swipefit-clean.mp4` — same cut, no captions.
+`../final/swipefit.srt` — the cues.
 `../final/PUBLISH-KIT.md` — title, chapters, links.
 
 ## One honest note about the cut

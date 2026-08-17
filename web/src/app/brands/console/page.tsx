@@ -252,7 +252,7 @@ export default function BrandConsole() {
             <Panel tone={accent} className="mt-8 p-7">
               <h2 className="display text-[24px]">What you are buying</h2>
               <p className="mt-3 max-w-2xl text-[15px] leading-relaxed">
-                FITCHECK takes no cut of the sale. It sells the layer above it: which garment a
+                SwipeFit takes no cut of the sale. It sells the layer above it: which garment a
                 shopper pictured on themselves, which ones they hesitated over, and why they
                 stopped — including the returns you never find out about because the shopper simply
                 never bought.
@@ -270,7 +270,7 @@ export default function BrandConsole() {
  *
  * In any ordinary store the shopper can always see whose product they are
  * holding, so brand pull and garment appeal arrive fused and cannot be
- * separated afterwards. FITCHECK can hide the label before the decision, which
+ * separated afterwards. SWIPEFIT can hide the label before the decision, which
  * makes the two separable — and the gap between the two keep rates is the price
  * of the name, stated as a number.
  *

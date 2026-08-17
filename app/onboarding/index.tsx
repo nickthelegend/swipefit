@@ -49,7 +49,7 @@ export default function Welcome() {
     <Screen grid>
       <View style={{ flex: 1, justifyContent: 'space-between', paddingVertical: space.lg }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Type role="label">Fitcheck</Type>
+          <Type role="label">SwipeFit</Type>
           <PillTag label="YouCam Skin AI + Apparel VTO" tone={color.acid} />
         </View>
 

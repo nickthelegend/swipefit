@@ -1,4 +1,4 @@
--- FITCHECK — blind swiping
+-- SwipeFit — blind swiping
 --
 -- Adds the one column, and the one view, behind the measurement no retailer can
 -- obtain for themselves.

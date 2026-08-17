@@ -1,6 +1,6 @@
 1
 00:00:03,600 --> 00:00:04,555
-This is FITCHECK.
+This is SWIPEFIT.
 
 2
 00:00:04,555 --> 00:00:09,387
@@ -20,7 +20,7 @@ The colour that suits them may fight you, and you find out after it arrives.
 
 6
 00:00:19,811 --> 00:00:22,814
-FITCHECK moves that decision to before the purchase.
+SWIPEFIT moves that decision to before the purchase.
 
 7
 00:00:22,814 --> 00:00:27,590
@@ -136,7 +136,7 @@ Most people buy the label before they judge the garment,
 
 35
 00:01:44,705 --> 00:01:47,230
-so FITCHECK hides it until after the decision.
+so SWIPEFIT hides it until after the decision.
 
 36
 00:01:47,230 --> 00:01:50,414
@@ -184,7 +184,7 @@ Now the part the API cannot do on its own.
 
 47
 00:02:21,902 --> 00:02:25,101
-It takes one garment per call — so FITCHECK chains it.
+It takes one garment per call — so SWIPEFIT chains it.
 
 48
 00:02:25,101 --> 00:02:28,360
@@ -200,7 +200,7 @@ There is no payment here, and there is not meant to be.
 
 51
 00:02:33,886 --> 00:02:37,255
-FITCHECK opens the brand's own product page and takes no cut.
+SWIPEFIT opens the brand's own product page and takes no cut.
 
 52
 00:02:37,255 --> 00:02:40,514
@@ -236,7 +236,7 @@ Hide the label, and the gap between those two numbers is what the name is worth.
 
 60
 00:03:05,781 --> 00:03:06,326
-FITCHECK.
+SWIPEFIT.
 
 61
 00:03:06,326 --> 00:03:08,205

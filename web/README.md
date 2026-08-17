@@ -37,7 +37,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ---
 
-# FITCHECK — web
+# SwipeFit — web
 
 Landing page, brand directory, and the brand console.
 
@@ -77,7 +77,7 @@ browser bundle it would hand full read/write on the database to any visitor.
 ```bash
 cd ..           # repo root
 npx expo run:android
-cp android/app/build/outputs/apk/debug/app-debug.apk web/public/builds/fitcheck-latest.apk
+cp android/app/build/outputs/apk/debug/app-debug.apk web/public/builds/swipefit-latest.apk
 ```
 
 ## Design

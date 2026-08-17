@@ -12,7 +12,7 @@
  *
  * Where this departs from a browser driver, and why:
  *
- *   There is no SVG cursor. FITCHECK is React Native on Android — there is no
+ *   There is no SVG cursor. SwipeFit is React Native on Android — there is no
  *   DOM to inject an overlay into, and adding one would mean shipping demo-only
  *   code into the APK, which would make the take staged rather than real.
  *   Android's own "show taps" developer setting draws the touch indicator
@@ -37,7 +37,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 // which threw away the best run of the night when the next one went worse.
 const RUN_ID = process.env.DEMO_RUN_ID ?? String(process.hrtime.bigint()).slice(-6);
 const OUT = `${root}demo/take-${RUN_ID}`;
-const PKG = 'com.fitcheck.app';
+const PKG = 'com.swipefit.app';
 
 /**
  * TAIL mode records only the closing beats.
@@ -76,19 +76,19 @@ const log = (m) => console.log(`  ${m}`);
 const TAIL_BEATS = new Set(['console', 'blindgap', 'outro']);
 
 /**
- * Is FITCHECK actually the focused app right now?
+ * Is SWIPEFIT actually the focused app right now?
  *
  * Added after a take reported SUCCESS while filming the Android search screen
  * with the keyboard up. Every beat had been marked, the run was declared clean,
- * and the footage contained no FITCHECK at all — the app had been exited by a
+ * and the footage contained no SWIPEFIT at all — the app had been exited by a
  * stray fallback tap several minutes earlier. Marking a beat is not evidence
  * that anything was recorded; this is.
  */
 function appInForeground() {
   try {
     const focus = sh(['shell', 'dumpsys', 'window'], { stdio: 'pipe' });
-    return /mCurrentFocus=.*com\.fitcheck\.app/.test(focus)
-      || /mFocusedApp=.*com\.fitcheck\.app/.test(focus);
+    return /mCurrentFocus=.*com\.swipefit\.app/.test(focus)
+      || /mFocusedApp=.*com\.swipefit\.app/.test(focus);
   } catch {
     return false;
   }

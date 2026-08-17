@@ -592,7 +592,7 @@ export const useAppStore = create<State & Actions>()(
       },
     }),
     {
-      name: 'fitcheck-v1',
+      name: 'swipefit-v1',
       storage: createJSONStorage(() => AsyncStorage),
       /**
        * The deck is derived state and is rebuilt on rehydrate. Persisting it

@@ -1,4 +1,4 @@
-# FITCHECK
+# SWIPEFIT
 
 **the face decides what you wear**
 
@@ -107,12 +107,12 @@ anyone with read access can publish a convincing update with. To create one:
 ```bash
 mkdir -p credentials
 keytool -genkeypair -v \
-  -keystore credentials/fitcheck-release.keystore \
-  -alias fitcheck -keyalg RSA -keysize 2048 -validity 10000
+  -keystore credentials/swipefit-release.keystore \
+  -alias swipefit -keyalg RSA -keysize 2048 -validity 10000
 ```
 
-Then set `FITCHECK_KEYSTORE_PASSWORD`, `FITCHECK_KEY_ALIAS` and
-`FITCHECK_KEY_PASSWORD`, or accept the development defaults in the plugin.
+Then set `SWIPEFIT_KEYSTORE_PASSWORD`, `SWIPEFIT_KEY_ALIAS` and
+`SWIPEFIT_KEY_PASSWORD`, or accept the development defaults in the plugin.
 
 **Back the keystore up.** Android identifies an app by its signing key, so losing
 it means never being able to update this package name again — the only route is

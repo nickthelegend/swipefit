@@ -163,7 +163,7 @@ for (const [i, mark] of marks.entries()) {
 const manifest = `${OUT}/clips.txt`;
 writeFileSync(manifest, clips.map((c) => `file '${c.file}'`).join('\n') + '\n');
 
-const master = `${OUT}/fitcheck-master.mp4`;
+const master = `${OUT}/swipefit-master.mp4`;
 ff(['-f', 'concat', '-safe', '0', '-i', manifest, '-c', 'copy', master]);
 
 const masterS = seconds(master);

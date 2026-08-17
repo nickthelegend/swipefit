@@ -86,13 +86,13 @@ def draw_card(frames_dir: Path, lines, seconds: float, fade_out: bool) -> int:
 
 
 INTRO = [
-    {"text": "FITCHECK", "size": 190, "ttf": BLACK_TTF, "colour": INK},
+    {"text": "SWIPEFIT", "size": 190, "ttf": BLACK_TTF, "colour": INK},
     {"text": "the face decides", "size": 76, "ttf": SEMI_TTF, "colour": VIOLET},
     {"text": "what you wear", "size": 76, "ttf": SEMI_TTF, "colour": VIOLET},
 ]
 
 OUTRO = [
-    {"text": "FITCHECK", "size": 170, "ttf": BLACK_TTF, "colour": INK},
+    {"text": "SWIPEFIT", "size": 170, "ttf": BLACK_TTF, "colour": INK},
     {"text": "thanks for watching", "size": 70, "ttf": SEMI_TTF, "colour": VIOLET},
 ]
 

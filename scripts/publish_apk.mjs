@@ -24,7 +24,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const apk = `${root}android/app/build/outputs/apk/release/app-release.apk`;
 const outDir = `${root}web/public/builds`;
-const out = `${outDir}/fitcheck-latest.apk`;
+const out = `${outDir}/swipefit-latest.apk`;
 
 let stat;
 try {
@@ -89,5 +89,5 @@ const info = {
 
 writeFileSync(`${root}web/src/data/build-info.json`, JSON.stringify(info, null, 2) + '\n');
 
-console.log(`  published  web/public/builds/fitcheck-latest.apk`);
+console.log(`  published  web/public/builds/swipefit-latest.apk`);
 for (const [k, v] of Object.entries(info)) console.log(`  ${k.padEnd(10)} ${v}`);

@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="max-w-sm">
             <div className="flex items-center gap-3">
               <Chevrons size={40} fill="#EBD22F" />
-              <span className="display text-[30px]">Fitcheck</span>
+              <span className="display text-[30px]">SwipeFit</span>
             </div>
             <p className="mt-3 text-[15px] leading-relaxed opacity-80">
               The face decides what you wear. A try-on and discovery layer that sits in front of

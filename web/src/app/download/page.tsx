@@ -5,7 +5,7 @@ import { Blob, Cursor, IconAndroid, IconApple, IconDownload, Starburst } from '@
 import { Panel, PillAnchor, Tag } from '@/components/ui/kit';
 
 export const metadata: Metadata = {
-  title: 'Download FITCHECK',
+  title: 'Download SWIPEFIT',
   description: 'Android APK direct download. Mac and iOS run from source. Free, no account.',
 };
 
@@ -24,7 +24,7 @@ export default function Download() {
           <div className="flex justify-center">
             <Starburst size={80} fill="#EBD22F" rotate={-12} />
           </div>
-          <h1 className="display mt-6 text-[clamp(42px,8vw,78px)]">Get FITCHECK</h1>
+          <h1 className="display mt-6 text-[clamp(42px,8vw,78px)]">Get SWIPEFIT</h1>
           <p className="mx-auto mt-5 max-w-lg text-[17px] leading-relaxed">
             Free, no account, and the skin scan runs once. Two photos and you&apos;re swiping.
           </p>
@@ -53,7 +53,7 @@ export default function Download() {
               {build.published ? (
                 <>
                   <div className="mt-6">
-                    <PillAnchor href="/builds/fitcheck-latest.apk" accent="violet" download>
+                    <PillAnchor href="/builds/swipefit-latest.apk" accent="violet" download>
                       <IconDownload size={18} color="#fff" />
                       Download APK
                     </PillAnchor>
@@ -79,7 +79,7 @@ export default function Download() {
                       {build.sha256}
                     </code>
                     <code className="mt-2 block overflow-x-auto rounded-[9px] border-2 border-black bg-white p-3 font-mono text-[11px]">
-                      shasum -a 256 fitcheck-latest.apk
+                      shasum -a 256 swipefit-latest.apk
                     </code>
                   </details>
                 </>
@@ -100,7 +100,7 @@ export default function Download() {
                 <h2 className="display text-[28px]">Mac &amp; iOS</h2>
               </div>
               <p className="mt-4 text-[15px] leading-relaxed">
-                There is no Mac binary — FITCHECK is a React Native app, so it runs on the iOS
+                There is no Mac binary — SwipeFit is a React Native app, so it runs on the iOS
                 Simulator or a device rather than as a desktop build. Run it from source:
               </p>
               <pre className="mt-4 overflow-x-auto rounded-[9px] border border-black bg-[#FDC7E2] px-4 py-3 text-[13px]">

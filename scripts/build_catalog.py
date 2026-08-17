@@ -1,5 +1,5 @@
 """
-Builds src/data/catalog.json for FITCHECK.
+Builds src/data/catalog.json for SWIPEFIT.
 
 Why this replaces the scraper it was originally specced as: major retail sites
 render product grids client-side behind bot protection, so an HTML scraper

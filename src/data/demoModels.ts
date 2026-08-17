@@ -102,7 +102,7 @@ export async function resolveDemoPerson(id: string): Promise<PersonPhotos | null
  * In development Metro serves bundled assets over HTTP, so `localUri` is a real
  * cached file and uploading it works. In a release build the same asset is
  * compiled into the APK and `localUri` comes back as
- * `android.resource://com.fitcheck.app/2131165308` — a resource handle, not a
+ * `android.resource://com.swipefit.app/2131165308` — a resource handle, not a
  * path. `new File(uri)` reports it does not exist, uploadPhoto throws
  * `missing_file`, and runScan quietly falls back to the recorded reading.
  *
