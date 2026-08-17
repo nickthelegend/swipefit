@@ -59,7 +59,8 @@
     "demo:bgm": "node scripts/make_bgm.mjs",
     "demo:await": "node scripts/await_take.mjs",
     "demo:cut": "node scripts/cut_video.mjs",
-    "demo:finish": "node scripts/finish_video.mjs"
+    "demo:finish": "node scripts/finish_video.mjs",
+    "demo:gallery": "python3 scripts/gallery.py"
   },
   "private": true,
   "engines": {

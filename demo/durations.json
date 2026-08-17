@@ -1,86 +1,89 @@
 {
+  "engine": "kokoro-onnx",
+  "voice": "af_heart",
+  "speed": 1,
   "breathSeconds": 0.45,
-  "totalSeconds": 193.571,
+  "totalSeconds": 207.959,
   "lines": {
     "intro": {
       "file": "demo/audio/00-intro.wav",
-      "seconds": 9.054
+      "seconds": 10.411
     },
     "problem": {
       "file": "demo/audio/01-problem.wav",
-      "seconds": 10.397
+      "seconds": 10.795
     },
     "shopfor": {
       "file": "demo/audio/02-shopfor.wav",
-      "seconds": 9.104
+      "seconds": 9.088
     },
     "capture": {
       "file": "demo/audio/03-capture.wav",
-      "seconds": 10.508
+      "seconds": 11.648
     },
     "pickmodel": {
       "file": "demo/audio/04-pickmodel.wav",
-      "seconds": 7.833
+      "seconds": 8.32
     },
     "scanlive": {
       "file": "demo/audio/05-scanlive.wav",
-      "seconds": 7.626
+      "seconds": 8.021
     },
     "reading": {
       "file": "demo/audio/06-reading.wav",
-      "seconds": 15.409
+      "seconds": 17.195
     },
     "deckopen": {
       "file": "demo/audio/07-deckopen.wav",
-      "seconds": 10.719
+      "seconds": 11.883
     },
     "tryon": {
       "file": "demo/audio/08-tryon.wav",
-      "seconds": 7.709
+      "seconds": 8.704
     },
     "matchwhy": {
       "file": "demo/audio/09-matchwhy.wav",
-      "seconds": 8.286
+      "seconds": 8.491
     },
     "blind": {
       "file": "demo/audio/10-blind.wav",
-      "seconds": 10.363
+      "seconds": 11.051
     },
     "swiperight": {
       "file": "demo/audio/11-swiperight.wav",
-      "seconds": 5.785
+      "seconds": 5.845
     },
     "swipeleft": {
       "file": "demo/audio/12-swipeleft.wav",
-      "seconds": 7.05
+      "seconds": 7.808
     },
     "reveal": {
       "file": "demo/audio/13-reveal.wav",
-      "seconds": 9.269
+      "seconds": 9.472
     },
     "bag": {
       "file": "demo/audio/14-bag.wav",
-      "seconds": 6.827
+      "seconds": 6.933
     },
     "outfit": {
       "file": "demo/audio/15-outfit.wav",
-      "seconds": 11.582
+      "seconds": 12.139
     },
     "handoff": {
       "file": "demo/audio/16-handoff.wav",
-      "seconds": 9.762
+      "seconds": 10.475
     },
     "console": {
       "file": "demo/audio/17-console.wav",
-      "seconds": 7.404
+      "seconds": 7.893
     },
     "blindgap": {
       "file": "demo/audio/18-blindgap.wav",
-      "seconds": 17.806
+      "seconds": 19.648
     },
     "outro": {
       "file": "demo/audio/19-outro.wav",
-      "seconds": 11.079
+      "seconds": 12.139
     }
   }
 }

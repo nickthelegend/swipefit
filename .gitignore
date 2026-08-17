@@ -69,3 +69,7 @@ __pycache__/
 /demo/handoff/raw-take.mp4
 /demo/handoff/bgm.wav
 /demo/handoff/narration/
+
+# Kokoro model files — 337MB, fetched by scripts/fetch_kokoro.sh
+/.cache/
+/.venv-tts/

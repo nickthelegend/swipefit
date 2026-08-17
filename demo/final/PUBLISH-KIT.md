@@ -1,22 +1,22 @@
 # SwipeFit — publish kit
 
-**Runtime** 3m 22s
+**Runtime** 3m 36s
 
 ## Title
 SwipeFit — the skin scan that decides what you see
 
 ## Chapters
 0:00 Intro
-0:51 Live skin scan
-0:58 The reading, in CIELAB
-1:14 Sixty pieces, re-sorted
-1:32 Rendered on your own body
-1:40 Why the brand is hidden
-2:13 A bag across brands
-2:20 Chaining a full outfit
-2:31 Handoff, not checkout
-2:41 What brands actually get
-2:49 What a name is worth
+0:54 Live skin scan
+1:02 The reading, in CIELAB
+1:19 Sixty pieces, re-sorted
+1:40 Rendered on your own body
+1:48 Why the brand is hidden
+2:23 A bag across brands
+2:29 Chaining a full outfit
+2:42 Handoff, not checkout
+2:52 What brands actually get
+3:00 What a name is worth
 
 ## Files
 - burned-in: demo/final/swipefit.mp4

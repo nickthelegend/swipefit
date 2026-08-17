@@ -1,78 +1,82 @@
 /**
- * PHASE 2 — one audio file per narration line, with MEASURED durations.
+ * PHASE 2 — narration.
  *
- * The one-clock rule lives or dies here. The driver holds each beat for the
- * real length of its audio file, so nothing in this script is allowed to
- * estimate: every duration comes from ffprobe reading the rendered file.
+ * Synthesises one audio file per line with Kokoro and writes demo/durations.json,
+ * which is the ONE CLOCK the driver and the cutter both read. Every duration in
+ * it is measured from the rendered audio (sample count / sample rate), never
+ * estimated from the text — an estimated span is exactly how narration and
+ * footage drift apart.
  *
- * Voice is macOS `say` (Samantha). Kokoro would be better and is not installed;
- * pulling in torch to get it is not a trade worth making tonight.
+ * Kokoro runs through onnxruntime in .venv-tts. An earlier revision of this file
+ * used macOS `say` because Kokoro was not installed; that was a substitution for
+ * a specified tool and it should have been raised rather than quietly commented.
+ *
+ * Setup, once:
+ *   ./scripts/fetch_kokoro.sh
+ *   python3 -m venv .venv-tts && .venv-tts/bin/pip install kokoro-onnx soundfile
  *
  *   node scripts/tts.mjs
  */
 
-import { execFileSync } from 'node:child_process';
-import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const outDir = `${root}demo/audio`;
+const python = `${root}.venv-tts/bin/python`;
+const BREATH_SECONDS = 0.45;
+
+if (!existsSync(python)) {
+  throw new Error(
+    'KOKORO_VENV_MISSING: create it with\n' +
+    '  python3 -m venv .venv-tts && .venv-tts/bin/pip install kokoro-onnx soundfile',
+  );
+}
+
+const run = spawnSync(python, [`${root}scripts/kokoro_tts.py`], {
+  encoding: 'utf8',
+  maxBuffer: 32 * 1024 * 1024,
+});
+
+// stderr carries the per-line progress; stdout carries only the JSON payload.
+if (run.stderr) process.stderr.write(run.stderr);
+if (run.status !== 0) {
+  throw new Error(`KOKORO_FAILED\n  ${(run.stderr || run.stdout || '').trim()}`);
+}
+
+const result = JSON.parse(run.stdout);
 const script = JSON.parse(readFileSync(`${root}demo/narration.json`, 'utf8'));
 
-// Remove only the narration files, not the directory.
-//
-// Wiping the whole directory also deleted bgm.wav, which lives here too — so
-// regenerating a narration line silently removed the music bed, and the next
-// render produced a video with no music and no error to explain it.
-mkdirSync(outDir, { recursive: true });
-for (const f of readdirSync(outDir)) {
-  if (/^\d\d-.*\.(wav|aiff)$/.test(f)) rmSync(`${outDir}/${f}`, { force: true });
-}
-
-const durations = {};
-let total = 0;
-
-for (const [i, line] of script.lines.entries()) {
-  const n = String(i).padStart(2, '0');
-  const aiff = `${outDir}/${n}-${line.id}.aiff`;
-  const wav = `${outDir}/${n}-${line.id}.wav`;
-
-  // -r 172 is a touch slower than default. At default pace the longer beats
-  // clip their own clauses and the CIELAB line in particular becomes mush.
-  execFileSync('say', ['-v', script.voice, '-r', '172', '-o', aiff, line.text]);
-
-  // 48kHz mono PCM — matches what the screen recording will be muxed against,
-  // so no resample step later.
-  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', aiff, '-ar', '48000', '-ac', '1', wav]);
-  rmSync(aiff);
-
-  const seconds = Number(
-    execFileSync('ffprobe', [
-      '-v', 'error',
-      '-show_entries', 'format=duration',
-      '-of', 'default=noprint_wrappers=1:nokey=1',
-      wav,
-    ], { encoding: 'utf8' }).trim(),
-  );
-
-  if (!Number.isFinite(seconds) || seconds <= 0) {
-    throw new Error(`ffprobe returned no duration for ${wav} — refusing to guess`);
+// Every line in the script must have produced a file. A missing entry would
+// otherwise surface much later as NO_AUDIO_FOR_BEAT in the cutter.
+for (const line of script.lines) {
+  if (!result.lines[line.id]) throw new Error(`NO_AUDIO_SYNTHESISED: ${line.id}`);
+  if (!existsSync(`${root}${result.lines[line.id].file}`)) {
+    throw new Error(`AUDIO_FILE_MISSING: ${result.lines[line.id].file}`);
   }
-
-  durations[line.id] = { file: `demo/audio/${n}-${line.id}.wav`, seconds: Number(seconds.toFixed(3)) };
-  total += seconds;
-  console.log(`  ${n} ${line.id.padEnd(12)} ${seconds.toFixed(2)}s`);
 }
 
-// 0.45s of breath after each line, matching the driver's hold().
-const BREATH = 0.45;
-const withBreath = total + BREATH * script.lines.length;
+const totalSeconds = Object.values(result.lines).reduce((sum, l) => sum + l.seconds, 0);
+const withBreaths = totalSeconds + BREATH_SECONDS * script.lines.length;
 
 writeFileSync(
   `${root}demo/durations.json`,
-  JSON.stringify({ breathSeconds: BREATH, totalSeconds: Number(total.toFixed(3)), lines: durations }, null, 2) + '\n',
+  JSON.stringify(
+    {
+      engine: 'kokoro-onnx',
+      voice: result.voice,
+      speed: result.speed,
+      breathSeconds: BREATH_SECONDS,
+      totalSeconds: Number(totalSeconds.toFixed(3)),
+      lines: result.lines,
+    },
+    null,
+    2,
+  ) + '\n',
 );
 
-console.log(`\n  ${script.lines.length} lines`);
-console.log(`  narration      ${total.toFixed(1)}s`);
-console.log(`  with breaths   ${withBreath.toFixed(1)}s  (${Math.floor(withBreath / 60)}m ${Math.round(withBreath % 60)}s)`);
+const mmss = (s) => `${Math.floor(s / 60)}m ${Math.round(s % 60)}s`;
+console.log(`\n  engine         kokoro-onnx (${result.voice})`);
+console.log(`  ${script.lines.length} lines`);
+console.log(`  narration      ${totalSeconds.toFixed(1)}s`);
+console.log(`  with breaths   ${withBreaths.toFixed(1)}s  (${mmss(withBreaths)})`);

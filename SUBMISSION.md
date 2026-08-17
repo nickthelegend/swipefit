@@ -129,7 +129,8 @@ filter, so the sort has something meaningful to sort.
 ```
 expo, react-native, react, typescript, supabase, nextjs, expo-router,
 react-native-reanimated, zustand, youcam-skin-ai, youcam-apparel-vto,
-perfect-corp-api, cielab, postgres, android, ffmpeg, python
+perfect-corp-api, cielab, postgres, android, ffmpeg, python, kokoro-tts,
+onnxruntime, pillow
 ```
 
 ---
@@ -148,13 +149,22 @@ Suggested title and chapters are in `demo/final/PUBLISH-KIT.md`.
 
 ## Image gallery
 
-Best five, 3:2 crops from the app:
+Ready to upload from `demo/gallery/` — 2400x1600 (3:2), built by
+`npm run demo:gallery`. Upload in this order:
 
-1. The deck — a real try-on render with the match score and BRAND HIDDEN
-2. The reading — undertone, season and the CIELAB swatches
-3. The detail card — the written "why this scored what it scored"
-4. The outfit builder — top and bottom rendered together with a running total
-5. The brand console — aggregate demand by tone bucket
+1. `01-rendered-on-you.jpg` — a real try-on render
+2. `02-one-scan-decides.jpg` — the reading, with the CIELAB swatches
+3. `03-the-brand-is-hidden.jpg` — the same render with BRAND HIDDEN
+4. `04-a-whole-outfit.jpg` — top and bottom chained onto one body
+5. `05-a-bag-across-brands.jpg` — five pieces, four labels, one total
+
+Every frame is pulled from the finished cut, so the gallery shows exactly what
+the video shows rather than separately staged screenshots.
+
+## Thumbnail
+
+`demo/gallery/00-thumbnail.jpg` — wordmark, the claim, and one real render.
+Use it as the YouTube thumbnail.
 
 ---
 
