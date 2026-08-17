@@ -61,3 +61,11 @@ __pycache__/
 /demo/cut/
 /demo/final/_*
 /demo/final/*.mp4
+
+# Regenerable demo media — kept out of the repo, not out of the deliverable.
+# bgm.wav alone is 40MB and both it and the narration are byte-identical
+# regenerations of `npm run demo:bgm` / `npm run demo:tts`. The marks, durations,
+# script and plan stay tracked, so the take is fully reproducible from source.
+/demo/handoff/raw-take.mp4
+/demo/handoff/bgm.wav
+/demo/handoff/narration/

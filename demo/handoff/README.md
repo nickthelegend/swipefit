@@ -7,12 +7,12 @@ and the finished cut made from it.
 
 | File | What it is |
 | --- | --- |
-| `raw-take.mp4` | The take, exactly as captured. 1080x2400, 563.5s, 20/20 beats. |
+| `raw-take.mp4` | The take, exactly as captured. 1080x2400, 563.5s, 20/20 beats. **Not in git** — 11MB; re-record with `npm run demo:drive`. |
 | `marks.log` | `DEMO_LINE <ms> <line-id>` in **video time**. |
 | `marks.json` | Same, plus wall-clock, measured spans and per-beat degradation. |
-| `narration/` | 20 WAVs, one per line. |
+| `narration/` | 20 WAVs, one per line. **Not in git** — run `npm run demo:tts`. |
 | `durations.json` | Every duration **measured with ffprobe**, never estimated. |
-| `bgm.wav` | Music bed, 215.8s, measured at -25.8 LUFS. |
+| `bgm.wav` | Music bed, 215.8s, measured at -25.8 LUFS. **Not in git** — 40MB; regenerate with `npm run demo:bgm`. |
 | `narration.json` | The script. |
 | `recording.md` | The plan, and the two detections behind it. |
 
@@ -42,6 +42,14 @@ card sits on its detail side for the tryon span and shows the render for the
 matchwhy span. Rather than narrate "that garment, rendered onto that body" over
 a card whose render was not on screen, each line was moved to the span that
 actually shows what it describes. Checked frame by frame.
+
+## Why the media is not in the repo
+
+The audio and video above are byte-identical regenerations of the two commands
+below — `make_bgm.mjs` is deterministic and `tts.mjs` measures every file it
+writes. Together they were 51MB of a 56MB repository, which is a poor trade for
+anyone cloning this to read the source. The marks, durations, script and plan
+are all tracked, so the take reproduces from source without them.
 
 ## Reproducing
 
